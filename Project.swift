@@ -1,31 +1,31 @@
 import ProjectDescription
 
 let project = Project(
-    name: "Tuist",
+    name: "GitLabourer",
     targets: [
         .target(
-            name: "Tuist",
+            name: "GitLabourer",
             destinations: .iOS,
             product: .app,
-            bundleId: "io.tuist.Tuist",
+            bundleId: "cz.nadvitek.GitLabourer",
             infoPlist: .extendingDefault(
                 with: [
                     "UILaunchStoryboardName": "LaunchScreen.storyboard",
                 ]
             ),
-            sources: ["Tuist/Sources/**"],
-            resources: ["Tuist/Resources/**"],
+            sources: ["GitLabourer/Sources/**"],
+            resources: ["GitLabourer/Resources/**"],
             dependencies: []
         ),
         .target(
-            name: "TuistTests",
+            name: "GitLabourerTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "io.tuist.TuistTests",
+            bundleId: "cz.nadvitek.GitLabourer",
             infoPlist: .default,
-            sources: ["Tuist/Tests/**"],
+            sources: ["GitLabourer/Tests/**"],
             resources: [],
-            dependencies: [.target(name: "Tuist")]
+            dependencies: [.target(name: "GitLabourer")]
         ),
     ]
 )

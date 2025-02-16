@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct TuistApp: App {
+struct GitLabourerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
