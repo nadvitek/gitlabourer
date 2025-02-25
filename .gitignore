@@ -1,3 +1,14 @@
+.gradle
+.settings
+.project
+.classpath
+.vscode
+.idea
+build
+*.iml
+local.properties
+
+
 */Settings.bundle/Licenses*
 Tuist/.build/*
 .kmm-build/*
