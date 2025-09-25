@@ -10,8 +10,8 @@ local.properties
 
 
 */Settings.bundle/Licenses*
-Tuist/.build/*
-.kmm-build/*
+iosApp/Tuist/.build/*
+iosApp/.kmm-build/*
 
 # Created by http://www.gitignore.io
 
@@ -28,9 +28,9 @@ Tuist/.build/*
 .Trashes
 
 # Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
+iosApp/.AppleDB
+iosApp/.AppleDesktop
+iosApp/Network Trash Folder
 Temporary Items
 .apdisk
 
@@ -38,31 +38,31 @@ Temporary Items
 ### Objective-C ###
 # Xcode
 #
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-*.xcodeproj
-*.xcworkspace
+iosApp/build/
+iosApp/*.pbxuser
+!iosApp/default.pbxuser
+iosApp/*.mode1v3
+!iosApp/default.mode1v3
+iosApp/*.mode2v3
+!iosApp/default.mode2v3
+iosApp/*.perspectivev3
+iosApp/!default.perspectivev3
+iosApp/xcuserdata
+iosApp/*.xccheckout
+iosApp/*.moved-aside
+iosApp/DerivedData
+iosApp/*.hmap
+iosApp/*.ipa
+iosApp/*.xcuserstate
+iosApp/*.xcodeproj
+iosApp/*.xcworkspace
 
 # CocoaPods
 Pods/
 
 # Carthage
-Carthage/Build
-Carthage/Checkouts
+iosApp/Carthage/Build
+iosApp/Carthage/Checkouts
 
 #Fastlane
 fastlane/report.xml
@@ -72,10 +72,56 @@ fastlane/test_output
 screenshots
 
 #build output
-/outputs
+iosApp//outputs
 
 # tuist
-Derived
-Tuist/Dependencies/*
-!Tuist/Dependencies/Lockfiles
+iosApp/Derived
+iosApp/Tuist/Dependencies/*
+!iosApp/Tuist/Dependencies/Lockfiles
+
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+out/
+.out/
+out/
+build/
+.idea/*
+.gradle/
+captures/
+.kotlin/
+
+
+#iml files
+*.iml
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# linux files
+.directory
+*.*~
+
+# mac files
+.DS_Store
+
+Thumbs.db
+thumbs.db
+
+outputs/mapping.txt
+
+artwork
+
+secrets.properties
 
