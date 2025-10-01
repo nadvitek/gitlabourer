@@ -9,10 +9,13 @@ compose-multiplatform = "1.7.0"
 kmpObservableViewmodel = "1.0.0-BETA-7"
 kmpNativeCoroutines = "1.0.0-ALPHA-37"
 koin = "4.0.0"
+koinKmmExport = "1.1"
 kotlin = "2.0.21"
 kotlinx-serialization = "1.7.3"
 ksp = "2.0.21-1.0.25"
 ktor = "3.0.0"
+logback = "1.2.11"
+crashPlugin = "1.1.5"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -29,8 +32,14 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-logging-native = { module = "io.ktor:ktor-client-logging-native", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+koinKmmExport-core = { module = "io.github.mykhailo-liutov:koinexport-core", version.ref = "koinKmmExport" }
+koinKmmExport-processor = { module = "io.github.mykhailo-liutov:koinexport-processor", version.ref = "koinKmmExport" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+crash-plugin = { group = "com.google.firebase", name = "crash-plugin", version.ref = "crashPlugin" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

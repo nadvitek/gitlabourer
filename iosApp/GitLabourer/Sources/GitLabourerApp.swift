@@ -1,10 +1,10 @@
-import Shared
+import shared
 import SwiftUI
 
 @main
 struct GitLabourerApp: App {
     init() {
-        KoinKt.doInitKoin()
+        KoinKt.doInitKoin(extraModules: [])
     }
 
     var body: some Scene {

@@ -56,6 +56,7 @@ iosApp/*.ipa
 iosApp/*.xcuserstate
 iosApp/*.xcodeproj
 iosApp/*.xcworkspace
+iosApp/*.xcframework
 
 # CocoaPods
 Pods/
@@ -124,4 +125,6 @@ outputs/mapping.txt
 artwork
 
 secrets.properties
+
+iOSApp/KotlinDebug/*
 

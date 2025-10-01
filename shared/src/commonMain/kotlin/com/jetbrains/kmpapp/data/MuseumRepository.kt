@@ -5,7 +5,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class MuseumRepository(
+/*class MuseumRepository(
     private val museumApi: MuseumApi,
     private val museumStorage: MuseumStorage,
     ) {
@@ -25,3 +25,4 @@ class MuseumRepository(
 
     fun getObjectById(objectId: Int): Flow<MuseumObject?> = museumStorage.getObjectById(objectId)
 }
+ */
