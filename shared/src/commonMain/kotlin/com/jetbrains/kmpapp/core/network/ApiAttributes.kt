@@ -1,6 +1,6 @@
 package com.jetbrains.kmpapp.core.network
 
-public class ApiAttributes(
-    val baseUrl: String,
-    val token: String?
+internal class ApiAttributes(
+    internal val baseUrl: String,
+    internal val token: String?
 )

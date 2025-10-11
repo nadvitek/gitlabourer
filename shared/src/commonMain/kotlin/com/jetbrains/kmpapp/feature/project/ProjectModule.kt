@@ -7,9 +7,10 @@ import com.jetbrains.kmpapp.feature.project.data.api.ProjectsKtorDataSource
 import com.jetbrains.kmpapp.feature.project.domain.GetProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.domain.GetProjectsUseCaseImpl
 import com.jetbrains.kmpapp.feature.project.domain.ProjectsRepository
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val projectModule = module {
+public val projectModule: Module = module {
     includes(apiModule)
 
     single<ProjectsRemoteDataSource> {
@@ -29,12 +30,4 @@ val projectModule = module {
             projectsRepository = get()
         )
     }
-
-    /*single<MuseumStorage> { InMemoryMuseumStorage() }
-    single {
-        MuseumRepository(get(), get()).apply {
-            initialize()
-        }
-    }
-     */
 }

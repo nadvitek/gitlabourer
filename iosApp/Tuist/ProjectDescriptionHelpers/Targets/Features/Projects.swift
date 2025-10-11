@@ -11,8 +11,12 @@ let projects = Target.target(
     product: .framework,
     bundleId: bundleId,
     infoPlist: .default,
-    sources: ["\(basePath)/Sources/**"],
+    sources: .sourceFilesList(globs: [
+        "\(basePath)/Sources/**",
+        .testing(at: basePath)
+    ].compactMap { $0 }),
     dependencies: [
+        .gitlabourerUI,
         .kmp
     ]
 )
@@ -29,3 +33,7 @@ let projectsTesting = Target.target(
         .target(projects)
     ]
 )
+
+public extension TargetDependency {
+    static let projects = TargetDependency.target(ProjectDescriptionHelpers.projects)
+}

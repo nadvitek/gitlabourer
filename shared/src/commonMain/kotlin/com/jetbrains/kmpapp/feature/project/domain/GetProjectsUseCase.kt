@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp.feature.project.domain
 
+import com.jetbrains.kmpapp.feature.project.domain.data.Project
 import io.github.mykhailoliutov.koinexport.core.KoinKmmExport
 
 @KoinKmmExport

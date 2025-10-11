@@ -44,10 +44,11 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koinKmmExport.core)
             implementation(libs.ktor.client.logging)
+            implementation("com.russhwolf:multiplatform-settings:1.1.1")           // core (includes ObservableSettings)
+            implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
             api(libs.kmp.observable.viewmodel)
         }
 
-        // Required by KMM-ViewModel
         all {
             languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")

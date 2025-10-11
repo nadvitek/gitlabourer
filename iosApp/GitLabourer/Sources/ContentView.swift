@@ -1,36 +1,115 @@
 import shared
 import SwiftUI
 import GitLabourerUI
+import Projects
+import Search
 
 public struct ContentView: View {
 
-    @State private var data: [Project] = []
+    // MARK: - Tabs
 
-    public init() {}
-
-    public var body: some View {
-        if true {
-            EmptyView()
-        } else {
-            EmptyView()
-        }
+    private enum TabType: Hashable {
+        case projects
+        case pipelines
+        case jobs
+        case settings
+        case search
     }
 
-    private func fetchData() {
-        Task {
-            do {
-                data = try await appDependency.projectsUseCase.invoke()
-                print("data fetched \(data)")
-            } catch {
+    // MARK: - State
 
+    @State private var selectedTab: TabType = .projects
+    
+    // MARK: - Initializers
+
+    public init() {
+        setupAppearance()
+    }
+    
+    // MARK: - UI
+
+    public var body: some View {
+        ZStack(alignment: .bottom) {
+            TabView(selection: $selectedTab) {
+                Tab(
+                    "Projects",
+                    systemImage: "list.bullet.rectangle",
+                    value: TabType.projects
+                ) {
+                    NavigationStack {
+                        ProjectsView(
+                            viewModel: ProjectsViewModelImpl(
+                                dependencies: appDependency.projectsViewModelDependencies
+                            )
+                        )
+                    }
+                }
+                
+                Tab(
+                    "Pipelines",
+                    systemImage: "checklist",
+                    value: TabType.pipelines
+                ) {
+                    NavigationStack {
+                        PlaceholderView(title: "Tab 2")
+                    }
+                }
+                
+                Tab(
+                    "Jobs",
+                    systemImage: "hammer",
+                    value: TabType.jobs
+                ) {
+                    NavigationStack {
+                        PlaceholderView(title: "Tab 3")
+                    }
+                }
+                
+                Tab(
+                    "Settings",
+                    systemImage: "gearshape",
+                    value: TabType.settings
+                ) {
+                    NavigationStack {
+                        PlaceholderView(title: "Settings")
+                    }
+                }
+                
+                Tab(
+                    "Search",
+                    systemImage: "magnifyingglass",
+                    value: TabType.search,
+                    role: .search
+                ) {
+                    SearchView()
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+
+    // MARK: - Placeholder View
+
+    private struct PlaceholderView: View {
+        let title: String
+
+        var body: some View {
+            ZStack {
+                Color(.systemBackground).ignoresSafeArea()
+                Text(title)
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
             }
         }
     }
 }
 
+#if DEBUG
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
+#endif

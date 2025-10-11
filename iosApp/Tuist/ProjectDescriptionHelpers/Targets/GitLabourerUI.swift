@@ -30,3 +30,7 @@ let gitlabourerUITesting = Target.target(
         .target(gitlabourerUI)
     ]
 )
+
+public extension TargetDependency {
+    static let gitlabourerUI = TargetDependency.target(ProjectDescriptionHelpers.gitlabourerUI)
+}
