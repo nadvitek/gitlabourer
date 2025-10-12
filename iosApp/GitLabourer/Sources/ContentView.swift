@@ -45,8 +45,8 @@ public struct ContentView: View {
             }
 
             Tab(
-                "Pipelines",
-                systemImage: "checklist",
+                "MRs",
+                systemImage: "point.topleft.filled.down.to.point.bottomright.curvepath",
                 value: TabType.pipelines
             ) {
                 NavigationStack {
@@ -55,9 +55,9 @@ public struct ContentView: View {
             }
 
             Tab(
-                "Jobs",
-                systemImage: "hammer",
-                value: TabType.jobs
+                "Pipelines",
+                systemImage: "checklist",
+                value: TabType.pipelines
             ) {
                 NavigationStack {
                     PlaceholderView(title: "Tab 3")
@@ -83,6 +83,7 @@ public struct ContentView: View {
                 SearchView()
             }
         }
+        .preferredColorScheme(.dark)
     }
 
     // MARK: - Placeholder View

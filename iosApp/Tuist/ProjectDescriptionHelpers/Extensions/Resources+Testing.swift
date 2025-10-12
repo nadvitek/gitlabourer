@@ -6,22 +6,22 @@ public extension ProjectDescription.SourceFilesList {
     /// - Parameter path: Path where existence of _Testing_ folder should be checked
     /// - Parameter isResourceFolder: When true, looks for `Testing/Resources` instead of `Testing`
     /// - Returns: Glob for testing resources folder if any, nil otherwise
-    static func testing(
-        at path: String,
-        isResourceFolder: Bool = false
-//        isDebug: Bool = Configuration.current.isDebug
-    ) -> ResourceFileElement? {
-        var isDirectory: ObjCBool = false
-        let testingPath = isResourceFolder ? path + "/Testing/Resources" : path + "/Testing"
-
-        let exists = FileManager.default.fileExists(atPath: testingPath, isDirectory: &isDirectory)
-
-        guard exists, isDirectory.boolValue else {
-            return nil
-        }
-
-        return "\(testingPath)/**"
-    }
+//    static func testing(
+//        at path: String,
+//        isResourceFolder: Bool = false
+////        isDebug: Bool = Configuration.current.isDebug
+//    ) -> ResourceFileElement? {
+//        var isDirectory: ObjCBool = false
+//        let testingPath = isResourceFolder ? path + "/Testing/Resources" : path + "/Testing"
+//
+//        let exists = FileManager.default.fileExists(atPath: testingPath, isDirectory: &isDirectory)
+//
+//        guard exists, isDirectory.boolValue else {
+//            return nil
+//        }
+//
+//        return "\(testingPath)/**"
+//    }
 }
 
 public extension ProjectDescription.SourceFileGlob {

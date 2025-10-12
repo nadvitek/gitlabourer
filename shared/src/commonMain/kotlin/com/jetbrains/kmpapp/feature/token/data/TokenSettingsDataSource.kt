@@ -21,18 +21,18 @@ internal class TokenSettingsDataSource(
         .toFlowSettings(dispatcher = Dispatchers.IO)
 
     override suspend fun extractToken(): String? {
-        return getTokens()?.access?.let { extractTokenFromBase64(it) }
+        return getTokens()?.privateToken
     }
 
     @OptIn(ExperimentalSettingsApi::class)
     override suspend fun saveTokens(tokens: AuthTokens) {
-        settings.putString(ACCESS_TOKEN_KEY, tokens.access)
+        settings.putString(ACCESS_TOKEN_KEY, tokens.privateToken)
     }
 
     @OptIn(ExperimentalSettingsApi::class)
     override suspend fun getTokens(): AuthTokens? {
         return settings.getStringOrNull(ACCESS_TOKEN_KEY)?.let { accessToken ->
-            AuthTokens(access = accessToken)
+            AuthTokens(privateToken = accessToken)
         }
     }
 

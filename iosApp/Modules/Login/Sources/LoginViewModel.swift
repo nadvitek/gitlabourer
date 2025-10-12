@@ -50,11 +50,10 @@ public class LoginViewModelImpl: LoginViewModel {
                 if user != nil {
                     UserDefaults.standard.set(true, forKey: "loggedIn")
                 } else {
-                    errorMessage = ""
+                    errorMessage = "Invalid Personal Access Token"
                 }
             } catch {
-                print(error)
-                errorMessage = ""
+                errorMessage = error.localizedDescription.description
             }
         }
     }

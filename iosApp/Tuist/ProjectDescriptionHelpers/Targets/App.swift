@@ -29,7 +29,7 @@ let app = Target.target(
         .gitlabourerUI,
         .search,
         .projects,
-        .login
+        .login,
     ]
 )
 

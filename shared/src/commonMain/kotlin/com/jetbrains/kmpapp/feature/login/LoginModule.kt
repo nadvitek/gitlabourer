@@ -7,6 +7,8 @@ import com.jetbrains.kmpapp.feature.login.data.api.LoginKtorDataSource
 import com.jetbrains.kmpapp.feature.login.domain.LoginRepository
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCaseImpl
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LogoutUseCase
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LogoutUseCaseImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -27,7 +29,14 @@ internal val loginModule: Module = module {
 
     factory<LoginUseCase> {
         LoginUseCaseImpl(
+            tokenLocalDataSource = get(),
             loginRepository = get()
+        )
+    }
+
+    factory<LogoutUseCase> {
+        LogoutUseCaseImpl(
+            tokenLocalDataSource = get()
         )
     }
 }
