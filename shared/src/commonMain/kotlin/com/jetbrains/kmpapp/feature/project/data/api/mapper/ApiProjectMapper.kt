@@ -3,9 +3,9 @@ package com.jetbrains.kmpapp.feature.project.data.api.mapper
 import com.jetbrains.kmpapp.feature.project.data.api.model.ApiNamespace
 import com.jetbrains.kmpapp.feature.project.data.api.model.ApiOwner
 import com.jetbrains.kmpapp.feature.project.data.api.model.ApiProject
-import com.jetbrains.kmpapp.feature.project.domain.data.Namespace
-import com.jetbrains.kmpapp.feature.project.domain.data.Owner
-import com.jetbrains.kmpapp.feature.project.domain.data.Project
+import com.jetbrains.kmpapp.feature.project.domain.model.Namespace
+import com.jetbrains.kmpapp.feature.project.domain.model.Owner
+import com.jetbrains.kmpapp.feature.project.domain.model.Project
 
 internal class ApiProjectMapper {
     fun map(api: ApiProject): Project = Project(

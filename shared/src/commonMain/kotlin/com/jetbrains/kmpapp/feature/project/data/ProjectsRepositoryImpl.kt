@@ -1,9 +1,9 @@
 package com.jetbrains.kmpapp.feature.project.data
 
 import com.jetbrains.kmpapp.feature.project.domain.ProjectsRepository
-import com.jetbrains.kmpapp.feature.project.domain.data.Project
+import com.jetbrains.kmpapp.feature.project.domain.model.Project
 
-class ProjectsRepositoryImpl(
+internal class ProjectsRepositoryImpl(
     private val projectsRemoteDataSource: ProjectsRemoteDataSource
 ) : ProjectsRepository {
 

@@ -1,8 +1,8 @@
 package com.jetbrains.kmpapp.feature.project.data
 
-import com.jetbrains.kmpapp.feature.project.domain.data.Project
+import com.jetbrains.kmpapp.feature.project.domain.model.Project
 
-interface ProjectsRemoteDataSource {
+internal interface ProjectsRemoteDataSource {
 
     suspend fun gatherProjects(pageNumber: Int) : List<Project>
 

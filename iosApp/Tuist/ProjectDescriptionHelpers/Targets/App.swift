@@ -28,7 +28,8 @@ let app = Target.target(
         .kmp,
         .gitlabourerUI,
         .search,
-        .projects
+        .projects,
+        .login
     ]
 )
 

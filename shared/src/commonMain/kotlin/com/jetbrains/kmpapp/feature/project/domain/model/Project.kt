@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.feature.project.domain.data
+package com.jetbrains.kmpapp.feature.project.domain.model
 
 public data class Project(
     public val id: Int,

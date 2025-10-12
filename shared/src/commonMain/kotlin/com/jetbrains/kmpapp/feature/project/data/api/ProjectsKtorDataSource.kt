@@ -4,7 +4,7 @@ import com.jetbrains.kmpapp.core.network.GitlabApiClient
 import com.jetbrains.kmpapp.feature.project.data.ProjectsRemoteDataSource
 import com.jetbrains.kmpapp.feature.project.data.api.mapper.ApiProjectMapper
 import com.jetbrains.kmpapp.feature.project.data.api.model.ApiProject
-import com.jetbrains.kmpapp.feature.project.domain.data.Project
+import com.jetbrains.kmpapp.feature.project.domain.model.Project
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class ProjectsKtorDataSource(

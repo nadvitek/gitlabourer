@@ -1,7 +1,7 @@
 package com.jetbrains.kmpapp.feature.project.domain
 
-import com.jetbrains.kmpapp.feature.project.domain.data.Project
+import com.jetbrains.kmpapp.feature.project.domain.model.Project
 
-interface ProjectsRepository {
+internal interface ProjectsRepository {
     suspend fun getProjects(pageNumber: Int) : List<Project>
 }

@@ -1,6 +1,8 @@
 package com.jetbrains.kmpapp.di
 
-import com.jetbrains.kmpapp.feature.project.domain.GetProjectsUseCase
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
+import com.jetbrains.kmpapp.feature.login.loginModule
+import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.projectModule
 import com.jetbrains.kmpapp.feature.repository.repositoryDetailModule
 import com.jetbrains.kmpapp.feature.token.tokenModule
@@ -16,6 +18,7 @@ public fun initKoin(extraModules: List<Module>) {
             repositoryDetailModule,
             tokenModule,
             platformSpecificModule,
+            loginModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -24,5 +27,8 @@ public fun initKoin(extraModules: List<Module>) {
 public class AppDependency : KoinComponent {
 
     public val getProjectsUseCase: GetProjectsUseCase
+        get() = get()
+
+    public val loginUseCase: LoginUseCase
         get() = get()
 }

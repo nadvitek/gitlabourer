@@ -4,8 +4,8 @@ import com.jetbrains.kmpapp.core.network.apiModule
 import com.jetbrains.kmpapp.feature.project.data.ProjectsRemoteDataSource
 import com.jetbrains.kmpapp.feature.project.data.ProjectsRepositoryImpl
 import com.jetbrains.kmpapp.feature.project.data.api.ProjectsKtorDataSource
-import com.jetbrains.kmpapp.feature.project.domain.GetProjectsUseCase
-import com.jetbrains.kmpapp.feature.project.domain.GetProjectsUseCaseImpl
+import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
+import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCaseImpl
 import com.jetbrains.kmpapp.feature.project.domain.ProjectsRepository
 import org.koin.core.module.Module
 import org.koin.dsl.module

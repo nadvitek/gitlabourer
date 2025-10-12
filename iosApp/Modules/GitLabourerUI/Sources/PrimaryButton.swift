@@ -32,6 +32,7 @@ public struct PrimaryButton: View {
                 .lineLimit(1)
                 .padding(.horizontal, 32)
                 .padding(.vertical, 12)
+                .frame(minWidth: 150)
                 .background(GitlabColors.gitlabOrangeTwo.swiftUIColor)
                 .clipShape(.rect(cornerRadius: 20))
                 .overlay {

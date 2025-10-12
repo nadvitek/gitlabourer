@@ -1,0 +1,33 @@
+package com.jetbrains.kmpapp.feature.login
+
+import com.jetbrains.kmpapp.core.network.apiModule
+import com.jetbrains.kmpapp.feature.login.data.LoginRemoteDataSource
+import com.jetbrains.kmpapp.feature.login.data.LoginRepositoryImpl
+import com.jetbrains.kmpapp.feature.login.data.api.LoginKtorDataSource
+import com.jetbrains.kmpapp.feature.login.domain.LoginRepository
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCaseImpl
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+internal val loginModule: Module = module {
+    includes(apiModule)
+
+    single<LoginRemoteDataSource> {
+        LoginKtorDataSource(
+            apiClient = get()
+        )
+    }
+
+    single<LoginRepository> {
+        LoginRepositoryImpl(
+            loginRemoteDataSource = get()
+        )
+    }
+
+    factory<LoginUseCase> {
+        LoginUseCaseImpl(
+            loginRepository = get()
+        )
+    }
+}

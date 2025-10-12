@@ -29,63 +29,60 @@ public struct ContentView: View {
     // MARK: - UI
 
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            TabView(selection: $selectedTab) {
-                Tab(
-                    "Projects",
-                    systemImage: "list.bullet.rectangle",
-                    value: TabType.projects
-                ) {
-                    NavigationStack {
-                        ProjectsView(
-                            viewModel: ProjectsViewModelImpl(
-                                dependencies: appDependency.projectsViewModelDependencies
-                            )
+        TabView(selection: $selectedTab) {
+            Tab(
+                "Projects",
+                systemImage: "list.bullet.rectangle",
+                value: TabType.projects
+            ) {
+                NavigationStack {
+                    ProjectsView(
+                        viewModel: ProjectsViewModelImpl(
+                            dependencies: appDependency.projectsViewModelDependencies
                         )
-                    }
-                }
-                
-                Tab(
-                    "Pipelines",
-                    systemImage: "checklist",
-                    value: TabType.pipelines
-                ) {
-                    NavigationStack {
-                        PlaceholderView(title: "Tab 2")
-                    }
-                }
-                
-                Tab(
-                    "Jobs",
-                    systemImage: "hammer",
-                    value: TabType.jobs
-                ) {
-                    NavigationStack {
-                        PlaceholderView(title: "Tab 3")
-                    }
-                }
-                
-                Tab(
-                    "Settings",
-                    systemImage: "gearshape",
-                    value: TabType.settings
-                ) {
-                    NavigationStack {
-                        PlaceholderView(title: "Settings")
-                    }
-                }
-                
-                Tab(
-                    "Search",
-                    systemImage: "magnifyingglass",
-                    value: TabType.search,
-                    role: .search
-                ) {
-                    SearchView()
+                    )
                 }
             }
+
+            Tab(
+                "Pipelines",
+                systemImage: "checklist",
+                value: TabType.pipelines
+            ) {
+                NavigationStack {
+                    PlaceholderView(title: "Tab 2")
+                }
+            }
+
+            Tab(
+                "Jobs",
+                systemImage: "hammer",
+                value: TabType.jobs
+            ) {
+                NavigationStack {
+                    PlaceholderView(title: "Tab 3")
+                }
+            }
+
+            Tab(
+                "Settings",
+                systemImage: "gearshape",
+                value: TabType.settings
+            ) {
+                NavigationStack {
+                    PlaceholderView(title: "Settings")
+                }
+            }
+
+            Tab(
+                "Search",
+                systemImage: "magnifyingglass",
+                value: TabType.search,
+                role: .search
+            ) {
+                SearchView()
+            }
         }
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - Placeholder View

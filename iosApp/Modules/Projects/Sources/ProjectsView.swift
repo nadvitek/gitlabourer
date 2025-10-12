@@ -18,7 +18,7 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
     public var body: some View {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(GitlabColors.gitlabDark.swiftUIColor)
+            .gitlabourerBackground()
             .onAppear(perform: viewModel.onAppear)
             .toolbar {
                 ToolbarItemTransparent(placement: .topBarLeading) {
