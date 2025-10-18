@@ -39,6 +39,7 @@ Temporary Items
 # Xcode
 #
 iosApp/build/
+iosApp/GitLabourer/.build
 iosApp/*.pbxuser
 !iosApp/default.pbxuser
 iosApp/*.mode1v3
