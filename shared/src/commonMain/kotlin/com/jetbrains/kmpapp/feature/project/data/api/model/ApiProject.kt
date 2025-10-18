@@ -15,6 +15,10 @@ internal data class ApiProject(
     internal val webUrl: String,
     @SerialName("visibility")
     internal val visibility: String,
+    @SerialName("star_count")
+    internal val starCount: Int?,
+    @SerialName("forks_count")
+    internal val forksCount: Int?,
     @SerialName("created_at")
     internal val createdAt: String,
     @SerialName("last_activity_at")

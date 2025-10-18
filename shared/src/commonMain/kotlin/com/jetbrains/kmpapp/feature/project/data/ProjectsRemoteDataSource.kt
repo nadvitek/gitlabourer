@@ -7,7 +7,7 @@ internal interface ProjectsRemoteDataSource {
     suspend fun gatherProjects(pageNumber: Int) : List<Project>
 
     companion object Endpoints {
-        const val GROUPS = "groups"
+        const val AVATAR = "avatar"
         const val PROJECTS = "projects"
 
         fun projectsWithPage(page: Int): String {
@@ -16,6 +16,10 @@ internal interface ProjectsRemoteDataSource {
             } else {
                 "$PROJECTS?page=$page"
             }
+        }
+
+        fun projectAvatar(id: Int): String {
+            return "$PROJECTS/$id/$AVATAR"
         }
     }
 }

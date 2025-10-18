@@ -14,6 +14,7 @@ import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.URLBuilder
 import io.ktor.http.appendPathSegments
@@ -60,6 +61,7 @@ internal class GitlabApiClient(
             install(PrivateTokenPlugin.Plugin) {
                 tokenProvider = { tokenLocalDataSource.extractToken() }
                 requireToken = true
+                followRedirects = true
             }
         }
     }
@@ -69,6 +71,15 @@ internal class GitlabApiClient(
 
     suspend inline fun <reified T, reified R> post(endpoint: String, body: R): T =
         httpClient.post(endpoint) { setBody(body) }.body()
+
+    suspend fun getRaw(
+        endpoint: String,
+        accept: ContentType = ContentType.Any
+    ): HttpResponse {
+        return httpClient.get(endpoint) {
+            accept(accept)
+        }
+    }
 
     fun close() = httpClient.close()
 }

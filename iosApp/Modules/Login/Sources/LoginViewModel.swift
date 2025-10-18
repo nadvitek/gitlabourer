@@ -49,6 +49,7 @@ public class LoginViewModelImpl: LoginViewModel {
 
                 if user != nil {
                     UserDefaults.standard.set(true, forKey: "loggedIn")
+                    UserDefaults.standard.set(token, forKey: "token")
                 } else {
                     errorMessage = "Invalid Personal Access Token"
                 }

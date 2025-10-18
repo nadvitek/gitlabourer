@@ -54,7 +54,7 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
     }
     
     public func logout() {
-        // TODO: - Implement later
+        UserDefaults.standard.set(false, forKey: "loggedIn")
     }
     
     // MARK: - Private helpers

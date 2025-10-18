@@ -6,7 +6,7 @@ internal struct GitlabourerBackgroundModifier: ViewModifier {
             .background(
                 LinearGradient(
                     colors: [
-                        GitlabColors.gitlabDark.swiftUIColor.opacity(0.9),
+                        GitlabColors.gitlabDark.swiftUIColor.opacity(0.6),
                         GitlabColors.gitlabAccent.swiftUIColor.opacity(0.75)
                     ],
                     startPoint: .topLeading,

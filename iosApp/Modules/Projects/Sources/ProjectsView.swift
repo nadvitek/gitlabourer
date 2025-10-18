@@ -54,13 +54,14 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
             ScrollViewThatFits {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(projects, id: \.id) { project in
-                        Text(project.name)
-                            .font(.title)
-                            .frame(
-                                maxWidth: .infinity,
-                                alignment: .leading
-                            )
-                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+//                        Text(project.name)
+//                            .font(.title)
+//                            .frame(
+//                                maxWidth: .infinity,
+//                                alignment: .leading
+//                            )
+//                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                        ProjectItemView(project: project)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -92,21 +93,7 @@ struct ProjectsView_Preview: PreviewProvider {
             viewModel: ProjectsViewModelMock(
                 screenState: .loaded(
                     [
-                        .init(
-                            id: 0,
-                            name: "A",
-                            description: nil,
-                            webUrl: "",
-                            visibility: "",
-                            createdAt: "",
-                            lastActivityAt: "",
-                            namespace: .init(
-                                id: 0,
-                                name: "",
-                                path: ""
-                            ),
-                            owner: nil
-                        )
+                        .mock
                     ]
                 )
             )

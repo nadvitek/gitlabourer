@@ -2,8 +2,9 @@ import SwiftUI
 
 public struct SearchView: View {
     @State private var query: String = ""
+    @State private var isPresented: Bool = true
     @FocusState private var focused: Bool
-    
+
     public init() {}
 
     public var body: some View {
@@ -26,18 +27,15 @@ public struct SearchView: View {
         }
         .searchable(
             text: $query,
-            placement: .sidebar,
+            isPresented: $isPresented,
+            placement: .toolbarPrincipal,
             prompt: "Search"
         )
+        .focusable(true)
         .searchFocused($focused)
-//        .task {
-//            // Ensures the field becomes first responder as soon as the view appears.
-////            isSearchFocused = true
-//            
-//            // If you ever see it not take focus reliably, uncomment the small delay:
-//            try? await Task.sleep(nanoseconds: 1_000_000_000)
-//            focused = true
-//        }
+        .onAppear {
+            isPresented = true
+        }
     }
 }
 
