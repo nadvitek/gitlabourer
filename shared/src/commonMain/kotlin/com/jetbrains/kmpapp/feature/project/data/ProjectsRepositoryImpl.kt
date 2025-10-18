@@ -10,4 +10,8 @@ internal class ProjectsRepositoryImpl(
     override suspend fun getProjects(pageNumber: Int): List<Project> {
         return projectsRemoteDataSource.gatherProjects(pageNumber)
     }
+
+    override suspend fun searchProjects(text: String): List<Project> {
+        return projectsRemoteDataSource.searchProjects(text)
+    }
 }

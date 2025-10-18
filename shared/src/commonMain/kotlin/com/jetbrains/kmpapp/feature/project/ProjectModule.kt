@@ -7,6 +7,8 @@ import com.jetbrains.kmpapp.feature.project.data.api.ProjectsKtorDataSource
 import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCaseImpl
 import com.jetbrains.kmpapp.feature.project.domain.ProjectsRepository
+import com.jetbrains.kmpapp.feature.project.domain.usecase.SearchProjectsUseCase
+import com.jetbrains.kmpapp.feature.project.domain.usecase.SearchProjectsUseCaseImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -27,6 +29,12 @@ public val projectModule: Module = module {
 
     factory<GetProjectsUseCase> {
         GetProjectsUseCaseImpl(
+            projectsRepository = get()
+        )
+    }
+
+    factory<SearchProjectsUseCase> {
+        SearchProjectsUseCaseImpl(
             projectsRepository = get()
         )
     }

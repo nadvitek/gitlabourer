@@ -51,23 +51,23 @@ public struct LoginView<ViewModel: LoginViewModel>: View {
                     isLoading: viewModel.isLoading,
                     action: viewModel.login
                 )
+
+                Spacer()
+
+                HStack(spacing: 4) {
+                    Text("Above the Mill s.r.o.")
+                        .fontWeight(.bold)
+
+                    Image(systemName: "fanblades.fill")
+                        .symbolEffect(.rotate.byLayer, options: .repeat(.periodic(delay: 0.0)))
+                }
+                .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
             }
             .padding(.horizontal, 16)
         }
         .scrollDisabled(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .gitlabourerBackground()
-        .safeAreaInset(edge: .bottom) {
-            HStack(spacing: 4) {
-                Text("Above the Mill s.r.o.")
-                    .fontWeight(.bold)
-
-                Image(systemName: "fanblades.fill")
-                    .symbolEffect(.rotate.byLayer, options: .repeat(.periodic(delay: 0.0)))
-            }
-            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-            .padding(.bottom, 50)
-        }
     }
 }
 

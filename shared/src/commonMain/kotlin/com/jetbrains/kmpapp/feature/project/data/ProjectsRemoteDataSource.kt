@@ -4,7 +4,8 @@ import com.jetbrains.kmpapp.feature.project.domain.model.Project
 
 internal interface ProjectsRemoteDataSource {
 
-    suspend fun gatherProjects(pageNumber: Int) : List<Project>
+    suspend fun gatherProjects(pageNumber: Int): List<Project>
+    suspend fun searchProjects(text: String): List<Project>
 
     companion object Endpoints {
         const val AVATAR = "avatar"
@@ -16,6 +17,10 @@ internal interface ProjectsRemoteDataSource {
             } else {
                 "$PROJECTS?page=$page"
             }
+        }
+
+        fun searchProjects(text: String): String {
+            return "$PROJECTS?search=$text"
         }
 
         fun projectAvatar(id: Int): String {

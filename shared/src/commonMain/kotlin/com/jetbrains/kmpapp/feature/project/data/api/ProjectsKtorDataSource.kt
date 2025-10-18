@@ -37,7 +37,28 @@ internal class ProjectsKtorDataSource(
         projects.map { api ->
             async {
                 val mapped = apiProjectMapper.map(api)
-                // Try to fetch a small avatar (e.g., 64px)
+                val payload = runCatching { avatarData(api.id, size = 64) }.getOrNull()
+                mapped.copy(
+                    avatarUrl = payload
+                )
+            }
+        }.awaitAll()
+    }
+
+    override suspend fun searchProjects(text: String): List<Project> = coroutineScope {
+        val projects = try {
+            apiClient.get<List<ApiProject>>(
+                endpoint = ProjectsRemoteDataSource.searchProjects(text)
+            )
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            e.printStackTrace()
+            emptyList()
+        }
+
+        projects.map { api ->
+            async {
+                val mapped = apiProjectMapper.map(api)
                 val payload = runCatching { avatarData(api.id, size = 64) }.getOrNull()
                 mapped.copy(
                     avatarUrl = payload

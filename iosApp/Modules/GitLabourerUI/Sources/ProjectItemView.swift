@@ -1,12 +1,15 @@
 import SwiftUI
-import GitLabourerUI
 import shared
 
-struct ProjectItemView: View {
+public struct ProjectItemView: View {
 
-    let project: Project
+    private let project: Project
 
-    var body: some View {
+    public init(project: Project) {
+        self.project = project
+    }
+
+    public var body: some View {
         HStack(spacing: 8) {
             projectImage
 
@@ -116,7 +119,7 @@ extension String {
     .gitlabourerBackground()
 }
 
-extension Project {
+public extension Project {
     static var mock: Project {
         Project(
             id: 1944,

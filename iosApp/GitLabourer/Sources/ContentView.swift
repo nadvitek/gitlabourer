@@ -80,7 +80,11 @@ public struct ContentView: View {
                 value: TabType.search,
                 role: .search
             ) {
-                SearchView()
+                SearchView(
+                    viewModel: SearchViewModelImpl(
+                        dependencies: appDependency.searchViewModelDependencies
+                    )
+                )
             }
         }
         .preferredColorScheme(.dark)
