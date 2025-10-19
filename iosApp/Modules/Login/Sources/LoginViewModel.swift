@@ -1,6 +1,7 @@
 import Foundation
 import shared
 import Observation
+import Core
 
 // MARK: - LoginViewModel
 
@@ -26,11 +27,16 @@ public class LoginViewModelImpl: LoginViewModel {
     // MARK: - Private properties
 
     private let dependencies: LoginViewModelDependencies
+    private weak var flowDelegate: LoginFlowDelegate?
 
     // MARK: - Initializers
 
-    public init(dependencies: LoginViewModelDependencies) {
+    public init(
+        dependencies: LoginViewModelDependencies,
+        flowDelegate: LoginFlowDelegate?
+    ) {
         self.dependencies = dependencies
+        self.flowDelegate = flowDelegate
     }
 
     // MARK: - Internal interface
@@ -48,8 +54,9 @@ public class LoginViewModelImpl: LoginViewModel {
                 )
 
                 if user != nil {
-                    UserDefaults.standard.set(true, forKey: "loggedIn")
-                    UserDefaults.standard.set(token, forKey: "token")
+                    UserDefaults.standard.isLoggedIn = true
+
+                    flowDelegate?.logIn()
                 } else {
                     errorMessage = "Invalid Personal Access Token"
                 }

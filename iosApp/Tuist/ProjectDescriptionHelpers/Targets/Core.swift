@@ -1,11 +1,11 @@
 import Foundation
 import ProjectDescription
 
-private let targetName = "Login"
+private let targetName = "Core"
 private let basePath = "Modules/" + targetName
 private let bundleId = "cz.nadvitek.\(targetName)"
 
-let login = Target.target(
+let core = Target.target(
     name: targetName,
     destinations: .iOS,
     product: .framework,
@@ -16,13 +16,12 @@ let login = Target.target(
         .testing(at: basePath)
     ].compactMap { $0 }),
     dependencies: [
-        .gitlabourerUI,
         .kmp,
-        .core
+        .ackategories
     ]
 )
 
-let loginTesting = Target.target(
+let coreTesting = Target.target(
     name: "\(targetName)Tests",
     destinations: .iOS,
     product: .unitTests,
@@ -31,10 +30,10 @@ let loginTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(login)
+        .target(core)
     ]
 )
 
 public extension TargetDependency {
-    static let login = TargetDependency.target(ProjectDescriptionHelpers.login)
+    static let core = TargetDependency.target(ProjectDescriptionHelpers.core)
 }

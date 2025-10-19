@@ -8,29 +8,31 @@ let app = Target.target(
     bundleId: "cz.nadvitek.GitLabourer",
     infoPlist: .extendingDefault(with: [
         "UILaunchScreen": [
+        ],
+        "UIApplicationSceneManifest": [
+            "UIApplicationSupportsMultipleScenes": false,
+            "UISceneConfigurations": [
+                "UIWindowSceneSessionRoleApplication": [
+                    [
+                        "UISceneConfigurationName": "Default Configuration",
+                        "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
+                        "UISceneClassName": "UIWindowScene"
+                    ]
+                ]
+            ]
         ]
-//        "UIApplicationSceneManifest": [
-//            "UIApplicationSupportsMultipleScenes": false,
-//            "UISceneConfigurations": [
-//                "UIWindowSceneSessionRoleApplication": [
-//                    [
-//                        "UISceneConfigurationName": "Default Configuration",
-//                        "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
-//                        "UISceneClassName": "UIWindowScene"
-//                    ]
-//                ]
-//            ]
-//        ]
     ]),
     sources: ["GitLabourer/Sources/**"],
     resources: ["GitLabourer/Resources/**"],
     dependencies: [
         .kmp,
+        .core,
         .gitlabourerUI,
         .search,
         .projects,
         .login,
-        .repository
+        .repository,
+        .ackategories
     ]
 )
 

@@ -23,6 +23,10 @@ let package = Package(
             url: "https://github.com/AckeeCZ/ackee-ios-snapshots",
             revision: "28f9aba"
         ),
+        .package(
+            url: "https://github.com/AckeeCZ/ACKategories",
+            .upToNextMajor(from: "6.15.0")
+        ),
     ]
 )
 

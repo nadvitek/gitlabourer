@@ -3,6 +3,7 @@ import SwiftUI
 import GitLabourerUI
 import Projects
 import Search
+import UIKit
 
 struct ContentView: View {
 
@@ -87,7 +88,6 @@ struct ContentView: View {
                 )
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - Placeholder View

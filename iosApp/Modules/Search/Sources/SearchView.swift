@@ -1,5 +1,4 @@
 import SwiftUI
-import Projects
 import GitLabourerUI
 import shared
 
@@ -26,12 +25,11 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
                 .searchable(
                     text: $viewModel.text,
                     isPresented: $viewModel.isPresented,
-                    placement: .toolbarPrincipal,
+                    placement: .sidebar,
                     prompt: "Search"
                 )
-                .navigationTitle("Search")
-                .focusable(true)
-                .searchFocused($focused)
+//                .focusable(true)
+//                .searchFocused($focused)
                 .onAppear {
                     viewModel.isPresented = true
                 }
@@ -78,7 +76,7 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
         if projects.isEmpty {
             ContentUnavailableView.search
                 .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.top, 100)
         } else {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(projects, id: \.id) { project in
@@ -88,6 +86,18 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
             .padding(.horizontal, 16)
         }
     }
+}
+
+public func createSearchViewController(
+    dependencies: SearchViewModelDependencies,
+    flowDelegate: SearchFlowDelegate
+) -> UIViewController {
+    SearchView(
+        viewModel: SearchViewModelImpl(
+            dependencies: dependencies
+        )
+    )
+    .hosting(isTabBarHidden: false)
 }
 
 #Preview {

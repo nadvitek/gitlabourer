@@ -1,6 +1,15 @@
 {
-  "originHash" : "bb8796e310cde74dabf322ee48becedaa3f6e0b32e00afc64c4980fd0de7aa15",
+  "originHash" : "c05ce9dcaff161bc6ae71cb0514587b6c1c2d0a3fe300e00636413c0b2d84905",
   "pins" : [
+    {
+      "identity" : "ackategories",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AckeeCZ/ACKategories.git",
+      "state" : {
+        "revision" : "491c5d6f43bb1a76161189a56b9f8ca61a70b333",
+        "version" : "6.16.0"
+      }
+    },
     {
       "identity" : "ackee-ios-snapshots",
       "kind" : "remoteSourceControl",

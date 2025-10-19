@@ -28,7 +28,7 @@ public struct PrimaryButton: View {
                 .opacity(isLoading ? 0 : 1)
                 .font(.body)
                 .fontWeight(.bold)
-                .foregroundStyle(GitlabColors.gitlabAccent.swiftUIColor)
+                .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
                 .lineLimit(1)
                 .padding(.horizontal, 32)
                 .padding(.vertical, 12)

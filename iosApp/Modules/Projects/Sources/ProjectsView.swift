@@ -52,6 +52,7 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                 )
         case let .loaded(projects):
             ScrollViewThatFits {
+                Text("AAAA")
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(projects, id: \.id) { project in
                         ProjectItemView(project: project)
@@ -76,6 +77,18 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
             }
         }
     }
+}
+
+public func createProjectsViewController(
+    dependencies: ProjectsViewModelDependencies,
+    flowDelegate: ProjectsFlowDelegate
+) -> UIViewController {
+    ProjectsView(
+        viewModel: ProjectsViewModelImpl(
+            dependencies: dependencies
+        )
+    )
+    .hosting(isTabBarHidden: false)
 }
 
 #if DEBUG

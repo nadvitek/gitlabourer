@@ -71,10 +71,17 @@ struct LoginView<ViewModel: LoginViewModel>: View {
     }
 }
 
-public func createLoginView(dependencies: LoginViewModelDependencies) -> some View {
+public func createLoginViewController(
+    dependencies: LoginViewModelDependencies,
+    flowDelegate: LoginFlowDelegate?
+) -> UIViewController {
     LoginView(
-        viewModel: LoginViewModelImpl(dependencies: dependencies)
+        viewModel: LoginViewModelImpl(
+            dependencies: dependencies,
+            flowDelegate: flowDelegate
+        )
     )
+    .hosting()
 }
 
 #if DEBUG
