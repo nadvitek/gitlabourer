@@ -5,5 +5,6 @@ public let projectTargets = [
     projects, projectsTesting,
     search, searchTesting,
     login, loginTesting,
-    gitlabourerUI, gitlabourerUITesting
+    repository, repositoryTesting,
+    gitlabourerUI, gitlabourerUITesting,
 ]

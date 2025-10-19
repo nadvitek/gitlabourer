@@ -30,6 +30,7 @@ let app = Target.target(
         .search,
         .projects,
         .login,
+        .repository
     ]
 )
 

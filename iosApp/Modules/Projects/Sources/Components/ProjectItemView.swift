@@ -1,5 +1,7 @@
 import SwiftUI
 import shared
+import GitLabourerUI
+import Repository
 
 public struct ProjectItemView: View {
 
@@ -10,6 +12,14 @@ public struct ProjectItemView: View {
     }
 
     public var body: some View {
+        NavigationLink {
+            ProjectDetailView()
+        } label: {
+            content
+        }
+    }
+
+    private var content: some View {
         HStack(spacing: 8) {
             projectImage
 

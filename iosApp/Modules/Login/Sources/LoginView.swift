@@ -1,7 +1,7 @@
 import SwiftUI
 import GitLabourerUI
 
-public struct LoginView<ViewModel: LoginViewModel>: View {
+struct LoginView<ViewModel: LoginViewModel>: View {
 
     // MARK: - Properties
 
@@ -9,13 +9,13 @@ public struct LoginView<ViewModel: LoginViewModel>: View {
 
     // MARK: - Initialiezers
 
-    public init(viewModel: ViewModel) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
 
     // MARK: - UI
 
-    public var body: some View {
+    var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 VStack(spacing: 0) {
@@ -69,6 +69,12 @@ public struct LoginView<ViewModel: LoginViewModel>: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .gitlabourerBackground()
     }
+}
+
+public func createLoginView(dependencies: LoginViewModelDependencies) -> some View {
+    LoginView(
+        viewModel: LoginViewModelImpl(dependencies: dependencies)
+    )
 }
 
 #if DEBUG

@@ -4,7 +4,7 @@ import GitLabourerUI
 import Projects
 import Search
 
-public struct ContentView: View {
+struct ContentView: View {
 
     // MARK: - Tabs
 
@@ -22,13 +22,13 @@ public struct ContentView: View {
     
     // MARK: - Initializers
 
-    public init() {
+    init() {
         setupAppearance()
     }
     
     // MARK: - UI
 
-    public var body: some View {
+    var body: some View {
         TabView(selection: $selectedTab) {
             Tab(
                 "Projects",

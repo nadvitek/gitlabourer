@@ -1,4 +1,5 @@
 import SwiftUI
+import Projects
 import GitLabourerUI
 import shared
 
@@ -75,18 +76,9 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
     @ViewBuilder
     private func loadedState(_ projects: [Project]) -> some View {
         if projects.isEmpty {
-            VStack(spacing: 20) {
-                Text("No result")
-                    .font(.headline)
-
-                Image(systemName: "text.magnifyingglass")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50)
-                    .symbolEffect(.bounce)
-            }
-            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ContentUnavailableView.search
+                .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(projects, id: \.id) { project in
@@ -99,5 +91,5 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
 }
 
 #Preview {
-    SearchView(viewModel: SearchViewModelMock())
+    SearchView(viewModel: SearchViewModelMock(screenState: .loaded([])))
 }

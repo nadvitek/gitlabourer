@@ -16,6 +16,7 @@ let search = Target.target(
         .testing(at: basePath)
     ].compactMap { $0 }),
     dependencies: [
+        .projects,
         .gitlabourerUI,
         .kmp
     ]

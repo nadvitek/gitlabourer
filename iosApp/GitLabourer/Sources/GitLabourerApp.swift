@@ -16,11 +16,7 @@ struct GitLabourerApp: App {
             if loggedIn {
                 ContentView()
             } else {
-                LoginView(
-                    viewModel: LoginViewModelImpl(
-                        dependencies: appDependency.loginViewModelDependencies
-                    )
-                )
+                createLoginView(dependencies: appDependency.loginViewModelDependencies)
             }
         }
     }
