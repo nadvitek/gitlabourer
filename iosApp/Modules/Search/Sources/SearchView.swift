@@ -28,8 +28,6 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
                     placement: .sidebar,
                     prompt: "Search"
                 )
-//                .focusable(true)
-//                .searchFocused($focused)
                 .onAppear {
                     viewModel.isPresented = true
                 }
@@ -80,7 +78,10 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
         } else {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(projects, id: \.id) { project in
-                    ProjectItemView(project: project)
+                    ProjectItemView(
+                        project: project,
+                        action: viewModel.onProjectClick
+                    )
                 }
             }
             .padding(.horizontal, 16)
@@ -94,7 +95,8 @@ public func createSearchViewController(
 ) -> UIViewController {
     SearchView(
         viewModel: SearchViewModelImpl(
-            dependencies: dependencies
+            dependencies: dependencies,
+            flowDelegate: flowDelegate
         )
     )
     .hosting(isTabBarHidden: false)

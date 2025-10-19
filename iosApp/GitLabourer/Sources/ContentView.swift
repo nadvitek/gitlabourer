@@ -39,7 +39,8 @@ struct ContentView: View {
                 NavigationStack {
                     ProjectsView(
                         viewModel: ProjectsViewModelImpl(
-                            dependencies: appDependency.projectsViewModelDependencies
+                            dependencies: appDependency.projectsViewModelDependencies,
+                            flowDelegate: nil
                         )
                     )
                 }
@@ -83,7 +84,8 @@ struct ContentView: View {
             ) {
                 SearchView(
                     viewModel: SearchViewModelImpl(
-                        dependencies: appDependency.searchViewModelDependencies
+                        dependencies: appDependency.searchViewModelDependencies,
+                        flowDelegate: nil
                     )
                 )
             }

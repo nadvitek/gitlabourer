@@ -1,6 +1,7 @@
 import Foundation
 import shared
 import Observation
+import shared
 
 // MARK: - ProjectsViewModel
 
@@ -11,6 +12,7 @@ public protocol SearchViewModel {
     var text: String { get set }
 
     func retry()
+    func onProjectClick(_ project: Project)
 }
 
 // MARK: - ScreenState
@@ -39,12 +41,17 @@ public class SearchViewModelImpl: SearchViewModel {
 
     private var searchTask: Task<Void, Never>?
     private let dependencies: SearchViewModelDependencies
+    private weak var flowDelegate: SearchFlowDelegate?
     private var projects: [Project] = []
 
     // MARK: - Initializers
 
-    public init(dependencies: SearchViewModelDependencies) {
+    public init(
+        dependencies: SearchViewModelDependencies,
+        flowDelegate: SearchFlowDelegate?
+    ) {
         self.dependencies = dependencies
+        self.flowDelegate = flowDelegate
     }
 
     // MARK: - Internal helpers
@@ -52,6 +59,10 @@ public class SearchViewModelImpl: SearchViewModel {
     public func retry() {
         screenState = .loading
         searchData()
+    }
+
+    public func onProjectClick(_ project: Project) {
+        flowDelegate?.onProjectClick(project)
     }
 
     // MARK: - Private helpers

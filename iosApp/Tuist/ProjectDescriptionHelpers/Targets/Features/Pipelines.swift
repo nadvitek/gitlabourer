@@ -1,11 +1,11 @@
 import Foundation
 import ProjectDescription
 
-private let targetName = "Projects"
+private let targetName = "Pipelines"
 private let basePath = "Modules/" + targetName
 private let bundleId = "cz.nadvitek.\(targetName)"
 
-let projects = Target.target(
+let pipelines = Target.target(
     name: targetName,
     destinations: .iOS,
     product: .framework,
@@ -21,7 +21,7 @@ let projects = Target.target(
     ]
 )
 
-let projectsTesting = Target.target(
+let pipelinesTesting = Target.target(
     name: "\(targetName)Tests",
     destinations: .iOS,
     product: .unitTests,
@@ -30,10 +30,10 @@ let projectsTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(projects)
+        .target(pipelines)
     ]
 )
 
 public extension TargetDependency {
-    static let projects = TargetDependency.target(ProjectDescriptionHelpers.projects)
+    static let pipelines = TargetDependency.target(ProjectDescriptionHelpers.pipelines)
 }

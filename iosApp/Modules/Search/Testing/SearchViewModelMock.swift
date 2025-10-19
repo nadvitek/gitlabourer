@@ -1,4 +1,4 @@
-
+import shared
 
 final class SearchViewModelMock: SearchViewModel {
     var screenState: SearchScreenState
@@ -11,4 +11,5 @@ final class SearchViewModelMock: SearchViewModel {
     }
 
     func retry() {}
+    func onProjectClick(_ project: Project) {}
 }

@@ -1,29 +1,25 @@
 import Foundation
 import ACKategories
 import UIKit
-import Search
-import shared
+import Projects
 import ProjectDetail
+import GitLabourerUI
+import shared
 
-final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate {
+final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate {
 
     override func start() -> UIViewController {
-        let vc = createSearchViewController(
-            dependencies: appDependency.searchViewModelDependencies,
+        let vc = createProjectsViewController(
+            dependencies: appDependency.projectsViewModelDependencies,
             flowDelegate: self
         )
-        vc.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
 
         let navVC = UINavigationController(
             rootViewController: vc
         )
 
-        let searchTab = UISearchTab { _ in
-            navVC
-        }
-
-        navVC.tabBarItem.title = "Search"
-        navVC.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        navVC.tabBarItem.title = "Projects"
+        navVC.tabBarItem.image = UIImage(systemName: "list.bullet.rectangle")
 
         navVC.setupCustomBackGestureDelegate()
 

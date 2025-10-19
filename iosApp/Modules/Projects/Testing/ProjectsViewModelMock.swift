@@ -1,4 +1,5 @@
 import Foundation
+import shared
 
 class ProjectsViewModelMock: ProjectsViewModel {
     
@@ -18,4 +19,5 @@ class ProjectsViewModelMock: ProjectsViewModel {
     func onAppear() {}
     func retry() {}
     func logout() {}
+    func onProjectClick(_ project: Project) {}
 }

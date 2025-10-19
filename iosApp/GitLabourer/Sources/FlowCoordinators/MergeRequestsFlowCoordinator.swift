@@ -2,20 +2,16 @@ import Foundation
 import ACKategories
 import UIKit
 import Projects
+import SwiftUI
 
-final class ProjecstFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate {
+final class MergeRequestsFlowCoordinator: Base.FlowCoordinatorNoDeepLink {
 
     override func start() -> UIViewController {
-        let vc = createProjectsViewController(
-            dependencies: appDependency.projectsViewModelDependencies,
-            flowDelegate: self
-        )
-
         let navVC = UINavigationController(
-            rootViewController: vc
+            rootViewController: EmptyView().hosting(isTabBarHidden: false)
         )
 
-        navVC.tabBarItem.title = "Projects"
+        navVC.tabBarItem.title = "MRs"
         navVC.tabBarItem.image = UIImage(systemName: "point.topleft.filled.down.to.point.bottomright.curvepath")
 
         navVC.setupCustomBackGestureDelegate()

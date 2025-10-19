@@ -11,6 +11,7 @@ public protocol ProjectsViewModel {
     func onAppear()
     func retry()
     func logout()
+    func onProjectClick(_ project: Project)
 }
 
 // MARK: - ScreenState
@@ -33,12 +34,17 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
 
     private var pageNumber: Int = 0
     private let dependencies: ProjectsViewModelDependencies
+    private weak var flowDelegate: ProjectsFlowDelegate?
     private var projects: [Project] = []
     
     // MARK: - Initializers
     
-    public init(dependencies: ProjectsViewModelDependencies) {
+    public init(
+        dependencies: ProjectsViewModelDependencies,
+        flowDelegate: ProjectsFlowDelegate?
+    ) {
         self.dependencies = dependencies
+        self.flowDelegate = flowDelegate
     }
     
     // MARK: - Internal interface
@@ -56,7 +62,11 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
     public func logout() {
         UserDefaults.standard.set(false, forKey: "loggedIn")
     }
-    
+
+    public func onProjectClick(_ project: Project) {
+        flowDelegate?.onProjectClick(project)
+    }
+
     // MARK: - Private helpers
     
     private func loadData() {
@@ -71,8 +81,6 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
                 )
                 
                 screenState = .loaded(projects)
-                
-                print("Screen state is \(screenState)")
             } catch {
                 screenState = .error
             }

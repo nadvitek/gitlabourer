@@ -33,11 +33,13 @@ final class AppFlowCoordinator: Base.FlowCoordinatorNoDeepLink, LoginFlowDelegat
 
     private func createTabBar( ) -> UITabBarController {
         var fcs: [Base.FlowCoordinatorNoDeepLink] = []
-        let projects = ProjecstFlowCoordinator()
-        let search = SearchFlowCoordinator()
 
-        fcs.append(projects)
-        fcs.append(search)
+        fcs.append(ProjectsFlowCoordinator())
+        fcs.append(MergeRequestsFlowCoordinator())
+        fcs.append(PipelinesFlowCoordinator())
+        fcs.append(SettingsFlowCoordinator())
+
+        fcs.append(SearchFlowCoordinator())
 
         fcs.forEach { addChild($0) }
 

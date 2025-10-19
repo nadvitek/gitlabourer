@@ -4,17 +4,22 @@ import shared
 public struct ProjectItemView: View {
 
     private let project: Project
+    private let action: (Project) -> Void
 
-    public init(project: Project) {
+    public init(
+        project: Project,
+        action: @escaping (Project) -> Void
+    ) {
         self.project = project
+        self.action = action
     }
 
     public var body: some View {
-//        NavigationLink {
-//            ProjectDetailView()
-//        } label: {
-//            content
-//        }
+        Button {
+            action(project)
+        } label: {
+            content
+        }
     }
 
     private var content: some View {
@@ -107,20 +112,13 @@ public struct ProjectItemView: View {
     }
 }
 
-extension String {
-    func uiImageFromBase64() -> UIImage? {
-        guard let data = Data(base64Encoded: self) else { return nil }
-        return UIImage(data: data)
-    }
-}
-
 #if DEBUG
 
 #Preview {
     VStack(spacing: 20) {
         ProjectItemView(
             project: .mock
-        )
+        ) { _ in }
     }
     .padding(.horizontal)
     .frame(maxWidth: .infinity, maxHeight: .infinity)

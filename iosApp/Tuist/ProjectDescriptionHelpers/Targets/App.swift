@@ -32,7 +32,11 @@ let app = Target.target(
         .projects,
         .login,
         .repository,
-        .ackategories
+        .ackategories,
+        .settings,
+        .pipelines,
+        .mergeRequests,
+        .projectDetail
     ]
 )
 

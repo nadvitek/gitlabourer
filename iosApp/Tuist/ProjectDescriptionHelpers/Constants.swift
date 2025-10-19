@@ -7,5 +7,9 @@ public let projectTargets = [
     login, loginTesting,
     repository, repositoryTesting,
     gitlabourerUI, gitlabourerUITesting,
-    core, coreTesting
+    core, coreTesting,
+    pipelines, pipelinesTesting,
+    mergeRequests, mergeRequestsTesting,
+    settings, settingsTesting,
+    projectDetail, projectDetailTesting
 ]
