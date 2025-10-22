@@ -4,8 +4,9 @@ import UIKit
 import Search
 import shared
 import ProjectDetail
+import MergeRequests
 
-final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate {
+final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate {
 
     override func start() -> UIViewController {
         let vc = createSearchViewController(
@@ -46,14 +47,22 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func handleProjectDetailPath(_ path: ProjectDetailPath) {
+    func handleProjectDetailPath(_ path: ProjectDetailPath, project: Project) {
         switch path {
         case .repository:
             break
         case .members:
             break
         case .mrs:
-            break
+            let vc = MergeRequestsView(
+                viewModel: MergeRequestsViewModelImpl(
+                    dependencies: appDependency.mergeRequestsViewModelDependencies,
+                    flowDelegate: self,
+                    projectId: KotlinInt(value: project.id)
+                )
+            ).hosting()
+
+            navigationController?.pushViewController(vc, animated: true)
         case .pipelines:
             break
         case .jobs:

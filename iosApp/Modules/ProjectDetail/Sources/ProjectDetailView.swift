@@ -60,6 +60,7 @@ public struct ProjectDetailView<ViewModel: ProjectDetailViewModel>: View {
 
     private func pathComponent(path: ProjectDetailPath) -> some View {
         Button {
+            viewModel.handleProjectDetailPath(path)
         } label: {
             HStack(spacing: 12) {
                 path.image
@@ -82,10 +83,10 @@ public struct ProjectDetailView<ViewModel: ProjectDetailViewModel>: View {
             .padding(12)
             .background(GitlabColors.gitlabOrange.swiftUIColor.opacity(0.05))
             .clipShape(.rect(cornerRadius: 16))
-            .overlay {
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(GitlabColors.gitlabGray.swiftUIColor, lineWidth: 2)
-            }
+//            .overlay {
+//                RoundedRectangle(cornerRadius: 16)
+//                    .stroke(GitlabColors.gitlabGray.swiftUIColor, lineWidth: 2)
+//            }
         }
     }
 
@@ -108,7 +109,3 @@ public struct ProjectDetailView<ViewModel: ProjectDetailViewModel>: View {
         }
     }
 }
-
-//#Preview {
-//    ProjectDetailView()
-//}

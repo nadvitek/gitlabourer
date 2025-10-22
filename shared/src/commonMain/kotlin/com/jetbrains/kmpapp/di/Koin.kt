@@ -2,6 +2,8 @@ package com.jetbrains.kmpapp.di
 
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
 import com.jetbrains.kmpapp.feature.login.loginModule
+import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetMergeRequestsUseCase
+import com.jetbrains.kmpapp.feature.mergeRequests.mergeRequestsModule
 import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.domain.usecase.SearchProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.projectModule
@@ -20,6 +22,7 @@ public fun initKoin(extraModules: List<Module>) {
             tokenModule,
             platformSpecificModule,
             loginModule,
+            mergeRequestsModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -34,5 +37,8 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val searchProjectsUseCase: SearchProjectsUseCase
+        get() = get()
+
+    public val getMergeRequestsUseCase: GetMergeRequestsUseCase
         get() = get()
 }

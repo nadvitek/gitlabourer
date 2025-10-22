@@ -5,8 +5,9 @@ import Projects
 import ProjectDetail
 import GitLabourerUI
 import shared
+import MergeRequests
 
-final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate {
+final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate {
 
     override func start() -> UIViewController {
         let vc = createProjectsViewController(
@@ -42,14 +43,22 @@ final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlo
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func handleProjectDetailPath(_ path: ProjectDetailPath) {
+    func handleProjectDetailPath(_ path: ProjectDetailPath, project: Project) {
         switch path {
         case .repository:
             break
         case .members:
             break
         case .mrs:
-            break
+            let vc = MergeRequestsView(
+                viewModel: MergeRequestsViewModelImpl(
+                    dependencies: appDependency.mergeRequestsViewModelDependencies,
+                    flowDelegate: self,
+                    projectId: KotlinInt(value: project.id)
+                )
+            ).hosting()
+
+            navigationController?.pushViewController(vc, animated: true)
         case .pipelines:
             break
         case .jobs:

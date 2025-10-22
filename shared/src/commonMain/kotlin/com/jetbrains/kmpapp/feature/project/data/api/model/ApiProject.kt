@@ -11,6 +11,8 @@ internal data class ApiProject(
     internal val name: String,
     @SerialName("description")
     internal val description: String? = null,
+    @SerialName("avatar_url")
+    internal val avatarUrl: String?,
     @SerialName("web_url")
     internal val webUrl: String,
     @SerialName("visibility")

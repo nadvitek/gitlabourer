@@ -35,6 +35,6 @@ public class ProjectDetailViewModelImpl: ProjectDetailViewModel {
     // MARK: - Internal interface
 
     public func handleProjectDetailPath(_ path: ProjectDetailPath) {
-        flowDelegate?.handleProjectDetailPath(path)
+        flowDelegate?.handleProjectDetailPath(path, project: project)
     }
 }

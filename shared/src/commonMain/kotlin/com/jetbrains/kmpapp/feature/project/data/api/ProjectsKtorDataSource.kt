@@ -37,10 +37,15 @@ internal class ProjectsKtorDataSource(
         projects.map { api ->
             async {
                 val mapped = apiProjectMapper.map(api)
-                val payload = runCatching { avatarData(api.id, size = 64) }.getOrNull()
-                mapped.copy(
-                    avatarUrl = payload
-                )
+
+                if (api.avatarUrl != null) {
+                    val payload = runCatching { avatarData(api.id, size = 64) }.getOrNull()
+                    mapped.copy(
+                        avatarUrl = payload
+                    )
+                } else {
+                    mapped
+                }
             }
         }.awaitAll()
     }

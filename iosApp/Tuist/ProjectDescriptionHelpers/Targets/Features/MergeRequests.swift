@@ -17,7 +17,8 @@ let mergeRequests = Target.target(
     ].compactMap { $0 }),
     dependencies: [
         .gitlabourerUI,
-        .kmp
+        .kmp,
+        .core
     ]
 )
 

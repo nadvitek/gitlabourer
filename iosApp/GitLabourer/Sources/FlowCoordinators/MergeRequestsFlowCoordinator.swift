@@ -1,14 +1,21 @@
 import Foundation
+import MergeRequests
 import ACKategories
 import UIKit
 import Projects
 import SwiftUI
 
-final class MergeRequestsFlowCoordinator: Base.FlowCoordinatorNoDeepLink {
+final class MergeRequestsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, MergeRequestsFlowDelegate {
 
     override func start() -> UIViewController {
         let navVC = UINavigationController(
-            rootViewController: EmptyView().hosting(isTabBarHidden: false)
+            rootViewController: MergeRequestsView(
+                viewModel: MergeRequestsViewModelImpl(
+                    dependencies: appDependency.mergeRequestsViewModelDependencies,
+                    flowDelegate: self,
+                    projectId: nil
+                )
+            ).hosting(isTabBarHidden: false)
         )
 
         navVC.tabBarItem.title = "MRs"

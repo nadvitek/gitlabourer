@@ -48,6 +48,7 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation("com.russhwolf:multiplatform-settings:1.1.1")           // core (includes ObservableSettings)
             implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             api(libs.kmp.observable.viewmodel)
         }
 
