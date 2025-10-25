@@ -11,6 +11,8 @@ public protocol RepositoryViewModel {
     var scrollViewAxes: Axis.Set { get }
     var itemSize: CGSize { get set }
     var contentHeight: Double { get }
+    var selectedBranchName: String { get set }
+    var branches: [String] { get }
 
     func onAppear()
     func onRowClick(_ item: TreeItem)
@@ -44,25 +46,33 @@ public class RepositoryViewModelImpl: RepositoryViewModel {
         guard case let .loaded(items) = screenState else { return 0 }
         return CGFloat(items.count) * itemSize.height
     }
+    public var selectedBranchName: String {
+        didSet {
+            loadDataForSelectedBranchName()
+        }
+    }
+    public var branches: [String] = []
 
     private var visibleItems: Int {
         itemCount + expanded.map(\.children).count
     }
     private var itemCount: Int = 0
-    private let projectId: KotlinInt?
+    private let project: Project
     private let dependencies: RepositoryViewModelDependencies
     private weak var flowDelegate: RepositoryFlowDelegate?
+    private var branchTask: Task<Void, Never>?
 
     // MARK: - Initializers
 
     public init(
         dependencies: RepositoryViewModelDependencies,
         flowDelegate: RepositoryFlowDelegate?,
-        projectId: KotlinInt?
+        project: Project
     ) {
         self.dependencies = dependencies
         self.flowDelegate = flowDelegate
-        self.projectId = projectId
+        self.project = project
+        self.selectedBranchName = project.defaultBranch ?? ""
     }
 
     // MARK: - Internal interface
@@ -92,28 +102,48 @@ public class RepositoryViewModelImpl: RepositoryViewModel {
             guard let self else { return }
 
             do {
-                var repository = try await dependencies.getRepositoryFileTreeUseCase.invoke(
+                let projectId = KotlinInt(value: project.id)
+
+                let branches = try await dependencies.getRepositoryBranchesUseCase.invoke(
                     projectId: projectId
                 )
 
-                repository.forEach {
-                    $0.children.append(
-                        .init(
-                            sha: "aa",
-                            name: "Test file",
-                            path: "aaa",
-                            mode: "aa",
-                            kind: .file,
-                            children: []
-                        )
-                    )
-                }
+                self.branches = branches.map(\.name)
+
+                let repository = try await dependencies.getRepositoryFileTreeUseCase.invoke(
+                    projectId: projectId,
+                    branchName: nil
+                )
 
                 itemCount = repository.count
                 screenState = .loaded(repository)
             } catch {
 
             }
+        }
+    }
+
+    private func loadDataForSelectedBranchName() {
+        branchTask?.cancel()
+        branchTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            screenState = .loading
+
+            do {
+                let projectId = KotlinInt(value: project.id)
+
+                let repository = try await dependencies.getRepositoryFileTreeUseCase.invoke(
+                    projectId: projectId,
+                    branchName: selectedBranchName
+                )
+
+                itemCount = repository.count
+                screenState = .loaded(repository)
+            } catch {
+
+            }
+
         }
     }
 }

@@ -36,11 +36,25 @@ public struct RepositoryView<ViewModel: RepositoryViewModel>: View {
 
     @ViewBuilder
     private var content: some View {
-        switch viewModel.screenState {
-        case .loading:
-            ProgressView()
-        case .loaded(let array):
-            loaded(array)
+        VStack(spacing: 0) {
+            RepositoryBranchPickerView(
+                selectedBranch: $viewModel.selectedBranchName,
+                branches: viewModel.branches
+            )
+            .disabled(viewModel.branches.isEmpty)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 12)
+
+            switch viewModel.screenState {
+            case .loading:
+                ProgressView()
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
+            case .loaded(let array):
+                loaded(array)
+            }
         }
     }
 

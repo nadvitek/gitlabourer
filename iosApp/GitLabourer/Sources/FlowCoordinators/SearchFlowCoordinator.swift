@@ -55,7 +55,7 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
                 viewModel: RepositoryViewModelImpl(
                     dependencies: appDependency.repositoryViewModelDependencies,
                     flowDelegate: self,
-                    projectId: KotlinInt(value: project.id)
+                    project: project
                 )
             )
             .hosting()

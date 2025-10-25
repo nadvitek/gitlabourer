@@ -51,7 +51,7 @@ final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlo
                 viewModel: RepositoryViewModelImpl(
                     dependencies: appDependency.repositoryViewModelDependencies,
                     flowDelegate: self,
-                    projectId: KotlinInt(value: project.id)
+                    project: project
                 )
             )
             .hosting()

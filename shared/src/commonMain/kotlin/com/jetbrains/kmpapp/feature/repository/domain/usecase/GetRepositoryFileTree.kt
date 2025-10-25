@@ -12,14 +12,14 @@ import io.github.mykhailoliutov.koinexport.core.KoinKmmExport
 public interface GetRepositoryFileTreeUseCase {
 
     @Throws(Throwable::class)
-    public suspend operator fun invoke(projectId: Int?): List<TreeItem>
+    public suspend operator fun invoke(projectId: Int?, branchName: String?): List<TreeItem>
 }
 
 internal class GetRepositoryFileTreeUseCaseImpl(
     private val repositoryRepository: RepositoryRepository
 ) : GetRepositoryFileTreeUseCase {
 
-    override suspend fun invoke(projectId: Int?): List<TreeItem> {
-        return repositoryRepository.getRepositoryTree(projectId)
+    override suspend fun invoke(projectId: Int?, branchName: String?): List<TreeItem> {
+        return repositoryRepository.getRepositoryTree(projectId, branchName)
     }
 }

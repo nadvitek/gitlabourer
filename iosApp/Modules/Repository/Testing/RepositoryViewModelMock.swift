@@ -18,6 +18,12 @@ final class RepositoryViewModelMock: RepositoryViewModel {
         itemCount + expanded.map(\.children).count
     }
     var itemCount: Int = 0
+    var branches: [String] = [
+        "development",
+        "feature/rosta",
+        "fix/verca"
+    ]
+    var selectedBranchName: String = "development"
 
     init(screenState: RepositoryScreenState = .loading) {
         self.screenState = screenState

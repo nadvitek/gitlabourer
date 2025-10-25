@@ -7,6 +7,8 @@ import com.jetbrains.kmpapp.feature.repository.data.RepositoryRemoteDataSource
 import com.jetbrains.kmpapp.feature.repository.data.RepositoryRepositoryImpl
 import com.jetbrains.kmpapp.feature.repository.data.api.RepositoryKtorDataSource
 import com.jetbrains.kmpapp.feature.repository.domain.RepositoryRepository
+import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetRepositoryBranchesUseCase
+import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetRepositoryBranchesUseCaseImpl
 import org.koin.dsl.module
 
 internal val repositoryDetailModule = module {
@@ -26,6 +28,11 @@ internal val repositoryDetailModule = module {
 
     factory<GetRepositoryFileTreeUseCase> {
         GetRepositoryFileTreeUseCaseImpl(
+            repositoryRepository = get()
+        )
+    }
+    factory<GetRepositoryBranchesUseCase> {
+        GetRepositoryBranchesUseCaseImpl(
             repositoryRepository = get()
         )
     }

@@ -34,6 +34,7 @@ struct RepositoryFileTreeLevelView: View {
 
                 assignItemSize($0)
             }
+            .frame(minWidth: itemSize.width)
 //            .frame(
 //                width: hasVisibleChildren ? (itemSize.width + CGFloat(depth * 16)) : nil
 //            )

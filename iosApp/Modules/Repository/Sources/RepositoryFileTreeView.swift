@@ -33,7 +33,7 @@ struct RepositoryFileTreeView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(GitlabColors.gitlabGray.swiftUIColor.opacity(0.35), lineWidth: 1)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 12)
         .padding(.vertical, 12)
         .readFrame(in: .global) {
             guard screenHeight == 0 else { return }

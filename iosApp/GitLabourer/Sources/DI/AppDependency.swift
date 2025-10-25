@@ -26,6 +26,9 @@ extension AppDependency {
     }
 
     var repositoryViewModelDependencies: RepositoryViewModelDependencies {
-        .init(getRepositoryFileTreeUseCase: appDependency.getRepositoryFileTreeUseCase)
+        .init(
+            getRepositoryFileTreeUseCase: appDependency.getRepositoryFileTreeUseCase,
+            getRepositoryBranchesUseCase: appDependency.getRepositoryBranchesUseCase
+        )
     }
 }
