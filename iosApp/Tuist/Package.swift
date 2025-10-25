@@ -14,8 +14,6 @@ let packageSettings = PackageSettings(
 )
 #endif
 
-let playerVersion: PackageDescription.Version = "8.11.0"
-
 let package = Package(
     name: "Gitlabourer",
     dependencies: [

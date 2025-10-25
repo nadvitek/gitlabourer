@@ -132,6 +132,7 @@ public extension Project {
             name: "Oneplay Mobile app",
             description: "",
             webUrl: "https://gitlab.ack.ee/ebox/mobile-app",
+            defaultBranch: "",
             visibility: "public",
             avatarUrl: nil,
             starCount: 3,

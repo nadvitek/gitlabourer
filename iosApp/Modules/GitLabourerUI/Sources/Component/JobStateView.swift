@@ -10,8 +10,10 @@ extension PipelineStatus {
             GitlabColors.fail.swiftUIColor
         case .running:
             GitlabColors.running.swiftUIColor
-        case .canceled:
+        case .canceled, .created:
             GitlabColors.cancel.swiftUIColor
+        case .pending:
+            GitlabColors.gitlabOrange.swiftUIColor.opacity(0.6)
         default:
             .brown
         }
@@ -27,6 +29,10 @@ extension PipelineStatus {
             Image(systemName: "timer.circle")
         case .canceled:
             Image(systemName: "minus.circle")
+        case .created:
+            Image(systemName: "record.circle")
+        case .pending:
+            Image(systemName: "pause.circle")
         default:
             Image(systemName: "plus")
         }
@@ -67,6 +73,8 @@ public struct JobStateView: View {
         JobStateView(state: .failed)
         JobStateView(state: .running)
         JobStateView(state: .canceled)
+        JobStateView(state: .created)
+        JobStateView(state: .pending)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .gitlabourerBackground()

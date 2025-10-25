@@ -3,6 +3,7 @@ import shared
 import Projects
 import Search
 import Login
+import Repository
 import MergeRequests
 
 let appDependency = AppDependency()
@@ -22,5 +23,9 @@ extension AppDependency {
 
     var mergeRequestsViewModelDependencies: MergeRequestsViewModelDependencies {
         .init(getMergeRequestsUseCase: appDependency.getMergeRequestsUseCase)
+    }
+
+    var repositoryViewModelDependencies: RepositoryViewModelDependencies {
+        .init(getRepositoryFileTreeUseCase: appDependency.getRepositoryFileTreeUseCase)
     }
 }

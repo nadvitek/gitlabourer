@@ -21,7 +21,6 @@ internal class MergeRequestsKtorDataSource(
     private val apiMergeRequestMapper = ApiMergeRequestMapper()
     private val apiPipelineMapper = ApiPipelineMapper()
 
-
     override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?): List<MergeRequest> = coroutineScope {
         val apiMRs = try {
             apiClient.get<List<ApiMergeRequest>>(

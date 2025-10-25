@@ -1,12 +1,11 @@
 package com.jetbrains.kmpapp.feature.project.domain.model
 
-import kotlinx.serialization.SerialName
-
 public data class Project(
     public val id: Int,
     public val name: String,
     public val description: String?,
     public val webUrl: String,
+    public val defaultBranch: String?,
     public val visibility: String,
     public val avatarUrl: AvatarPayload?,
     public val starCount: Int,

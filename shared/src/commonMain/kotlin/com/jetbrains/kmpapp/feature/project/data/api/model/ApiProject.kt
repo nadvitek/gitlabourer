@@ -13,6 +13,8 @@ internal data class ApiProject(
     internal val description: String? = null,
     @SerialName("avatar_url")
     internal val avatarUrl: String?,
+    @SerialName("default_branch")
+    internal val defaultBranch: String?,
     @SerialName("web_url")
     internal val webUrl: String,
     @SerialName("visibility")

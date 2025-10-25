@@ -13,6 +13,7 @@ internal class ApiProjectMapper {
         name = api.name,
         description = api.description,
         webUrl = api.webUrl,
+        defaultBranch = api.defaultBranch,
         visibility = api.visibility,
         avatarUrl = null,
         starCount = api.starCount ?: 0,
