@@ -8,6 +8,7 @@ import com.jetbrains.kmpapp.feature.mergeRequests.mergeRequestsModule
 import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.domain.usecase.SearchProjectsUseCase
 import com.jetbrains.kmpapp.feature.project.projectModule
+import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetFileDataUseCase
 import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetRepositoryBranchesUseCase
 import com.jetbrains.kmpapp.feature.repository.repositoryDetailModule
 import com.jetbrains.kmpapp.feature.token.tokenModule
@@ -48,5 +49,8 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val getRepositoryBranchesUseCase: GetRepositoryBranchesUseCase
+        get() = get()
+
+    public val getFileDataUseCase: GetFileDataUseCase
         get() = get()
 }

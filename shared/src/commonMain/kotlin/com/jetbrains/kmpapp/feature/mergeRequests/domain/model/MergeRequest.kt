@@ -78,6 +78,7 @@ public data class MergeRequest(
     val forceRemoveSourceBranch: Boolean?,
     val squash: Boolean?,
     val squashCommitSha: String?,
+    val isApproved: Boolean,
 
     val sha: String?,
     val mergeCommitSha: String?,

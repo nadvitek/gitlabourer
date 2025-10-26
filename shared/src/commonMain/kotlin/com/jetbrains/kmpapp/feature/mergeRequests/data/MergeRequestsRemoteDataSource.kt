@@ -10,6 +10,7 @@ internal interface MergeRequestsRemoteDataSource {
         const val MRS = "merge_requests"
         const val PROJECTS = "projects"
         const val PIPELINES = "pipelines"
+        const val APPROVALS = "approvals"
 
         fun mergeRequestWithState(state: MergeRequestState): String {
             return "$MRS?with_labels_details=true&state=${state.value}"
@@ -21,6 +22,10 @@ internal interface MergeRequestsRemoteDataSource {
 
         fun pipelineForMergeRequest(projectId: String, mrId: String): String {
             return "$PROJECTS/$projectId/$MRS/$mrId/$PIPELINES"
+        }
+
+        fun approvalsForMergeRequest(projectId: String, mrId: String): String {
+            return "$PROJECTS/$projectId/$MRS/$mrId/$APPROVALS"
         }
     }
 }

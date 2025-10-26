@@ -3,6 +3,7 @@ package com.jetbrains.kmpapp.feature.mergeRequests.data.api
 import com.jetbrains.kmpapp.core.network.GitlabApiClient
 import com.jetbrains.kmpapp.feature.mergeRequests.data.MergeRequestsRemoteDataSource
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.mapper.ApiPipelineMapper
+import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiApprovals
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiMergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiPipeline
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
@@ -42,9 +43,15 @@ internal class MergeRequestsKtorDataSource(
                         mrId = api.iid.toString()
                     )
                 }.getOrNull()
+                val approval: Result<Boolean> = runCatching {
+                    getApproval(
+                        projectId = api.projectId.toString(),
+                        mrId = api.iid.toString()
+                    )
+                }
 
                 val mapped = apiMergeRequestMapper.map(api)
-                mapped.copy(pipeline = pipeline)
+                mapped.copy(pipeline = pipeline, isApproved = approval.getOrDefault(false))
             }
         }.awaitAll()
     }
@@ -55,5 +62,12 @@ internal class MergeRequestsKtorDataSource(
         )
         val first = response.firstOrNull() ?: return null
         return apiPipelineMapper.map(first)
+    }
+
+    suspend fun getApproval(projectId: String, mrId: String): Boolean {
+        val response: ApiApprovals = apiClient.get(
+            endpoint = MergeRequestsRemoteDataSource.approvalsForMergeRequest(projectId, mrId)
+        )
+        return response.approved
     }
 }

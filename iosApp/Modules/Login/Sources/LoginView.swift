@@ -55,7 +55,7 @@ struct LoginView<ViewModel: LoginViewModel>: View {
                 Spacer()
 
                 HStack(spacing: 4) {
-                    Text("Above the Mill s.r.o.")
+                    Text("Above the Mill")
                         .fontWeight(.bold)
 
                     Image(systemName: "fanblades.fill")

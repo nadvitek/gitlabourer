@@ -1,6 +1,7 @@
 package com.jetbrains.kmpapp.feature.repository.data
 
 import com.jetbrains.kmpapp.feature.repository.domain.RepositoryRepository
+import com.jetbrains.kmpapp.feature.repository.domain.model.FileData
 import com.jetbrains.kmpapp.feature.repository.domain.model.RepositoryBranch
 import com.jetbrains.kmpapp.feature.repository.domain.model.TreeItem
 import com.jetbrains.kmpapp.feature.repository.domain.model.toHierarchicalTree
@@ -18,5 +19,9 @@ internal class RepositoryRepositoryImpl(
 
     override suspend fun getRepositoryBranches(projectId: Int?): List<RepositoryBranch> {
         return remoteDataSource.getRepositoryBranches(projectId)
+    }
+
+    override suspend fun getFileData(projectId: Int, filePath: String, branchName: String): FileData {
+        return remoteDataSource.getFileData(projectId, filePath, branchName)
     }
 }

@@ -54,6 +54,7 @@ internal class ApiMergeRequestMapper {
         forceRemoveSourceBranch = api.forceRemoveSourceBranch,
         squash = api.squash,
         squashCommitSha = api.squashCommitSha,
+        isApproved = false,
         sha = api.sha,
         mergeCommitSha = api.mergeCommitSha,
         reference = api.reference,
