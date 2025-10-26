@@ -12,11 +12,18 @@ struct MergeRequestItemView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(mr.title)
-                .font(.subheadline)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(1)
+            HStack(spacing: 0) {
+                Text(mr.title)
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(1)
+
+                if mr.isApproved {
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundStyle(GitlabColors.success.swiftUIColor)
+                }
+            }
 
             if mr.labels.isEmpty {
                 nonLabelsLanes
@@ -96,14 +103,18 @@ struct MergeRequestItemView: View {
 
 
             HStack(spacing: 2) {
-                initialComponent(
-                    mr.assignees.first?.name.getNameInitials() ?? ""
-                )
+                if let assignee = mr.assignees.first {
+                    initialComponent(
+                        assignee.name.getNameInitials()
+                    )
+                }
 
 
-                initialComponent(
-                    mr.reviewers.first?.name.getNameInitials() ?? ""
-                )
+                if let reviewer = mr.reviewers.first {
+                    initialComponent(
+                        reviewer.name.getNameInitials()
+                    )
+                }
             }
         }
     }

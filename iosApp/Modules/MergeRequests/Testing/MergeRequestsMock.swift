@@ -151,6 +151,7 @@ public enum MergeRequestMockFactory {
             forceRemoveSourceBranch: false,
             squash: false,
             squashCommitSha: squashCommitSha,
+            isApproved: false,
             sha: sha,
             mergeCommitSha: mergeCommitSha,
             reference: reference,

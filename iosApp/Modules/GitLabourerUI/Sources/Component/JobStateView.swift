@@ -10,7 +10,7 @@ extension PipelineStatus {
             GitlabColors.fail.swiftUIColor
         case .running:
             GitlabColors.running.swiftUIColor
-        case .canceled, .created:
+        case .canceled, .created, .skipped:
             GitlabColors.cancel.swiftUIColor
         case .pending:
             GitlabColors.gitlabOrange.swiftUIColor.opacity(0.6)
@@ -33,6 +33,8 @@ extension PipelineStatus {
             Image(systemName: "record.circle")
         case .pending:
             Image(systemName: "pause.circle")
+        case .skipped:
+            Image(systemName: "forward.end.circle")
         default:
             Image(systemName: "plus")
         }
