@@ -82,12 +82,24 @@ public class RepositoryViewModelImpl: RepositoryViewModel {
     }
 
     public func onRowClick(_ item: TreeItem) {
-        if item.kind == .directory {
+        switch item.kind {
+        case .directory:
             if expanded.contains(item) {
                 expanded.remove(item)
             } else {
                 expanded.insert(item)
             }
+        case .file:
+            flowDelegate?.openFile(
+                file: item,
+                selectedBranchName: selectedBranchName,
+                branches: branches
+            )
+        case .submodule:
+            // TODO: - Implement
+            break
+        default:
+            break
         }
     }
 

@@ -31,4 +31,10 @@ extension AppDependency {
             getRepositoryBranchesUseCase: appDependency.getRepositoryBranchesUseCase
         )
     }
+
+    var filesViewModelDependencies: FilesViewModelDependencies {
+        .init(
+            getFileData: appDependency.getFileDataUseCase
+        )
+    }
 }

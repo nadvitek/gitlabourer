@@ -55,8 +55,9 @@ internal class RepositoryKtorDataSource(
     override suspend fun getFileData(
         projectId: Int, filePath: String, branchName: String
     ): FileData {
+        val replacedFilePath = filePath.replace("/", "%2F")
         val response = apiClient.get<ApiFileData>(
-            endpoint = RepositoryRemoteDataSource.getFileData(projectId, filePath, branchName)
+            endpoint = RepositoryRemoteDataSource.getFileData(projectId, replacedFilePath, branchName)
         )
 
         val mapped = apiFileDataMapper.map(response)

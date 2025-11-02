@@ -29,7 +29,7 @@ internal interface RepositoryRemoteDataSource {
         }
 
         fun getFileData(projectId: Int, filePath: String, branchName: String): String {
-            return "$PROJECTS/${projectId}/$REPOSITORY/$FILES/$filePath?ref_name=$branchName"
+            return "$PROJECTS/${projectId}/$REPOSITORY/$FILES/$filePath?ref=$branchName"
         }
     }
 }

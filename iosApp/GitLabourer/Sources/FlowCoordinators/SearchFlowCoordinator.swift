@@ -9,6 +9,8 @@ import Repository
 
 final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate {
 
+    private var projectId: KotlinInt?
+
     override func start() -> UIViewController {
         let vc = createSearchViewController(
             dependencies: appDependency.searchViewModelDependencies,
@@ -38,12 +40,14 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
     }
 
     func onProjectClick(_ project: Project) {
+        projectId = KotlinInt(value: project.id)
+
         let vc = ProjectDetailView(
             viewModel: ProjectDetailViewModelImpl(
                 project: project,
                 flowDelegate: self
             )
-        ).hosting(isTabBarHidden: false)
+        ).hosting()
 
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -80,5 +84,28 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
         case .tags:
             break
         }
+    }
+
+    func openFile(
+        file: TreeItem,
+        selectedBranchName: String,
+        branches: [String]
+    ) {
+        guard let projectId else { return }
+
+        let vc = FilesView(
+            viewModel: FilesViewModelImpl(
+                dependencies: appDependency.filesViewModelDependencies,
+                projectId: projectId,
+                filePath: file.path,
+                selectedBranchName: selectedBranchName,
+                branches: branches
+            )
+        )
+        .hosting(supportedOrientations: .landscape)
+
+        vc.modalPresentationStyle = .fullScreen
+
+        navigationController?.present(vc, animated: true)
     }
 }

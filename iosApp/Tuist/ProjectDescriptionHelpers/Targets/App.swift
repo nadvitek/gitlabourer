@@ -9,6 +9,7 @@ let app = Target.target(
     infoPlist: .extendingDefault(with: [
         "UILaunchScreen": [
         ],
+        "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
             "UISceneConfigurations": [
