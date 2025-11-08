@@ -1,12 +1,11 @@
 package com.jetbrains.kmpapp.feature.mergerequest.data.api.mapper
 
+import com.jetbrains.kmpapp.feature.login.data.api.mapper.ApiUserMapper
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiLabel
-import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiGitlabUser
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiMergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiMilestone
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiTaskCompletionStatus
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiTimeStats
-import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.GitlabUser
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.Label
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MRState
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
@@ -22,6 +21,8 @@ import kotlin.runCatching
 
 internal class ApiMergeRequestMapper {
 
+    val apiUserMapper = ApiUserMapper()
+
     fun map(api: ApiMergeRequest): MergeRequest = MergeRequest(
         id = api.id.toString(),
         iid = api.iid.toString(),
@@ -36,11 +37,11 @@ internal class ApiMergeRequestMapper {
         mergedAt = api.mergedAt,
         closedAt = api.closedAt,
         pipeline = null,
-        author = map(api.author),
-        assignees = api.assignees.map(::map),
-        reviewers = api.reviewers.map(::map),
-        mergedBy = api.mergedBy?.let(::map),
-        closedBy = api.closedBy?.let(::map),
+        author = apiUserMapper.map(api.author),
+        assignees = api.assignees.map(apiUserMapper::map),
+        reviewers = api.reviewers.map(apiUserMapper::map),
+        mergedBy = api.mergedBy?.let(apiUserMapper::map),
+        closedBy = api.closedBy?.let(apiUserMapper::map),
         labels = api.labels.map(::map),
         milestone = api.milestone?.let(::map),
         upvotes = api.upvotes,
@@ -69,14 +70,6 @@ internal class ApiMergeRequestMapper {
         name = api.name,
         color = api.color,
         textColor = api.textColor
-    )
-
-    private fun map(api: ApiGitlabUser): GitlabUser = GitlabUser(
-        id = api.id.toString(),
-        username = api.username,
-        name = api.name,
-        avatarUrl = api.avatarUrl,
-        webUrl = api.webUrl
     )
 
     private fun map(api: ApiMilestone): Milestone = Milestone(

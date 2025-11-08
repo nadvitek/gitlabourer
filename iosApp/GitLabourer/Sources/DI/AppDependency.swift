@@ -5,6 +5,7 @@ import Search
 import Login
 import Repository
 import MergeRequests
+import Pipelines
 
 let appDependency = AppDependency()
 
@@ -35,6 +36,12 @@ extension AppDependency {
     var filesViewModelDependencies: FilesViewModelDependencies {
         .init(
             getFileData: appDependency.getFileDataUseCase
+        )
+    }
+
+    var pipelinesViewModelDependencies: PipelinesViewModelDependencies {
+        .init(
+            getPipelinesForProjectUseCase: appDependency.getPipelinesForProjectUseCase
         )
     }
 }

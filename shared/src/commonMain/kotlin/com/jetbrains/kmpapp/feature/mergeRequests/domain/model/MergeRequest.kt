@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp.feature.mergeRequests.domain.model
 
+import com.jetbrains.kmpapp.feature.login.domain.model.User
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 
@@ -57,11 +58,11 @@ public data class MergeRequest(
 
     val pipeline: Pipeline?,
 
-    val author: GitlabUser,
-    val assignees: List<GitlabUser>,
-    val reviewers: List<GitlabUser>,
-    val mergedBy: GitlabUser?,
-    val closedBy: GitlabUser?,
+    val author: User,
+    val assignees: List<User>,
+    val reviewers: List<User>,
+    val mergedBy: User?,
+    val closedBy: User?,
 
     val labels: List<Label>,
     val milestone: Milestone?,

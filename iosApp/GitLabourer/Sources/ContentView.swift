@@ -30,66 +30,67 @@ struct ContentView: View {
     // MARK: - UI
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            Tab(
-                "Projects",
-                systemImage: "list.bullet.rectangle",
-                value: TabType.projects
-            ) {
-                NavigationStack {
-                    ProjectsView(
-                        viewModel: ProjectsViewModelImpl(
-                            dependencies: appDependency.projectsViewModelDependencies,
-                            flowDelegate: nil
-                        )
-                    )
-                }
-            }
-
-            Tab(
-                "MRs",
-                systemImage: "point.topleft.filled.down.to.point.bottomright.curvepath",
-                value: TabType.pipelines
-            ) {
-                NavigationStack {
-                    PlaceholderView(title: "Tab 2")
-                }
-            }
-
-            Tab(
-                "Pipelines",
-                systemImage: "checklist",
-                value: TabType.pipelines
-            ) {
-                NavigationStack {
-                    PlaceholderView(title: "Tab 3")
-                }
-            }
-
-            Tab(
-                "Settings",
-                systemImage: "gearshape",
-                value: TabType.settings
-            ) {
-                NavigationStack {
-                    PlaceholderView(title: "Settings")
-                }
-            }
-
-            Tab(
-                "Search",
-                systemImage: "magnifyingglass",
-                value: TabType.search,
-                role: .search
-            ) {
-                SearchView(
-                    viewModel: SearchViewModelImpl(
-                        dependencies: appDependency.searchViewModelDependencies,
-                        flowDelegate: nil
-                    )
-                )
-            }
-        }
+//        TabView(selection: $selectedTab) {
+//            Tab(
+//                "Projects",
+//                systemImage: "list.bullet.rectangle",
+//                value: TabType.projects
+//            ) {
+//                NavigationStack {
+//                    ProjectsView(
+//                        viewModel: ProjectsViewModelImpl(
+//                            dependencies: appDependency.projectsViewModelDependencies,
+//                            flowDelegate: nil
+//                        )
+//                    )
+//                }
+//            }
+//
+//            Tab(
+//                "MRs",
+//                systemImage: "point.topleft.filled.down.to.point.bottomright.curvepath",
+//                value: TabType.pipelines
+//            ) {
+//                NavigationStack {
+//                    PlaceholderView(title: "Tab 2")
+//                }
+//            }
+//
+//            Tab(
+//                "Pipelines",
+//                systemImage: "checklist",
+//                value: TabType.pipelines
+//            ) {
+//                NavigationStack {
+//                    PlaceholderView(title: "Tab 3")
+//                }
+//            }
+//
+//            Tab(
+//                "Settings",
+//                systemImage: "gearshape",
+//                value: TabType.settings
+//            ) {
+//                NavigationStack {
+//                    PlaceholderView(title: "Settings")
+//                }
+//            }
+//
+//            Tab(
+//                "Search",
+//                systemImage: "magnifyingglass",
+//                value: TabType.search,
+//                role: .search
+//            ) {
+//                SearchView(
+//                    viewModel: SearchViewModelImpl(
+//                        dependencies: appDependency.searchViewModelDependencies,
+//                        flowDelegate: nil
+//                    )
+//                )
+//            }
+//        }
+        EmptyView()
     }
 
     // MARK: - Placeholder View

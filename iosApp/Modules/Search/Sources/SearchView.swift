@@ -18,53 +18,55 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
     // MARK: - UI
 
     public var body: some View {
-        NavigationStack {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .gitlabourerBackground()
-                .searchable(
-                    text: $viewModel.text,
-                    isPresented: $viewModel.isPresented,
-                    placement: .sidebar,
-                    prompt: "Search"
-                )
-                .onAppear {
-                    viewModel.isPresented = true
-                }
-                .animation(.default, value: viewModel.screenState)
-        }
+        content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .gitlabourerBackground()
+            .searchable(
+                text: $viewModel.text,
+                isPresented: $viewModel.isPresented,
+                placement: .toolbar,
+                prompt: "Search"
+            )
+            .onAppear {
+                viewModel.isPresented = true
+            }
+            .animation(.default, value: viewModel.screenState)
     }
 
     // MARK: - Private helpers
 
     @ViewBuilder
     private var content: some View {
-        switch viewModel.screenState {
-        case .loading:
-            ProgressView()
-                .tint(.white)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity
-                )
-        case let .loaded(projects):
-            ScrollViewThatFits {
-                loadedState(projects)
-            }
-        case .error:
-            VStack(spacing: 20) {
-                Image(systemName: "network.slash")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50)
-                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                    .symbolEffect(.bounce)
+        VStack(spacing: 12) {
+            switch viewModel.screenState {
+            case .loading:
+                ProgressView()
+                    .tint(.white)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
 
-                PrimaryButton(
-                    "Retry",
-                    isLoading: viewModel.isLoading,
-                    action: viewModel.retry
-                )
+            case let .loaded(projects):
+                ScrollViewThatFits {
+                    loadedState(projects)
+                }
+
+            case .error:
+                VStack(spacing: 20) {
+                    Image(systemName: "network.slash")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50)
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                        .symbolEffect(.bounce)
+
+                    PrimaryButton(
+                        "Retry",
+                        isLoading: viewModel.isLoading,
+                        action: viewModel.retry
+                    )
+                }
             }
         }
     }

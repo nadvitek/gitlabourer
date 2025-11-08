@@ -1,29 +1,10 @@
 import Foundation
 import shared
+import Core
 
 #if DEBUG
 
-
 public enum MergeRequestMockFactory {
-
-    // Nested builders with defaults so you can override just what you need
-    public static func makeUser(
-        id: String = "u-1",
-        username: String = "jdoe",
-        name: String = "John Doe",
-        avatarUrl: String? = nil,
-        webUrl: String? = "https://gitlab.example.com/jdoe"
-    ) -> GitlabUser {
-        // Adjust argument labels to match your generated Swift initializer for shared.User
-        GitlabUser(
-            id: id,
-            username: username,
-            name: name,
-            avatarUrl: avatarUrl,
-            webUrl: webUrl
-        )
-    }
-
     public static func makeMilestone(
         id: String = "m-1",
         iid: String? = "10",
@@ -72,7 +53,6 @@ public enum MergeRequestMockFactory {
         )
     }
 
-    // Main factory with defaults for everything. Override any arg at call site.
     public static func makeMergeRequest(
         id: String = "12345",
         iid: String = "1",
@@ -87,11 +67,11 @@ public enum MergeRequestMockFactory {
         mergedAt: Kotlinx_datetimeInstant? = nil,
         closedAt: Kotlinx_datetimeInstant? = nil,
         pipelineStatus: PipelineStatus,
-        author: GitlabUser = makeUser(),
-        assignees: [GitlabUser] = [makeUser(id: "u-3", username: "bwayne", name: "Bruce Wayne")],
-        reviewers: [GitlabUser] = [makeUser(id: "u-4", username: "ckent", name: "Clark Kent")],
-        mergedBy: GitlabUser? = nil,
-        closedBy: GitlabUser? = nil,
+        author: User = .mock(),
+        assignees: [User] = [.mock(id: 3, username: "bwayne", name: "Bruce Wayne")],
+        reviewers: [User] = [.mock(id: 4, username: "ckent", name: "Clark Kent")],
+        mergedBy: User? = nil,
+        closedBy: User? = nil,
         labels: [shared.Label] = [],
         milestone: Milestone? = makeMilestone(),
         upvotes: Int32 = 7,

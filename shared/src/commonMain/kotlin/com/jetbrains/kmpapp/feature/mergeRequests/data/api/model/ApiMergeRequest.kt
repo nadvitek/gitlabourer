@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp.feature.mergeRequests.data.api.model
 
+import com.jetbrains.kmpapp.feature.login.data.api.model.ApiUser
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiLabel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -36,15 +37,15 @@ internal data class ApiMergeRequest(
     @SerialName("closed_at")
     val closedAt: Instant? = null,
     @SerialName("author")
-    val author: ApiGitlabUser,
+    val author: ApiUser,
     @SerialName("assignees")
-    val assignees: List<ApiGitlabUser> = emptyList(),
+    val assignees: List<ApiUser> = emptyList(),
     @SerialName("reviewers")
-    val reviewers: List<ApiGitlabUser> = emptyList(),
+    val reviewers: List<ApiUser> = emptyList(),
     @SerialName("merged_by")
-    val mergedBy: ApiGitlabUser? = null,
+    val mergedBy: ApiUser? = null,
     @SerialName("closed_by")
-    val closedBy: ApiGitlabUser? = null,
+    val closedBy: ApiUser? = null,
     @SerialName("labels")
     val labels: List<ApiLabel> = emptyList(),
     @SerialName("milestone")
@@ -87,22 +88,6 @@ internal data class ApiMergeRequest(
     val blockingDiscussionsResolved: Boolean? = null,
     @SerialName("user_notes_count")
     val userNotesCount: Int? = null
-)
-
-@Serializable
-internal data class ApiGitlabUser(
-    @SerialName("id")
-    val id: Long,
-    @SerialName("username")
-    val username: String,
-    @SerialName("name")
-    val name: String,
-    @SerialName("state")
-    val state: String? = null,
-    @SerialName("avatar_url")
-    val avatarUrl: String? = null,
-    @SerialName("web_url")
-    val webUrl: String? = null
 )
 
 @Serializable

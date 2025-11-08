@@ -53,7 +53,7 @@ struct MergeRequestItemView: View {
 
     // MARK: - Private helpers
 
-    private func initialComponent(_ text: String) -> some View {
+    private func userComponent(_ text: String) -> some View {
         Text(text)
             .fontWeight(.semibold)
             .font(.caption2)
@@ -104,14 +104,14 @@ struct MergeRequestItemView: View {
 
             HStack(spacing: 2) {
                 if let assignee = mr.assignees.first {
-                    initialComponent(
+                    userComponent(
                         assignee.name.getNameInitials()
                     )
                 }
 
 
                 if let reviewer = mr.reviewers.first {
-                    initialComponent(
+                    userComponent(
                         reviewer.name.getNameInitials()
                     )
                 }
@@ -141,13 +141,13 @@ struct MergeRequestItemView: View {
                 }
 
                 if let assignee = mr.assignees.first {
-                    initialComponent(
+                    userComponent(
                         assignee.name.getNameInitials()
                     )
                 }
 
                 if let reviewer = mr.reviewers.first {
-                    initialComponent(
+                    userComponent(
                         reviewer.name.getNameInitials()
                     )
                 }

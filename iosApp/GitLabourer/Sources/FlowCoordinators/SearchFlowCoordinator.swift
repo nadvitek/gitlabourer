@@ -6,6 +6,7 @@ import shared
 import ProjectDetail
 import MergeRequests
 import Repository
+import Pipelines
 
 final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate {
 
@@ -21,10 +22,6 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
         let navVC = UINavigationController(
             rootViewController: vc
         )
-
-        let searchTab = UISearchTab { _ in
-            navVC
-        }
 
         navVC.tabBarItem.title = "Search"
         navVC.tabBarItem.image = UIImage(systemName: "magnifyingglass")
@@ -65,8 +62,10 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
             .hosting()
 
             navigationController?.pushViewController(vc, animated: true)
+
         case .members:
             break
+
         case .mrs:
             let vc = MergeRequestsView(
                 viewModel: MergeRequestsViewModelImpl(
@@ -77,10 +76,21 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
             ).hosting()
 
             navigationController?.pushViewController(vc, animated: true)
+
         case .pipelines:
-            break
+            let vc = PipelinesView(
+                viewModel: PipelinesViewModelImpl(
+                    dependencies: appDependency.pipelinesViewModelDependencies,
+                    projectId: KotlinInt(value: project.id)
+                )
+            )
+            .hosting()
+
+            navigationController?.pushViewController(vc, animated: true)
+
         case .jobs:
             break
+
         case .tags:
             break
         }

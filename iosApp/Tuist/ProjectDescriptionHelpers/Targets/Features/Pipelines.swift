@@ -17,6 +17,7 @@ let pipelines = Target.target(
     ].compactMap { $0 }),
     dependencies: [
         .gitlabourerUI,
+        .core,
         .kmp
     ]
 )

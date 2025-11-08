@@ -36,7 +36,6 @@ final class AppFlowCoordinator: Base.FlowCoordinatorNoDeepLink, LoginFlowDelegat
 
         fcs.append(ProjectsFlowCoordinator())
         fcs.append(MergeRequestsFlowCoordinator())
-        fcs.append(PipelinesFlowCoordinator())
         fcs.append(SettingsFlowCoordinator())
 
         fcs.append(SearchFlowCoordinator())

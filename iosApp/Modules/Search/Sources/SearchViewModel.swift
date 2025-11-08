@@ -70,6 +70,8 @@ public class SearchViewModelImpl: SearchViewModel {
     private func searchData() {
         guard !text.isEmpty else { screenState = .loaded([]); return }
 
+        screenState = .loading
+
         searchTask?.cancel()
         searchTask = Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -78,8 +80,6 @@ public class SearchViewModelImpl: SearchViewModel {
                 let self,
                 !Task.isCancelled
             else { return }
-
-            screenState = .loading
 
             defer { isLoading = false }
 

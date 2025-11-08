@@ -8,7 +8,7 @@ public extension View {
     func hosting(
         isTabBarHidden: Bool = true,
         isBackButtonHidden: Bool = false,
-        supportedOrientations: UIInterfaceOrientationMask = .portrait,
+        supportedOrientations: UIInterfaceOrientationMask = [.portrait],
     ) -> HostingController<some View> {
         .init(
             isTabBarHidden: isTabBarHidden,
@@ -34,7 +34,7 @@ public final class HostingController<Content: View>: UIHostingController<Content
     public init(
         isTabBarHidden: Bool,
         isBackButtonHidden: Bool,
-        supportedOrientations: UIInterfaceOrientationMask = .portrait,
+        supportedOrientations: UIInterfaceOrientationMask = [.portrait],
         rootView: Content
     ) {
         self.isTabBarHidden = isTabBarHidden

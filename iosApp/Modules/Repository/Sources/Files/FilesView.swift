@@ -38,9 +38,12 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                            .padding(12)
-                            .glassEffect()
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 14)
                     }
+                    .glassEffect()
+
+                    Spacer()
 
                     RepositoryBranchPickerView(
                         selectedBranch: $viewModel.selectedBranchName,
@@ -48,8 +51,6 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
                     )
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-                .ignoresSafeArea()
 
                 switch viewModel.screenState {
                 case .loading:
@@ -128,6 +129,7 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
+            .frame(maxWidth: .infinity)
             .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
             .clipShape(
                 UnevenRoundedRectangle(
@@ -145,12 +147,10 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
 
     private func attributedMarkdown(from content: String) throws -> AttributedString {
         var options = AttributedString.MarkdownParsingOptions()
-        // Preserve whitespace/newlines and avoid treating as full block HTML
         options.interpretedSyntax = .inlineOnlyPreservingWhitespace
         return try AttributedString(markdown: content, options: options)
     }
 
-    // Force a uniform text color on an attributed string
     private func overridingColor(_ attributed: NSAttributedString, color: UIColor) -> NSAttributedString {
         let mutable = NSMutableAttributedString(attributedString: attributed)
         let fullRange = NSRange(location: 0, length: mutable.length)
@@ -170,13 +170,11 @@ struct AttributedText: UIViewRepresentable {
         tv.isSelectable = true
         tv.dataDetectorTypes = .link
         tv.backgroundColor = .clear
-        // tv.textColor is ignored when attributedString has its own colors
         tv.textContainerInset = .zero
         tv.textContainer.lineFragmentPadding = 0
         tv.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         tv.textContainer.lineBreakMode = .byWordWrapping
 
-        // Optional: set link color (won’t affect non-link text)
         tv.linkTextAttributes = [
             .foregroundColor: GitlabColors.gitlabOrange.color
         ]
@@ -187,7 +185,6 @@ struct AttributedText: UIViewRepresentable {
         uiView.attributedText = attributedString
     }
 
-    // iOS 16+: tell SwiftUI how big this view wants to be
     @available(iOS 16.0, *)
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize {
         let targetWidth = proposal.width ?? UIScreen.main.bounds.width

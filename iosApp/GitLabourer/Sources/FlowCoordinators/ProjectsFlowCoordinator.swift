@@ -7,6 +7,7 @@ import GitLabourerUI
 import shared
 import MergeRequests
 import Repository
+import Pipelines
 
 final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate {
 
@@ -61,8 +62,10 @@ final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlo
             .hosting()
 
             navigationController?.pushViewController(vc, animated: true)
+
         case .members:
             break
+
         case .mrs:
             let vc = MergeRequestsView(
                 viewModel: MergeRequestsViewModelImpl(
@@ -73,10 +76,21 @@ final class ProjectsFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlo
             ).hosting()
 
             navigationController?.pushViewController(vc, animated: true)
+
         case .pipelines:
-            break
+            let vc = PipelinesView(
+                viewModel: PipelinesViewModelImpl(
+                    dependencies: appDependency.pipelinesViewModelDependencies,
+                    projectId: KotlinInt(value: project.id)
+                )
+            )
+            .hosting()
+
+            navigationController?.pushViewController(vc, animated: true)
+
         case .jobs:
             break
+
         case .tags:
             break
         }
