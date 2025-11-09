@@ -58,5 +58,4 @@ internal class PipelinesKtorDataSource(
 
         return if (!commitTitle.isNullOrBlank()) mapped.copy(name = commitTitle) else mapped
     }
-
 }

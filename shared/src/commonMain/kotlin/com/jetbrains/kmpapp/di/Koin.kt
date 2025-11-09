@@ -1,5 +1,11 @@
 package com.jetbrains.kmpapp.di
 
+import com.jetbrains.kmpapp.feature.jobs.domain.usecase.CancelJobUseCase
+import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobLogUseCase
+import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobsForPipelineUseCase
+import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobsForProjectUseCase
+import com.jetbrains.kmpapp.feature.jobs.domain.usecase.RetryJobUseCase
+import com.jetbrains.kmpapp.feature.jobs.jobsModule
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
 import com.jetbrains.kmpapp.feature.login.loginModule
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetMergeRequestsUseCase
@@ -29,6 +35,7 @@ public fun initKoin(extraModules: List<Module>) {
             loginModule,
             mergeRequestsModule,
             pipelinesModule,
+            jobsModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -58,5 +65,20 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val getPipelinesForProjectUseCase: GetPipelinesForProjectUseCase
+        get() = get()
+
+    public val getJobsForPipelineUseCase: GetJobsForPipelineUseCase
+        get() = get()
+
+    public val getJobsForProjectUseCase: GetJobsForProjectUseCase
+        get() = get()
+
+    public val cancelJobUseCase: CancelJobUseCase
+        get() = get()
+
+    public val retryJobUseCase: RetryJobUseCase
+        get() = get()
+
+    public val getJobLogUseCase: GetJobLogUseCase
         get() = get()
 }

@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp.core.network
 
+import com.jetbrains.kmpapp.core.network.data.ApiLocalDataSource
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -12,11 +13,15 @@ import io.ktor.client.plugins.api.Send
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
+import io.ktor.http.append
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
@@ -24,17 +29,12 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 internal class GitlabApiClient(
-    private val apiAttributes: ApiAttributes,
     private val tokenLocalDataSource: TokenLocalDataSource,
+    private val apiLocalDataSource: ApiLocalDataSource
 ) {
     internal val httpClient: HttpClient
 
     init {
-        val apiBase = URLBuilder().apply {
-            takeFrom(apiAttributes.baseUrl)
-            appendPathSegments("api", "v4")
-        }.buildString()
-
         httpClient = HttpClient {
             install(ContentNegotiation) {
                 json(
@@ -53,15 +53,22 @@ internal class GitlabApiClient(
             }
 
             defaultRequest {
-                url { takeFrom("$apiBase/") }
                 contentType(ContentType.Application.Json)
                 accept(ContentType.Application.Json)
+            }
+
+            install(DynamicBaseUrlPlugin.Plugin) {
+                baseUrlProvider = {
+                    apiLocalDataSource.getUrl()
+                        ?: "https://gitlab.com"
+                }
+                apiPath = listOf("api", "v4")
+                onlyForRelativeRequests = true
             }
 
             install(PrivateTokenPlugin.Plugin) {
                 tokenProvider = { tokenLocalDataSource.extractToken() }
                 requireToken = true
-                followRedirects = true
             }
         }
     }
@@ -72,6 +79,9 @@ internal class GitlabApiClient(
     suspend inline fun <reified T, reified R> post(endpoint: String, body: R): T =
         httpClient.post(endpoint) { setBody(body) }.body()
 
+    suspend inline fun <reified T> post(endpoint: String): T =
+        httpClient.post(endpoint).body()
+
     suspend fun getRaw(
         endpoint: String,
         accept: ContentType = ContentType.Any
@@ -80,6 +90,13 @@ internal class GitlabApiClient(
             accept(accept)
         }
     }
+
+    suspend fun getText(endpoint: String): String =
+        httpClient.get(endpoint) {
+            headers {
+                append(HttpHeaders.Accept, ContentType.Text.Plain)
+            }
+        }.bodyAsText()
 
     fun close() = httpClient.close()
 }
@@ -105,6 +122,61 @@ internal object PrivateTokenPlugin {
                 !token.isNullOrBlank() ->
                     request.headers.append(header, token)
             }
+            proceed(request)
+        }
+    }
+}
+
+internal object DynamicBaseUrlPlugin {
+    class Config {
+        // Provide the server root, e.g. "https://gitlab.example.com"
+        lateinit var baseUrlProvider: suspend () -> String?
+        // Path pieces appended after the base (defaults to /api/v4)
+        var apiPath: List<String> = listOf("api", "v4")
+        // If true, only rewrite URLs that are *relative* (recommended)
+        var onlyForRelativeRequests: Boolean = true
+    }
+
+    val Plugin = createClientPlugin("DynamicBaseUrlPlugin", ::Config) {
+        val provider = pluginConfig.baseUrlProvider
+        val apiPath = pluginConfig.apiPath
+        val onlyRelative = pluginConfig.onlyForRelativeRequests
+
+        on(Send) { request ->
+            val isRelative = request.url.host.isNullOrEmpty()
+            if (onlyRelative && !isRelative) {
+                proceed(request); return@on
+            }
+
+            val base = provider()?.trimEnd('/')
+                ?: throw IllegalStateException("Missing base URL")
+
+            val apiBase = URLBuilder().apply {
+                takeFrom(base)
+                appendPathSegments(apiPath)
+            }.build()
+
+            // Keep the original (possibly relative) path & query
+            val originalPath = request.url.encodedPath
+            val originalQuery = request.url.build().encodedQuery
+
+            // Prefix with {base}/api/v4
+            request.url.takeFrom(apiBase)
+
+            // Re-attach original path and query (without duplicating slashes)
+            val joinedPath = listOf(request.url.encodedPath.trimEnd('/'),
+                originalPath.trimStart('/'))
+                .filter { it.isNotEmpty() }
+                .joinToString("/")
+
+            request.url.encodedPath = if (joinedPath.isEmpty()) "/" else "/$joinedPath"
+            if (!originalQuery.isNullOrBlank()) {
+                request.url.parameters.clear()
+                URLBuilder("https://dummy.invalid/?$originalQuery").parameters.forEach {
+                        key, values -> values.forEach { v -> request.url.parameters.append(key, v) }
+                }
+            }
+
             proceed(request)
         }
     }

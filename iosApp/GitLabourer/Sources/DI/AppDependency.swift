@@ -6,6 +6,7 @@ import Login
 import Repository
 import MergeRequests
 import Pipelines
+import Jobs
 
 let appDependency = AppDependency()
 
@@ -42,6 +43,23 @@ extension AppDependency {
     var pipelinesViewModelDependencies: PipelinesViewModelDependencies {
         .init(
             getPipelinesForProjectUseCase: appDependency.getPipelinesForProjectUseCase
+        )
+    }
+
+    var jobsViewModelDependencies: JobsViewModelDependencies {
+        JobsViewModelDependencies(
+            getJobsForProjectUseCase: appDependency.getJobsForProjectUseCase,
+            getJobsForPipelineUseCase: appDependency.getJobsForPipelineUseCase,
+            cancelJobUseCase: appDependency.cancelJobUseCase,
+            retryJobUseCase: appDependency.retryJobUseCase
+        )
+    }
+
+    var jobsDetailViewModelDependencies: JobsDetailViewModelDependencies {
+        JobsDetailViewModelDependencies(
+            cancelJobUseCase: appDependency.cancelJobUseCase,
+            retryJobUseCase: appDependency.retryJobUseCase,
+            getJobLogUseCase: appDependency.getJobLogUseCase
         )
     }
 }

@@ -1,0 +1,40 @@
+import Foundation
+import ProjectDescription
+
+private let targetName = "Jobs"
+private let basePath = "Modules/" + targetName
+private let bundleId = "cz.nadvitek.\(targetName)"
+
+let jobs = Target.target(
+    name: targetName,
+    destinations: .iOS,
+    product: .framework,
+    bundleId: bundleId,
+    infoPlist: .default,
+    sources: .sourceFilesList(globs: [
+        "\(basePath)/Sources/**",
+        .testing(at: basePath)
+    ].compactMap { $0 }),
+    dependencies: [
+        .gitlabourerUI,
+        .core,
+        .kmp
+    ]
+)
+
+let jobsTesting = Target.target(
+    name: "\(targetName)Tests",
+    destinations: .iOS,
+    product: .unitTests,
+    bundleId: bundleId,
+    infoPlist: .default,
+    sources: ["\(basePath)/Tests/**"],
+    dependencies: [
+        .xctest,
+        .target(jobs)
+    ]
+)
+
+public extension TargetDependency {
+    static let jobs = TargetDependency.target(ProjectDescriptionHelpers.jobs)
+}

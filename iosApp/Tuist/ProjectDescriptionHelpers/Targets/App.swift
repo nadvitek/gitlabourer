@@ -37,7 +37,8 @@ let app = Target.target(
         .settings,
         .pipelines,
         .mergeRequests,
-        .projectDetail
+        .projectDetail,
+        .jobs
     ]
 )
 

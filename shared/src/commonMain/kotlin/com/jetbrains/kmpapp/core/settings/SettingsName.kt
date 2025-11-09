@@ -5,5 +5,6 @@ package com.jetbrains.kmpapp.core.settings
  */
 internal enum class SettingsName(val settingsFileName: String) {
 
-    TOKEN("token")
+    TOKEN("token"),
+    URL("url")
 }

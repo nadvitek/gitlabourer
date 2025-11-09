@@ -7,8 +7,9 @@ import ProjectDetail
 import MergeRequests
 import Repository
 import Pipelines
+import Jobs
 
-final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate {
+final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate, PipelinesFlowDelegate, JobsFlowDelegate {
 
     private var projectId: KotlinInt?
 
@@ -81,6 +82,7 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
             let vc = PipelinesView(
                 viewModel: PipelinesViewModelImpl(
                     dependencies: appDependency.pipelinesViewModelDependencies,
+                    flowDelegate: self,
                     projectId: KotlinInt(value: project.id)
                 )
             )
@@ -89,7 +91,18 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
             navigationController?.pushViewController(vc, animated: true)
 
         case .jobs:
-            break
+            let vc = JobsView(
+                viewModel: JobsViewModelImpl(
+                    dependencies: appDependency.jobsViewModelDependencies,
+                    flowDelegate: self,
+                    projectId: KotlinInt(value: project.id),
+                    pipelineId: nil,
+                    screenType: .list
+                )
+            )
+            .hosting()
+
+            navigationController?.pushViewController(vc, animated: true)
 
         case .tags:
             break
@@ -110,6 +123,42 @@ final class SearchFlowCoordinator: Base.FlowCoordinatorNoDeepLink, SearchFlowDel
                 filePath: file.path,
                 selectedBranchName: selectedBranchName,
                 branches: branches
+            )
+        )
+        .hosting(supportedOrientations: .landscape)
+
+        vc.modalPresentationStyle = .fullScreen
+
+        navigationController?.present(vc, animated: true)
+    }
+
+    func onPipelineClick(_ pipeline: DetailedPipeline) {
+        guard let projectId else { return }
+
+        let vc = JobsView(
+            viewModel: JobsViewModelImpl(
+                dependencies: appDependency.jobsViewModelDependencies,
+                flowDelegate: self,
+                projectId: projectId,
+                pipelineId: KotlinInt(value: Int32(pipeline.id)),
+                screenType: .pipeline
+            )
+        )
+        .hosting()
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func openJob(
+        _ job: DetailedJob
+    ) {
+        guard let projectId else { return }
+
+        let vc = JobsDetailView(
+            viewModel: JobsDetailViewModelImpl(
+                dependencies: appDependency.jobsDetailViewModelDependencies,
+                projectId: projectId,
+                job: job
             )
         )
         .hosting(supportedOrientations: .landscape)

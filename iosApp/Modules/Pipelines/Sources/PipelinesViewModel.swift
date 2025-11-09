@@ -10,6 +10,7 @@ public protocol PipelinesViewModel {
 
     func onAppear()
     func openLink(_ webUrl: String)
+    func onPipelineClick(_ pipeline: DetailedPipeline)
 }
 
 // MARK: - ScreenState
@@ -30,15 +31,18 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
 
     private let projectId: KotlinInt
     private let dependencies: PipelinesViewModelDependencies
+    private weak var flowDelegate: PipelinesFlowDelegate?
     private var pageNumber: Int = 0
 
     // MARK: - Initializers
 
     public init(
         dependencies: PipelinesViewModelDependencies,
+        flowDelegate: PipelinesFlowDelegate?,
         projectId: KotlinInt,
     ) {
         self.dependencies = dependencies
+        self.flowDelegate = flowDelegate
         self.projectId = projectId
     }
 
@@ -50,7 +54,6 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
         loadData()
     }
 
-    @MainActor
     public func openLink(_ webUrl: String) {
         guard
             let url = URL(string: webUrl),
@@ -58,6 +61,10 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
         else { return }
 
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    public func onPipelineClick(_ pipeline: DetailedPipeline) {
+        flowDelegate?.onPipelineClick(pipeline)
     }
 
     // MARK: - Private helpers
@@ -69,7 +76,7 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
             screenState = .loading
 
             do {
-                var fileData = try await dependencies.getPipelinesForProjectUseCase.invoke(
+                let fileData = try await dependencies.getPipelinesForProjectUseCase.invoke(
                     projectId: Int32(truncating: projectId),
                     pageNumber: Int32(pageNumber)
                 )

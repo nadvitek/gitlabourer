@@ -22,6 +22,16 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gitlabourerBackground()
             .onAppear(perform: viewModel.onAppear)
+            .toolbar {
+                ToolbarItemTransparent(
+                    placement: .principal
+                ) {
+                    Text("Pipelines")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                }
+            }
     }
 
     // MARK: - Private helpers
@@ -29,12 +39,6 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
     @ViewBuilder
     private var content: some View {
         VStack(spacing: 12) {
-            Text("Pipelines")
-                .fontWeight(.bold)
-                .font(.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-
             switch viewModel.screenState {
             case .loading:
                 ProgressView()
@@ -52,7 +56,11 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
         ScrollViewThatFits {
             VStack(spacing: 12) {
                 ForEach(pipelines, id: \.id) { pipeline in
-                    pipelineView(pipeline)
+                    Button {
+                        viewModel.onPipelineClick(pipeline)
+                    } label: {
+                        pipelineView(pipeline)
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -83,6 +91,8 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
 
                     Text(name)
                         .font(.body)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
                         .frame(height: 43, alignment: .top)
                 }
             }
@@ -143,6 +153,7 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
                 .padding(.top, 4)
             }
         }
+        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 8)
         .padding(.vertical, 8)

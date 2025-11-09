@@ -129,7 +129,7 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
             .clipShape(
                 UnevenRoundedRectangle(

@@ -11,5 +11,6 @@ public let projectTargets = [
     pipelines, pipelinesTesting,
     mergeRequests, mergeRequestsTesting,
     settings, settingsTesting,
-    projectDetail, projectDetailTesting
+    projectDetail, projectDetailTesting,
+    jobs, jobsTesting
 ]

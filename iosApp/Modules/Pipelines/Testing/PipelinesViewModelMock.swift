@@ -10,6 +10,7 @@ final class PipelinesViewModelMock: PipelinesViewModel {
 
     func onAppear() {}
     func openLink(_ webUrl: String) {}
+    func onPipelineClick(_ pipeline: DetailedPipeline) {}
 }
 
 #if DEBUG
