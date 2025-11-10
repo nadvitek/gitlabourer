@@ -30,6 +30,7 @@ internal val loginModule: Module = module {
     factory<LoginUseCase> {
         LoginUseCaseImpl(
             tokenLocalDataSource = get(),
+            apiLocalDataSource = get(),
             loginRepository = get()
         )
     }

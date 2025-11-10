@@ -3,6 +3,7 @@ package com.jetbrains.kmpapp.core.network
 import com.jetbrains.kmpapp.core.network.data.ApiLocalDataSource
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -24,8 +25,11 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.append
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 internal class GitlabApiClient(
@@ -52,23 +56,26 @@ internal class GitlabApiClient(
                 level = LogLevel.ALL
             }
 
-            defaultRequest {
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-
-            install(DynamicBaseUrlPlugin.Plugin) {
-                baseUrlProvider = {
-                    apiLocalDataSource.getUrl()
-                        ?: "https://gitlab.com"
-                }
-                apiPath = listOf("api", "v4")
-                onlyForRelativeRequests = true
-            }
+            setUpDefaultRequest()
 
             install(PrivateTokenPlugin.Plugin) {
                 tokenProvider = { tokenLocalDataSource.extractToken() }
                 requireToken = true
+            }
+        }
+    }
+
+    private fun HttpClientConfig<*>.setUpDefaultRequest() {
+        defaultRequest {
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+            // There's no way to make this suspend because ktor doesn't support it. However, this
+            // is always called on Dispatchers.IO, so it only briefly blocks a worker thread.
+            runBlocking {
+                val apiUrl = apiLocalDataSource
+                    .getUrl()
+
+                url("https://$apiUrl/api/v4/")
             }
         }
     }
@@ -99,6 +106,19 @@ internal class GitlabApiClient(
         }.bodyAsText()
 
     fun close() = httpClient.close()
+
+    private fun normalizeBaseUrl(raw: String?): String {
+        val trimmed = raw?.trim().orEmpty()
+        if (trimmed.isBlank()) return "https://gitlab.com"
+
+        val withScheme =
+            if (trimmed.startsWith("http://", ignoreCase = true) ||
+                trimmed.startsWith("https://", ignoreCase = true)
+            ) trimmed
+            else "https://$trimmed"
+
+        return withScheme.trimEnd('/')
+    }
 }
 
 internal object PrivateTokenPlugin {
@@ -129,11 +149,8 @@ internal object PrivateTokenPlugin {
 
 internal object DynamicBaseUrlPlugin {
     class Config {
-        // Provide the server root, e.g. "https://gitlab.example.com"
         lateinit var baseUrlProvider: suspend () -> String?
-        // Path pieces appended after the base (defaults to /api/v4)
         var apiPath: List<String> = listOf("api", "v4")
-        // If true, only rewrite URLs that are *relative* (recommended)
         var onlyForRelativeRequests: Boolean = true
     }
 
@@ -143,41 +160,47 @@ internal object DynamicBaseUrlPlugin {
         val onlyRelative = pluginConfig.onlyForRelativeRequests
 
         on(Send) { request ->
-            val isRelative = request.url.host.isNullOrEmpty()
+            val isRelative = request.url.host.isEmpty()
+
             if (onlyRelative && !isRelative) {
-                proceed(request); return@on
+                return@on proceed(request)
             }
 
             val base = provider()?.trimEnd('/')
                 ?: throw IllegalStateException("Missing base URL")
+
+            val parsed = URLBuilder().apply { takeFrom(base) }.build()
+            require(parsed.host.isNotBlank()) { "Base URL must include a host (got '$base')" }
 
             val apiBase = URLBuilder().apply {
                 takeFrom(base)
                 appendPathSegments(apiPath)
             }.build()
 
-            // Keep the original (possibly relative) path & query
             val originalPath = request.url.encodedPath
             val originalQuery = request.url.build().encodedQuery
 
-            // Prefix with {base}/api/v4
             request.url.takeFrom(apiBase)
 
-            // Re-attach original path and query (without duplicating slashes)
-            val joinedPath = listOf(request.url.encodedPath.trimEnd('/'),
-                originalPath.trimStart('/'))
-                .filter { it.isNotEmpty() }
-                .joinToString("/")
+            val joinedPath = listOf(
+                request.url.encodedPath.trimEnd('/'),
+                originalPath.trimStart('/')
+            ).filter { it.isNotEmpty() }.joinToString("/")
 
             request.url.encodedPath = if (joinedPath.isEmpty()) "/" else "/$joinedPath"
-            if (!originalQuery.isNullOrBlank()) {
+
+            if (originalQuery.isNotBlank()) {
                 request.url.parameters.clear()
-                URLBuilder("https://dummy.invalid/?$originalQuery").parameters.forEach {
-                        key, values -> values.forEach { v -> request.url.parameters.append(key, v) }
+
+                val parsed = URLBuilder("https://dummy.invalid/?$originalQuery").build().parameters
+                parsed.names().forEach { name ->
+                    parsed.getAll(name)?.forEach { value ->
+                        request.url.parameters.append(name, value)
+                    }
                 }
             }
 
-            proceed(request)
+            return@on proceed(request)
         }
     }
 }
