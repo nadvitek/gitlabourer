@@ -30,6 +30,15 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
             .onAppear {
                 viewModel.isPresented = true
             }
+            .toolbar {
+                ToolbarItemTransparent(placement: .principal) {
+                    Text("Search")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                }
+            }
+            .toolbarVisibility(.visible, for: .navigationBar)
             .animation(.default, value: viewModel.screenState)
     }
 

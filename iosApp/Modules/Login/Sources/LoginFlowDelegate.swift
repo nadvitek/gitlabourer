@@ -1,5 +1,6 @@
 import Foundation
+import shared
 
 public protocol LoginFlowDelegate: AnyObject {
-    func logIn()
+    func logIn(user: User)
 }

@@ -12,7 +12,21 @@ internal class LoginKtorDataSource(
 
     private val apiUserMapper = ApiUserMapper()
 
-    override suspend fun login(token: String): User? {
+    override suspend fun login(): User? {
+        return try {
+            val user = apiClient.get<ApiUser>(
+                endpoint = LoginRemoteDataSource.USER
+            )
+
+            apiUserMapper.map(user)
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+            null
+        }
+    }
+
+    override suspend fun getUser(): User? {
         return try {
             val user = apiClient.get<ApiUser>(
                 endpoint = LoginRemoteDataSource.USER

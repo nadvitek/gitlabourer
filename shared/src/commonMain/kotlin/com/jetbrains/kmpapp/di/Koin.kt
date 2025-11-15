@@ -6,7 +6,9 @@ import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobsForPipelineUseCas
 import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobsForProjectUseCase
 import com.jetbrains.kmpapp.feature.jobs.domain.usecase.RetryJobUseCase
 import com.jetbrains.kmpapp.feature.jobs.jobsModule
+import com.jetbrains.kmpapp.feature.login.domain.usecase.GetUserUseCase
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
+import com.jetbrains.kmpapp.feature.login.domain.usecase.LogoutUseCase
 import com.jetbrains.kmpapp.feature.login.loginModule
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetMergeRequestsUseCase
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetRepositoryFileTreeUseCase
@@ -80,5 +82,11 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val getJobLogUseCase: GetJobLogUseCase
+        get() = get()
+
+    public val logoutUseCase: LogoutUseCase
+        get() = get()
+
+    public val getUserUseCase: GetUserUseCase
         get() = get()
 }

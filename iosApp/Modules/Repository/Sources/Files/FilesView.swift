@@ -30,116 +30,116 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
     // MARK: -
 
     private var content: some View {
-        ScrollViewThatFits {
-            VStack(spacing: 12) {
-                HStack(spacing: 6) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 14)
-                    }
-                    .glassEffect()
-
-                    Spacer()
-
-                    RepositoryBranchPickerView(
-                        selectedBranch: $viewModel.selectedBranchName,
-                        branches: viewModel.branches
-                    )
+        VStack(spacing: 12) {
+            HStack(spacing: 6) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 14)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                switch viewModel.screenState {
-                case .loading:
-                    ProgressView()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity
-                        )
-                case let .loaded(file):
-                    loaded(file)
-                }
-            }
-            .padding(.top, 20)
-        }
-    }
-
-    private func loaded(_ file: FileData) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 0) {
-                Text(file.fileName)
-                    .fontWeight(.bold)
+                .glassEffect()
 
                 Spacer()
 
-                HStack(spacing: 8) {
-                    if coppied {
-                        Image(systemName: "checkmark")
-                            .transition(.opacity.combined(with: .scale))
-                    }
-
-                    Button {
-                        UIPasteboard.general.string = file.content
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            coppied = true
-                        }
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                coppied = false
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "document.on.document.fill")
-                    }
-                }
-            }
-            .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 6)
-            .padding(.horizontal, 8)
-            .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
-            .clipShape(
-                UnevenRoundedRectangle(
-                    topLeadingRadius: 12,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: 0,
-                    topTrailingRadius: 12,
-                    style: .circular
+                RepositoryBranchPickerView(
+                    selectedBranch: $viewModel.selectedBranchName,
+                    branches: viewModel.branches
                 )
-            )
-
-            // Render Markdown with a selectable UITextView wrapper; otherwise use selectable SwiftUI Text
-            Group {
-                if file.type == .md,
-                   let attributed = try? attributedMarkdown(from: file.content) {
-                    // Convert to NSAttributedString and override colors
-                    let nsAttr = NSAttributedString(attributed)
-                    let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
-                    AttributedText(attributedString: recolored)
-                } else {
-                    // Plain text: enable SwiftUI text selection
-                    Text(file.content)
-                        .textSelection(.enabled)
-                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
-            .clipShape(
-                UnevenRoundedRectangle(
-                    topLeadingRadius: 0,
-                    bottomLeadingRadius: 12,
-                    bottomTrailingRadius: 12,
-                    topTrailingRadius: 0,
-                    style: .circular
+
+            switch viewModel.screenState {
+            case .loading:
+                ProgressView()
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
+            case let .loaded(file):
+                loaded(file)
+            }
+        }
+        .padding(.top, 20)
+    }
+
+    private func loaded(_ file: FileData) -> some View {
+        ScrollViewThatFits {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
+                    Text(file.fileName)
+                        .fontWeight(.bold)
+
+                    Spacer()
+
+                    HStack(spacing: 8) {
+                        if coppied {
+                            Image(systemName: "checkmark")
+                                .transition(.opacity.combined(with: .scale))
+                        }
+
+                        Button {
+                            UIPasteboard.general.string = file.content
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                coppied = true
+                            }
+
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    coppied = false
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "document.on.document.fill")
+                        }
+                    }
+                }
+                .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 8)
+                .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
+                .clipShape(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 12,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 12,
+                        style: .circular
+                    )
                 )
-            )
+
+                // Render Markdown with a selectable UITextView wrapper; otherwise use selectable SwiftUI Text
+                Group {
+                    if file.type == .md,
+                       let attributed = try? attributedMarkdown(from: file.content) {
+                        // Convert to NSAttributedString and override colors
+                        let nsAttr = NSAttributedString(attributed)
+                        let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
+                        AttributedText(attributedString: recolored)
+                    } else {
+                        // Plain text: enable SwiftUI text selection
+                        Text(file.content)
+                            .textSelection(.enabled)
+                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                    }
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
+                .clipShape(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 0,
+                        bottomLeadingRadius: 12,
+                        bottomTrailingRadius: 12,
+                        topTrailingRadius: 0,
+                        style: .circular
+                    )
+                )
+            }
         }
     }
 
@@ -160,38 +160,9 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
     }
 }
 
-struct AttributedText: UIViewRepresentable {
-    let attributedString: NSAttributedString
+#if DEBUG
 
-    func makeUIView(context: Context) -> UITextView {
-        let tv = UITextView()
-        tv.isEditable = false
-        tv.isScrollEnabled = false
-        tv.isSelectable = true
-        tv.dataDetectorTypes = .link
-        tv.backgroundColor = .clear
-        tv.textContainerInset = .zero
-        tv.textContainer.lineFragmentPadding = 0
-        tv.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        tv.textContainer.lineBreakMode = .byWordWrapping
-
-        tv.linkTextAttributes = [
-            .foregroundColor: GitlabColors.gitlabOrange.color
-        ]
-        return tv
-    }
-
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.attributedText = attributedString
-    }
-
-    @available(iOS 16.0, *)
-    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize {
-        let targetWidth = proposal.width ?? UIScreen.main.bounds.width
-        let size = uiView.sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))
-        return CGSize(width: targetWidth, height: size.height)
-    }
-}
+// MARK: - Previews
 
 #Preview(traits: .landscapeRight) {
     FilesView(
@@ -239,3 +210,5 @@ struct AttributedText: UIViewRepresentable {
         )
     )
 }
+
+#endif

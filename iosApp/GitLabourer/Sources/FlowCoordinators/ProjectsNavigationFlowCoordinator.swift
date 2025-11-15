@@ -9,7 +9,7 @@ import Pipelines
 import ACKategories
 import Jobs
 
-class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate, PipelinesFlowDelegate, JobsFlowDelegate {
+class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate, PipelinesFlowDelegate, JobsFlowDelegate {
 
     private var projectId: KotlinInt?
 

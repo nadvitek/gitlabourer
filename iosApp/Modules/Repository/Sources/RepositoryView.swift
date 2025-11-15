@@ -37,13 +37,15 @@ public struct RepositoryView<ViewModel: RepositoryViewModel>: View {
     @ViewBuilder
     private var content: some View {
         VStack(spacing: 0) {
-            RepositoryBranchPickerView(
-                selectedBranch: $viewModel.selectedBranchName,
-                branches: viewModel.branches
-            )
-            .disabled(viewModel.branches.isEmpty)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 12)
+            if viewModel.selectedBranchName.isNotEmpty {
+                RepositoryBranchPickerView(
+                    selectedBranch: $viewModel.selectedBranchName,
+                    branches: viewModel.branches
+                )
+                .disabled(viewModel.branches.isEmpty)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+            }
 
             switch viewModel.screenState {
             case .loading:

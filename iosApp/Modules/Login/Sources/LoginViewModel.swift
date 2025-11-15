@@ -7,6 +7,7 @@ import Core
 
 public protocol LoginViewModel {
     var isLoading: Bool { get }
+    var url: String { get set }
     var token: String { get set }
     var errorMessage: String { get set }
 
@@ -21,6 +22,7 @@ public class LoginViewModelImpl: LoginViewModel {
     // MARK: - Internal properties
 
     public var isLoading: Bool = false
+    public var url: String = ""
     public var token: String = ""
     public var errorMessage: String = ""
 
@@ -50,13 +52,14 @@ public class LoginViewModelImpl: LoginViewModel {
 
             do {
                 let user = try await dependencies.loginUseCase.invoke(
+                    url: url,
                     token: token
                 )
 
-                if user != nil {
+                if let user {
                     UserDefaults.standard.isLoggedIn = true
 
-                    flowDelegate?.logIn()
+                    flowDelegate?.logIn(user: user)
                 } else {
                     errorMessage = "Invalid Personal Access Token"
                 }

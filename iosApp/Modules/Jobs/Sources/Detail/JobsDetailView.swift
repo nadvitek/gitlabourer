@@ -29,85 +29,94 @@ public struct JobsDetailView<ViewModel: JobsDetailViewModel>: View {
     // MARK: - Private helpers
 
     private var content: some View {
-        ScrollViewThatFits {
-            VStack(spacing: 12) {
-                HStack(spacing: 6) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 14)
-                    }
-                    .glassEffect()
-
-                    Spacer()
+        VStack(spacing: 12) {
+            HStack(spacing: 6) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 14)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .glassEffect()
 
-                switch viewModel.screenState {
-                case .loading:
-                    ProgressView()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity
-                        )
-                case let .loaded(jobLog):
-                    loaded(jobLog)
-                }
+                Spacer()
             }
-            .padding(.top, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            switch viewModel.screenState {
+            case .loading:
+                ProgressView()
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
+            case let .loaded(jobLog):
+                loaded(jobLog)
+            }
         }
+        .padding(.top, 20)
     }
 
     private func loaded(_ jobLog: JobLog) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 0) {
-                if let name = viewModel.job.name {
-                    Text(name)
+        ScrollViewThatFits {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
+                    if let name = viewModel.job.name {
+                        Text(name)
+                            .fontWeight(.bold)
+                    }
+                }
+                .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 8)
+                .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
+                .clipShape(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 12,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 12,
+                        style: .circular
+                    )
+                )
+
+                if jobLog.content.isEmpty {
+                    Text("This job does not have a trace.")
+                        .font(.headline)
                         .fontWeight(.bold)
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                } else {
+                    let nsAttr = NSAttributedString(string: jobLog.content)
+                    let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
+                    AttributedText(attributedString: recolored)
+                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
+                        .clipShape(
+                            UnevenRoundedRectangle(
+                                topLeadingRadius: 0,
+                                bottomLeadingRadius: 12,
+                                bottomTrailingRadius: 12,
+                                topTrailingRadius: 0,
+                                style: .circular
+                            )
+                        )
                 }
             }
-            .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, 6)
-            .padding(.horizontal, 8)
-            .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
-            .clipShape(
-                UnevenRoundedRectangle(
-                    topLeadingRadius: 12,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: 0,
-                    topTrailingRadius: 12,
-                    style: .circular
-                )
-            )
-
-            if jobLog.content.isEmpty {
-                Text("This job does not have a trace.")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-            } else {
-                Text(jobLog.content)
-                    .textSelection(.enabled)
-                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 12)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
-                    .clipShape(
-                        UnevenRoundedRectangle(
-                            topLeadingRadius: 0,
-                            bottomLeadingRadius: 12,
-                            bottomTrailingRadius: 12,
-                            topTrailingRadius: 0,
-                            style: .circular
-                        )
-                    )
-            }
         }
+    }
+
+    private func overridingColor(_ attributed: NSAttributedString, color: UIColor) -> NSAttributedString {
+        let mutable = NSMutableAttributedString(attributedString: attributed)
+        let fullRange = NSRange(location: 0, length: mutable.length)
+        mutable.removeAttribute(.foregroundColor, range: fullRange)
+        mutable.addAttribute(.foregroundColor, value: color, range: fullRange)
+        return mutable
     }
 }
 

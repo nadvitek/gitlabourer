@@ -78,8 +78,8 @@ internal data class ApiJobPipelineRef(
 internal data class ApiJobCommitRef(
     @SerialName("id")
     val id: String? = null,
-    @SerialName("name")
-    val name: String? = null,
+    @SerialName("title")
+    val title: String? = null,
     @SerialName("sha")
     val sha: String? = null
 )

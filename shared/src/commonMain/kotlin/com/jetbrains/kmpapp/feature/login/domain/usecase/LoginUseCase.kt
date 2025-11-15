@@ -24,6 +24,6 @@ internal class LoginUseCaseImpl(
         val authTokens = AuthTokens(privateToken = token)
         tokenLocalDataSource.saveTokens(authTokens)
         apiLocalDataSource.saveUrl(url)
-        return loginRepository.login(token)
+        return loginRepository.login()
     }
 }

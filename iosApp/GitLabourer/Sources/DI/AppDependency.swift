@@ -7,6 +7,7 @@ import Repository
 import MergeRequests
 import Pipelines
 import Jobs
+import Settings
 
 let appDependency = AppDependency()
 
@@ -60,6 +61,13 @@ extension AppDependency {
             cancelJobUseCase: appDependency.cancelJobUseCase,
             retryJobUseCase: appDependency.retryJobUseCase,
             getJobLogUseCase: appDependency.getJobLogUseCase
+        )
+    }
+
+    var settingsViewModelDependencies: SettingsViewModelDependencies {
+        SettingsViewModelDependencies(
+            getUserUseCase: getUserUseCase,
+            logoutUseCase: logoutUseCase
         )
     }
 }

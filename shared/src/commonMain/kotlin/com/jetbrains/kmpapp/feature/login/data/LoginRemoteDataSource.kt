@@ -4,7 +4,8 @@ import com.jetbrains.kmpapp.feature.login.domain.model.User
 
 internal interface LoginRemoteDataSource {
 
-    suspend fun login(token: String) : User?
+    suspend fun login() : User?
+    suspend fun getUser() : User?
 
     companion object Endpoints {
         const val USER = "user"

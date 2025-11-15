@@ -97,6 +97,10 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 #Preview {
     MergeRequestsView(
         viewModel: MergeRequestsViewModelMock(
@@ -107,3 +111,5 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
     )
     .preferredColorScheme(.dark)
 }
+
+#endif

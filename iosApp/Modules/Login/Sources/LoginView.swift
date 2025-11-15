@@ -32,10 +32,10 @@ struct LoginView<ViewModel: LoginViewModel>: View {
                 .padding(.top, 40)
 
                 VStack(spacing: 16) {
-                    // TODO: - Implement
+                    // TODO: - Implement error message
                     GitLabourerTextField(
-                        text: .constant(""),
-                        placeholder: "Server address",
+                        text: $viewModel.url,
+                        placeholder: "gitlab.com",
                         errorMessage: .constant("")
                     )
 

@@ -7,7 +7,11 @@ internal class LoginRepositoryImpl(
     private val loginRemoteDataSource: LoginRemoteDataSource
 ): LoginRepository {
 
-    override suspend fun login(token: String): User? {
-        return loginRemoteDataSource.login(token)
+    override suspend fun login(): User? {
+        return loginRemoteDataSource.login()
+    }
+
+    override suspend fun getUser(): User? {
+        return loginRemoteDataSource.getUser()
     }
 }

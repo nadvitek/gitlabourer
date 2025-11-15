@@ -79,9 +79,17 @@ internal class JobsKtorDataSource(
     }
 
     override suspend fun getJobLog(projectId: Int, jobId: Long): JobLog {
-        // Prefer a text/plain request so GitLab returns the raw trace text
+//        val content: String = try {
+//            apiClient.getText(
+//                endpoint = JobsRemoteDataSource.jobTrace(projectId, jobId)
+//            )
+//        } catch (e: Exception) {
+//            if (e is CancellationException) throw e
+//            e.printStackTrace()
+//            ""
+//        }
         val content: String = try {
-            apiClient.getText(
+            apiClient.get(
                 endpoint = JobsRemoteDataSource.jobTrace(projectId, jobId)
             )
         } catch (e: Exception) {

@@ -148,7 +148,7 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
-                    alignment: .leading
+                    alignment: .bottom
                 )
                 .padding(.top, 4)
             }

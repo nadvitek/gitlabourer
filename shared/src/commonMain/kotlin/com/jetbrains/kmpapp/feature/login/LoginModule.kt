@@ -5,6 +5,8 @@ import com.jetbrains.kmpapp.feature.login.data.LoginRemoteDataSource
 import com.jetbrains.kmpapp.feature.login.data.LoginRepositoryImpl
 import com.jetbrains.kmpapp.feature.login.data.api.LoginKtorDataSource
 import com.jetbrains.kmpapp.feature.login.domain.LoginRepository
+import com.jetbrains.kmpapp.feature.login.domain.usecase.GetUserUseCase
+import com.jetbrains.kmpapp.feature.login.domain.usecase.GetUserUseCaseImpl
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCaseImpl
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LogoutUseCase
@@ -37,7 +39,14 @@ internal val loginModule: Module = module {
 
     factory<LogoutUseCase> {
         LogoutUseCaseImpl(
-            tokenLocalDataSource = get()
+            tokenLocalDataSource = get(),
+            apiLocalDataSource = get()
+        )
+    }
+
+    factory<GetUserUseCase> {
+        GetUserUseCaseImpl(
+            loginRepository = get(),
         )
     }
 }

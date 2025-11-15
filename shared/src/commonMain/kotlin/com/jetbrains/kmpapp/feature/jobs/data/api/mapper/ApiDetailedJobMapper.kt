@@ -30,7 +30,7 @@ internal class ApiDetailedJobMapper {
         status = PipelineStatus.from(api.status),
         stage = api.stage,
         name = api.name,
-        pipelineName = api.commit?.name,
+        pipelineName = api.commit?.title,
         ref = api.ref,
         webUrl = api.webUrl,
         user = api.user?.let(apiUserMapper::map),
