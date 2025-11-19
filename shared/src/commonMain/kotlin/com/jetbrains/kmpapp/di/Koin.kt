@@ -13,6 +13,8 @@ import com.jetbrains.kmpapp.feature.login.loginModule
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetMergeRequestsUseCase
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetRepositoryFileTreeUseCase
 import com.jetbrains.kmpapp.feature.mergeRequests.mergeRequestsModule
+import com.jetbrains.kmpapp.feature.notification.domain.usecase.ObservePipelineUpdatesUseCase
+import com.jetbrains.kmpapp.feature.notification.notificationModule
 import com.jetbrains.kmpapp.feature.pipelines.domain.usecase.GetPipelinesForProjectUseCase
 import com.jetbrains.kmpapp.feature.pipelines.pipelinesModule
 import com.jetbrains.kmpapp.feature.project.domain.usecase.GetProjectsUseCase
@@ -38,6 +40,7 @@ public fun initKoin(extraModules: List<Module>) {
             mergeRequestsModule,
             pipelinesModule,
             jobsModule,
+            notificationModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -88,5 +91,8 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val getUserUseCase: GetUserUseCase
+        get() = get()
+
+    public val observePipelineUpdatesUseCase: ObservePipelineUpdatesUseCase
         get() = get()
 }

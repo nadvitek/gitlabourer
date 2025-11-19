@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kmpNativeCoroutines)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -46,10 +47,14 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koinKmmExport.core)
             implementation(libs.ktor.client.logging)
-            implementation("com.russhwolf:multiplatform-settings:1.1.1")           // core (includes ObservableSettings)
+            implementation("com.russhwolf:multiplatform-settings:1.1.1")
             implementation("com.russhwolf:multiplatform-settings-coroutines:1.1.1")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             api(libs.kmp.observable.viewmodel)
+
+//            implementation("dev.gitlive:firebase-common:2.1.0")
+//            implementation("dev.gitlive:firebase-firestore:2.1.0")
+//            implementation("dev.gitlive:firebase-auth:2.1.0")
         }
 
         all {
@@ -80,16 +85,3 @@ android {
 dependencies {
     implementation(libs.crash.plugin)
 }
-
-/*tasks.register<org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask>("assembleXCFramework") {
-    baseName = "SharedModule"
-
-    from(
-        kotlin.targets.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>("iosArm64").binaries.getFramework("debug"),
-        kotlin.targets.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>("iosSimulatorArm64").binaries.getFramework("debug"),
-        kotlin.targets.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>("iosX64").binaries.getFramework("debug")
-    )
-
-    destinationDir = buildDir.resolve("xcframeworks")
-}
- */

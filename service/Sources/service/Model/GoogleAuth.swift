@@ -9,7 +9,6 @@ struct AuthToken {
     let expiresAt: Date
 
     var expired: Bool {
-        // refresh 60s before actual expiry
         Date() >= expiresAt.addingTimeInterval(-60)
     }
 }

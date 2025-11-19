@@ -6,7 +6,7 @@ struct Pipeline: Content {
     let status: PipelineStatus
 }
 
-enum PipelineStatus: Codable, Equatable {
+enum PipelineStatus: String, Codable, Equatable, Content {
     case created
     case waitingForResource
     case preparing
@@ -15,6 +15,7 @@ enum PipelineStatus: Codable, Equatable {
     case success
     case failed
     case canceled
+    case canceling
     case skipped
     case manual
     case scheduled
@@ -22,8 +23,17 @@ enum PipelineStatus: Codable, Equatable {
 
     var isRunning: Bool {
         switch self {
-        case .running, .pending, .scheduled, .preparing, .waitingForResource: return true
+        case .running, .pending, .scheduled, .preparing, .waitingForResource, .created: return true
         default: return false
+        }
+    }
+
+    var isFinished: Bool {
+        switch self {
+        case .created, .waitingForResource, .preparing, .pending, .running, .scheduled:
+            false
+        case .success, .failed, .canceled, .canceling, .skipped, .manual, .unknown:
+            true
         }
     }
 
@@ -36,6 +46,7 @@ enum PipelineStatus: Codable, Equatable {
         case success
         case failed
         case canceled
+        case canceling
         case skipped
         case manual
         case scheduled

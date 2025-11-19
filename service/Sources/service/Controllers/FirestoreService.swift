@@ -38,7 +38,6 @@ final class FirestoreService: @unchecked Sendable {
     let clientEmail: String
     let scope: String
 
-    // token cache isolated in an actor to be Sendable-safe
     private let tokenCache = AuthTokenCache()
 
     init(app: Application, projectId: String, clientEmail: String, scope: String) {
@@ -52,10 +51,12 @@ final class FirestoreService: @unchecked Sendable {
 
     /// Save or overwrite a subscription for a userId
     func saveSubscription(_ sub: Subscription) async throws {
+        let encryptedToken = try await app.encryption.encrypt(sub.token)
+
         let fields = SubscriptionFields(
             userId: .init(stringValue: sub.userId),
             baseUrl: .init(stringValue: sub.baseUrl),
-            token: .init(stringValue: sub.token)
+            token: .init(stringValue: encryptedToken)
         )
 
         let doc = FirestoreDocument<SubscriptionFields>(
@@ -65,7 +66,9 @@ final class FirestoreService: @unchecked Sendable {
             updateTime: nil
         )
 
-        let url = documentURL(collection: "subscriptions", documentId: sub.userId)
+        let documentId = "\(sub.baseUrl)_\(sub.userId)"
+
+        let url = documentURL(collection: "subscriptions", documentId: documentId)
         let headers = try await authHeaders()
 
         _ = try await app.client.patch(URI(string: url), headers: headers) { req in
@@ -81,18 +84,65 @@ final class FirestoreService: @unchecked Sendable {
         let headers = try await authHeaders()
 
         let res = try await app.client.get(URI(string: url), headers: headers)
-        let list = try res.content.decode(ListDocumentsResponse<SubscriptionFields>.self)
 
+        if res.status != .ok {
+            let bodyString = res.body.flatMap { String(buffer: $0) } ?? "<no body>"
+            app.logger.error("Firestore listDocuments error: \(res.status) \(bodyString)")
+            throw Abort(.internalServerError, reason: "Firestore error: \(res.status)")
+        }
+
+        let list = try res.content.decode(ListDocumentsResponse<SubscriptionFields>.self)
         let docs = list.documents ?? []
 
-        return docs.map { doc in
+        var subscriptions: [Subscription] = []
+        subscriptions.reserveCapacity(docs.count)
+
+        for doc in docs {
             let f = doc.fields
-            return Subscription(
+            let decryptedToken = try await app.encryption.decrypt(f.token.stringValue)
+            let sub = Subscription(
                 userId: f.userId.stringValue,
                 baseUrl: f.baseUrl.stringValue,
-                token: f.token.stringValue
+                token: decryptedToken
             )
+            subscriptions.append(sub)
         }
+
+        return subscriptions
+    }
+
+    func savePipelineStatus(for sub: Subscription, result: Result) async throws {
+        let mr = result.mergeRequest
+        let pipeline = result.pipeline
+
+        let now = ISO8601DateFormatter().string(from: Date())
+
+        let fields = NotificationFields(
+            userId: .init(stringValue: sub.userId),
+            projectId: .init(integerValue: String(mr.project_id)),
+            mrIid: .init(integerValue: String(mr.iid)),
+            mrTitle: .init(stringValue: mr.title),
+            pipelineId: .init(integerValue: String(pipeline.id)),
+            pipelineStatus: .init(stringValue: pipeline.status.rawValue),
+            updatedAt: .init(stringValue: now)
+        )
+
+        let doc = FirestoreDocument(
+            name: nil,
+            fields: fields,
+            createTime: nil,
+            updateTime: nil
+        )
+
+        let docId = "\(sub.baseUrl)_\(sub.userId)_\(mr.project_id)_\(mr.iid)_\(pipeline.id)"
+        let url = documentURL(collection: "pipelineStatuses", documentId: docId)
+        let headers = try await authHeaders()
+
+        _ = try await app.client.patch(URI(string: url), headers: headers) { req in
+            try req.content.encode(doc)
+        }
+
+        app.logger.info("Saved pipeline status for user=\(sub.userId), project=\(mr.project_id), MR=\(mr.iid)")
     }
 
     // MARK: - Private helpers
@@ -141,7 +191,6 @@ final class FirestoreService: @unchecked Sendable {
             iat: IssuedAtClaim(value: now)
         )
 
-        // Use the JWTSigners stored on Application via actor box
         let assertion = try await app.jwtSignersBox.sign(payload)
 
         let body = FirebaseAuthRequest(
@@ -157,7 +206,7 @@ final class FirestoreService: @unchecked Sendable {
     }
 }
 
-// MARK: - Storage key
+// MARK: - AuthTokenKey
 
 struct AuthTokenKey: StorageKey {
     typealias Value = AuthToken

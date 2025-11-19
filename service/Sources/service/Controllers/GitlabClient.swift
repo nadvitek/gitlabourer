@@ -15,14 +15,12 @@ struct GitLabClient {
             req.headers.add(name: "PRIVATE-TOKEN", value: token)
         }
 
-        // Optional: sanity check
         guard response.status == .ok else {
             throw Abort(response.status)
         }
 
         let decodedResponse = try response.content.decode([MergeRequest].self)
 
-        // Concurrently fetch the latest pipeline for each MR, then filter by running status
         let pairs: [(MergeRequest, Pipeline?)] = try await withThrowingTaskGroup(
             of: (
                 MergeRequest,
@@ -47,8 +45,7 @@ struct GitLabClient {
 
         let filteredResponse = pairs.compactMap { mr, pipeline in
             if
-                let pipeline,
-                pipeline.status.isRunning == true
+                let pipeline
             {
                 return Result(
                     mergeRequest: mr,
@@ -71,7 +68,6 @@ struct GitLabClient {
             req.headers.add(name: "PRIVATE-TOKEN", value: token)
         }
 
-        // Optional: sanity check
         guard response.status == .ok else {
             throw Abort(response.status)
         }

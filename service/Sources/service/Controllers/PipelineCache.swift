@@ -2,7 +2,6 @@ import Foundation
 import Vapor
 
 actor PipelineCache {
-    // key: pipelineKey (user+mr+pipeline), value: last known status
     private var storage: [String: PipelineStatus] = [:]
 
     func lastStatus(for key: String) -> PipelineStatus? {
@@ -12,9 +11,12 @@ actor PipelineCache {
     func updateStatus(_ status: PipelineStatus, for key: String) {
         storage[key] = status
     }
+
+    func removeValue(for key: String) {
+        storage.removeValue(forKey: key)
+    }
 }
 
-// StorageKey wrapper for Application.storage
 struct PipelineCacheStorageKey: StorageKey {
     typealias Value = PipelineCache
 }

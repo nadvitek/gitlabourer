@@ -40,5 +40,12 @@ public enum class PipelineStatus {
             "scheduled" -> SCHEDULED
             else -> UNKNOWN
         }
+
+        public fun fromBackend(value: String): PipelineStatus =
+            entries.firstOrNull { it.name.equals(value, ignoreCase = true) }
+                ?: when (value.lowercase()) {
+                    "waiting_for_resource" -> WAITING_FOR_RESOURCE
+                    else -> UNKNOWN
+                }
     }
 }
