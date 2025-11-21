@@ -68,13 +68,16 @@ extension AppFlowCoordinator: LogoutFlowDelegate {
     }
 
     func logout() {
-        let rootVC = createLoginViewController(
-            dependencies: appDependency.loginViewModelDependencies,
-            flowDelegate: self
-        )
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let rootVC = createLoginViewController(
+                dependencies: appDependency.loginViewModelDependencies,
+                flowDelegate: self
+            )
 
-        self.window.rootViewController = rootVC
-        rootViewController = rootVC
+            self.window.rootViewController = rootVC
+            rootViewController = rootVC
+        }
     }
 }
 

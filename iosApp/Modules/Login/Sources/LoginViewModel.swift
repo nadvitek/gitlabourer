@@ -10,8 +10,10 @@ public protocol LoginViewModel {
     var url: String { get set }
     var token: String { get set }
     var errorMessage: String { get set }
+    var isOnboardingPresented: Bool { get set }
 
     func login()
+    func presentOnboarding()
 }
 
 // MARK: - LoginViewModelImpl
@@ -25,6 +27,7 @@ public class LoginViewModelImpl: LoginViewModel {
     public var url: String = ""
     public var token: String = ""
     public var errorMessage: String = ""
+    public var isOnboardingPresented: Bool = false
 
     // MARK: - Private properties
 
@@ -42,6 +45,12 @@ public class LoginViewModelImpl: LoginViewModel {
     }
 
     // MARK: - Internal interface
+
+    public func presentOnboarding() {
+        guard !UserDefaults.standard.wasOnboarded else { return }
+
+        isOnboardingPresented = true
+    }
 
     public func login() {
         Task { @MainActor [weak self] in

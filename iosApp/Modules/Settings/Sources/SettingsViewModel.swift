@@ -51,10 +51,9 @@ public class SettingsViewModelImpl: SettingsViewModel {
     }
 
     public func logout() {
-        UserDefaults.standard.set(false, forKey: "loggedIn")
-
         Task {
             try? await dependencies.logoutUseCase.invoke()
+            UserDefaults.standard.isLoggedIn = false
             flowDelegate?.logout()
         }
     }

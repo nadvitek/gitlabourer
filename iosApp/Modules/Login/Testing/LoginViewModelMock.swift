@@ -5,6 +5,7 @@ final class LoginViewModelMock: LoginViewModel {
     var token: String
     var url: String
     var errorMessage: String
+    var isOnboardingPresented: Bool = false
 
     init(
         isLoading: Bool = false,
@@ -19,4 +20,5 @@ final class LoginViewModelMock: LoginViewModel {
     }
 
     func login() {}
+    func presentOnboarding() {}
 }

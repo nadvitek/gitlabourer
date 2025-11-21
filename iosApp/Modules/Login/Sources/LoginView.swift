@@ -67,6 +67,17 @@ struct LoginView<ViewModel: LoginViewModel>: View {
         }
         .scrollDisabled(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .fullScreenCover(
+            isPresented: $viewModel.isOnboardingPresented,
+            onDismiss: {
+                UserDefaults.standard.wasOnboarded = true
+            }
+        ) {
+            OnboardingView(viewModel: OnboardingViewModelImpl())
+        }
+        .onAppear {
+            viewModel.presentOnboarding()
+        }
         .gitlabourerBackground()
     }
 }
@@ -81,6 +92,7 @@ public func createLoginViewController(
             flowDelegate: flowDelegate
         )
     )
+    .preferredColorScheme(.dark)
     .hosting()
 }
 
@@ -88,6 +100,7 @@ public func createLoginViewController(
 
 #Preview {
     LoginView(viewModel: LoginViewModelMock(errorMessage: "Personal Access Token is invalid."))
+        .preferredColorScheme(.dark)
 }
 
 #endif

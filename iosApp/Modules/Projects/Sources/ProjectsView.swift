@@ -29,12 +29,12 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                         .frame(width: 200, alignment: .leading)
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: viewModel.logout) {
-                        Image(systemName: "door.right.hand.open")
-                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                    }
-                }
+//                ToolbarItem(placement: .topBarTrailing) {
+//                    Button(action: viewModel.logout) {
+//                        Image(systemName: "door.right.hand.open")
+//                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+//                    }
+//                }
             }
     }
 
