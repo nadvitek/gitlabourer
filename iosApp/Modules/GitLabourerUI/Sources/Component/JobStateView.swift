@@ -73,12 +73,9 @@ public struct JobStateView: View {
 
 #Preview {
     VStack(spacing: 20) {
-        JobStateView(state: .success)
-        JobStateView(state: .failed)
-        JobStateView(state: .running)
-        JobStateView(state: .canceled)
-        JobStateView(state: .created)
-        JobStateView(state: .pending)
+        ForEach(PipelineStatus.allCases, id: \.self) { status in
+            JobStateView(state: status)
+        }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .gitlabourerBackground()
