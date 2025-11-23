@@ -14,10 +14,16 @@ public struct ToolbarItemTransparent<Content: View>: ToolbarContent {
     }
     
     public var body: some ToolbarContent {
-        ToolbarItem(placement: placement) {
-            content
-                .padding(.leading, -5)
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: placement) {
+                content
+                    .padding(.leading, -5)
+            }
+            .sharedBackgroundVisibility(.hidden)
+        } else {
+            ToolbarItem(placement: placement) {
+                content
+            }
         }
-        .sharedBackgroundVisibility(.hidden)
     }
 }

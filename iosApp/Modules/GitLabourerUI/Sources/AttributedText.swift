@@ -31,7 +31,6 @@ public struct AttributedText: UIViewRepresentable {
         uiView.attributedText = attributedString
     }
 
-    @available(iOS 16.0, *)
     public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize {
         let targetWidth = proposal.width ?? UIScreen.main.bounds.width
         let size = uiView.sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))

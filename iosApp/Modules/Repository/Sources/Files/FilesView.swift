@@ -32,7 +32,7 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
     private var content: some View {
         VStack(spacing: 12) {
             HStack(spacing: 6) {
-                Button {
+                let button = Button {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
@@ -40,7 +40,13 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 14)
                 }
-                .glassEffect()
+
+                if #available(iOS 26.0, *) {
+                    button
+                        .glassEffect()
+                } else {
+                    button
+                }
 
                 Spacer()
 
