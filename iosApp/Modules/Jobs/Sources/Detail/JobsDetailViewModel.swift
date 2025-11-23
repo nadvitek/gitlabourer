@@ -8,9 +8,11 @@ import SwiftUI
 public protocol JobsDetailViewModel {
     var screenState: JobsDetailScreenState { get }
     var job: DetailedJob { get }
+    var isRetryLoading: Bool { get }
 
     func onAppear()
     func openLink(_ webUrl: String)
+    func retry()
 }
 
 // MARK: - ScreenState
@@ -18,6 +20,7 @@ public protocol JobsDetailViewModel {
 public enum JobsDetailScreenState {
     case loading
     case loaded(JobLog)
+    case error
 }
 
 // MARK: - JobsViewModelImpl
@@ -29,6 +32,7 @@ public class JobsDetailViewModelImpl: JobsDetailViewModel {
 
     public var screenState: JobsDetailScreenState = .loading
     public let job: DetailedJob
+    public var isRetryLoading: Bool = false
 
     private let projectId: KotlinInt
     private let dependencies: JobsDetailViewModelDependencies
@@ -64,11 +68,19 @@ public class JobsDetailViewModelImpl: JobsDetailViewModel {
         }
     }
 
+    public func retry() {
+        isRetryLoading = true
+
+        loadData()
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
         Task { @MainActor [weak self] in
             guard let self else { return }
+
+            defer { isRetryLoading = false }
 
             do {
                 let jobLog = try await dependencies.getJobLogUseCase.invoke(
@@ -78,7 +90,7 @@ public class JobsDetailViewModelImpl: JobsDetailViewModel {
 
                 screenState = .loaded(jobLog)
             } catch {
-
+                screenState = .error
             }
         }
     }

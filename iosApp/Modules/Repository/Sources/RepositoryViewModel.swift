@@ -12,11 +12,13 @@ public protocol RepositoryViewModel {
     var itemSize: CGSize { get set }
     var contentHeight: Double { get }
     var selectedBranchName: String { get set }
+    var isRetryLoading: Bool { get }
     var branches: [String] { get }
 
     func onAppear()
     func onRowClick(_ item: TreeItem)
     func assignItemSize(_ size: CGSize)
+    func retry()
 }
 
 // MARK: - ScreenState
@@ -24,6 +26,7 @@ public protocol RepositoryViewModel {
 public enum RepositoryScreenState {
     case loading
     case loaded([TreeItem])
+    case error
 }
 
 // MARK: - RepositoryViewModelImpl
@@ -52,6 +55,7 @@ public class RepositoryViewModelImpl: RepositoryViewModel {
         }
     }
     public var branches: [String] = []
+    public var isRetryLoading: Bool = false
 
     private var visibleItems: Int {
         itemCount + expanded.map(\.children).count
@@ -107,11 +111,19 @@ public class RepositoryViewModelImpl: RepositoryViewModel {
         itemSize = size
     }
 
+    public func retry() {
+        isRetryLoading = true
+
+        loadData()
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
         Task { @MainActor [weak self] in
             guard let self else { return }
+
+            defer { isRetryLoading = false }
 
             do {
                 let projectId = KotlinInt(value: project.id)

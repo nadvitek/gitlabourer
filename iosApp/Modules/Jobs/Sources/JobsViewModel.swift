@@ -7,9 +7,14 @@ import SwiftUI
 
 public protocol JobsViewModel {
     var screenState: JobsScreenState { get }
+    var isLoadingNextPage: Bool { get }
+    var hasNextPage: Bool { get }
+    var isRetryLoading: Bool { get }
 
     func onAppear()
     func openLink(_ webUrl: String)
+    func retry()
+    func refresh() async
     func handleAction(_ action: JobsAction)
 }
 
@@ -19,6 +24,7 @@ public enum JobsScreenState {
     case loading
     case list([DetailedJob])
     case pipeline(JobsStream)
+    case error
 }
 
 public enum JobsScreenType {
@@ -30,6 +36,8 @@ public enum JobsAction {
     case retry(DetailedJob)
     case cancel(DetailedJob)
     case open(DetailedJob)
+    case loadNextPage
+    case openLink(String?)
 }
 
 // MARK: - JobsViewModelImpl
@@ -40,6 +48,9 @@ public class JobsViewModelImpl: JobsViewModel {
     // MARK: - Internal properties
 
     public var screenState: JobsScreenState = .loading
+    public var hasNextPage: Bool = false
+    public var isLoadingNextPage: Bool = false
+    public var isRetryLoading: Bool = false
 
     private let projectId: KotlinInt
     private let dependencies: JobsViewModelDependencies
@@ -47,6 +58,7 @@ public class JobsViewModelImpl: JobsViewModel {
     private let pipelineId: KotlinInt?
     private var pageNumber: Int = 0
     private let jobsScreenType: JobsScreenType
+    private var cachedJobs: [DetailedJob] = []
 
     // MARK: - Initializers
 
@@ -93,10 +105,50 @@ public class JobsViewModelImpl: JobsViewModel {
         switch action {
         case let .cancel(job):
             cancelJob(job)
+
         case let .retry(job):
             retryJob(job)
+
         case let .open(job):
             flowDelegate?.openJob(job)
+
+        case .loadNextPage:
+            loadNextPage()
+
+        case let .openLink(url):
+            if let url {
+                openLink(url)
+            }
+        }
+    }
+
+    public func retry() {
+        isRetryLoading = true
+
+        switch jobsScreenType {
+        case .pipeline:
+            loadPipelineData()
+
+        case .list:
+            loadListData()
+        }
+    }
+
+    public func refresh() async {
+        cachedJobs = []
+        pageNumber = 0
+
+        do {
+            let jobs = try await dependencies.getJobsForProjectUseCase.invoke(
+                projectId: Int32(truncating: projectId),
+                pageNumber: Int32(pageNumber)
+            )
+
+            cachedJobs = jobs.items
+            hasNextPage = jobs.pageInfo.hasNextPage
+            screenState = .list(jobs.items)
+        } catch {
+            screenState = .error
         }
     }
 
@@ -125,7 +177,7 @@ public class JobsViewModelImpl: JobsViewModel {
                     }
                 }
             } catch {
-
+                screenState = .error
             }
         }
     }
@@ -140,9 +192,32 @@ public class JobsViewModelImpl: JobsViewModel {
                     pageNumber: Int32(pageNumber)
                 )
 
-                screenState = .list(jobs)
+                cachedJobs = jobs.items
+                hasNextPage = jobs.pageInfo.hasNextPage
+                screenState = .list(jobs.items)
             } catch {
+                screenState = .error
+            }
+        }
+    }
 
+    private func loadNextPage() {
+        pageNumber += 1
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            do {
+                let jobs = try await dependencies.getJobsForProjectUseCase.invoke(
+                    projectId: Int32(truncating: projectId),
+                    pageNumber: Int32(pageNumber)
+                )
+
+                cachedJobs.append(contentsOf: jobs.items)
+                hasNextPage = jobs.pageInfo.hasNextPage
+                screenState = .list(cachedJobs)
+            } catch {
+                screenState = .error
             }
         }
     }
@@ -151,14 +226,10 @@ public class JobsViewModelImpl: JobsViewModel {
         Task { [weak self] in
             guard let self else { return }
 
-            do {
-                try await dependencies.retryJobUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
-                    jobId: job.id
-                )
-            } catch {
-
-            }
+            let _ = try? await dependencies.retryJobUseCase.invoke(
+                projectId: Int32(truncating: projectId),
+                jobId: job.id
+            )
         }
     }
 
@@ -166,14 +237,10 @@ public class JobsViewModelImpl: JobsViewModel {
         Task { [weak self] in
             guard let self else { return }
 
-            do {
-                try await dependencies.cancelJobUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
-                    jobId: job.id
-                )
-            } catch {
-
-            }
+            let _ = try? await dependencies.cancelJobUseCase.invoke(
+                projectId: Int32(truncating: projectId),
+                jobId: job.id
+            )
         }
     }
 }

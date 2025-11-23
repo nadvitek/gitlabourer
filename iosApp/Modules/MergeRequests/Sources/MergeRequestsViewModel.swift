@@ -7,9 +7,16 @@ import Observation
 public protocol MergeRequestsViewModel {
     var screenState: [MergeRequestState: MergeRequestsScreenState] { get }
     var selectedState: MergeRequestState { get set }
+    var hasNextPage: [MergeRequestState: Bool] { get }
+    var isLoadingNextPage: [MergeRequestState: Bool] { get }
+    var isRetryLoading: [MergeRequestState: Bool] { get }
 
     func isStateSelected(_ state: MergeRequestState) -> Bool
+    func hasCurrentStateNextPage() -> Bool
     func onAppear()
+    func refresh() async
+    func retry()
+    func loadNextPage()
     func selectState(state: MergeRequestState)
 }
 
@@ -18,6 +25,7 @@ public protocol MergeRequestsViewModel {
 public enum MergeRequestsScreenState {
     case loading
     case loaded([MergeRequest])
+    case error
 }
 
 // MARK: - ProjectsViewModelImpl
@@ -29,9 +37,14 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
 
     public var screenState: [MergeRequestState: MergeRequestsScreenState] = [:]
     public var selectedState: MergeRequestState = .opened
+    public var hasNextPage: [MergeRequestState: Bool] = [:]
+    public var isLoadingNextPage: [MergeRequestState: Bool] = [:]
+    public var isRetryLoading: [MergeRequestState: Bool] = [:]
 
     private let projectId: KotlinInt?
     private let dependencies: MergeRequestsViewModelDependencies
+    private var cachedMergeRequests: [MergeRequestState: [MergeRequest]] = [:]
+    private var pageNumber = 0
     private weak var flowDelegate: MergeRequestsFlowDelegate?
 
     // MARK: - Initializers
@@ -53,6 +66,8 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
     // MARK: - Internal interface
 
     public func onAppear() {
+        guard case .loading = screenState[selectedState] else { return }
+
         loadData()
     }
 
@@ -65,21 +80,85 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
         selectedState == state
     }
 
+    public func refresh() async {
+        pageNumber = 0
+        cachedMergeRequests[selectedState] = []
+        let currentState = selectedState
+
+        do {
+            let mergeRequests = try await dependencies.getMergeRequestsUseCase.invoke(
+                state: selectedState,
+                projectId: projectId,
+                pageNumber: 0
+            )
+
+            cachedMergeRequests[currentState] = mergeRequests.items
+            hasNextPage[currentState] = mergeRequests.pageInfo.hasNextPage
+            screenState[currentState] = .loaded(mergeRequests.items)
+        } catch {
+            screenState[currentState] = .error
+        }
+    }
+
+    public func loadNextPage() {
+        pageNumber += 1
+        isLoadingNextPage[selectedState] = true
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            let currentState = selectedState
+            defer { isLoadingNextPage[currentState] = false }
+
+            do {
+                let mergeRequests = try await dependencies.getMergeRequestsUseCase.invoke(
+                    state: selectedState,
+                    projectId: projectId,
+                    pageNumber: Int32(pageNumber)
+                )
+
+                cachedMergeRequests[currentState]?.append(contentsOf: mergeRequests.items)
+                hasNextPage[currentState] = mergeRequests.pageInfo.hasNextPage
+                if let mrs = cachedMergeRequests[currentState] {
+                    screenState[currentState] = .loaded(mrs)
+                }
+            } catch {
+                screenState[currentState] = .error
+            }
+        }
+    }
+
+    public func retry() {
+        isRetryLoading[selectedState] = true
+
+        loadData()
+    }
+
+    public func hasCurrentStateNextPage() -> Bool {
+        hasNextPage[selectedState] ?? false
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
         Task { @MainActor [weak self] in
             guard let self else { return }
 
+            let currentState = selectedState
+            defer { isRetryLoading[currentState] = false }
+
             do {
                 let mergeRequests = try await dependencies.getMergeRequestsUseCase.invoke(
                     state: selectedState,
-                    projectId: projectId
+                    projectId: projectId,
+                    pageNumber: 0
                 )
 
-                screenState[selectedState] = .loaded(mergeRequests)
+                cachedMergeRequests[currentState] = mergeRequests.items
+                hasNextPage[currentState] = mergeRequests.pageInfo.hasNextPage
+                screenState[currentState] = .loaded(mergeRequests.items)
             } catch {
-                
+                screenState[currentState] = .error
             }
         }
     }
@@ -96,7 +175,6 @@ extension MergeRequestState {
         case .merged: "Merged"
         case .closed: "Closed"
         case .all: "All"
-        default: "Not possible"
         }
     }
 }

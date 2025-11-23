@@ -3,7 +3,6 @@ package com.jetbrains.kmpapp.core.network
 import TokenSettingsDataSource
 import com.jetbrains.kmpapp.core.network.data.ApiLocalDataSource
 import com.jetbrains.kmpapp.core.network.data.ApiSettingsDataSource
-import com.jetbrains.kmpapp.core.network.domain.model.ApiAttributes
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import org.koin.dsl.module
 

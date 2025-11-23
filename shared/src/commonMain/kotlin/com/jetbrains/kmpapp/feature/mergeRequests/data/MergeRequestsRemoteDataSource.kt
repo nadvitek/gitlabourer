@@ -2,9 +2,10 @@ package com.jetbrains.kmpapp.feature.mergeRequests.data
 
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestState
+import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestsPage
 
 internal interface MergeRequestsRemoteDataSource {
-    suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?): List<MergeRequest>
+    suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage
 
     companion object Endpoints {
         const val MRS = "merge_requests"

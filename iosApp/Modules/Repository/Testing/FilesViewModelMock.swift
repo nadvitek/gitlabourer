@@ -1,6 +1,7 @@
 import Foundation
 
 final class FilesViewModelMock: FilesViewModel {
+    var isRetryLoading: Bool = false
     var screenState: FilesScreenState = .loading
     var branches: [String] = [
         "development",
@@ -14,4 +15,5 @@ final class FilesViewModelMock: FilesViewModel {
     }
 
     func onAppear() {}
+    func retry() {}
 }

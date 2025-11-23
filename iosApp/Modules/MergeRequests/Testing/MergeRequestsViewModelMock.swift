@@ -3,8 +3,12 @@ import shared
 
 @Observable
 final class MergeRequestsViewModelMock: MergeRequestsViewModel {
+    
     var screenState: [MergeRequestState : MergeRequestsScreenState] = [:]
     var selectedState: MergeRequestState = .opened
+    var hasNextPage: [MergeRequestState : Bool] = [:]
+    var isLoadingNextPage: [MergeRequestState : Bool] = [:]
+    var isRetryLoading: [MergeRequestState : Bool] = [:]
 
     init(screenState: MergeRequestsScreenState = .loading) {
         MergeRequestState.allCases.forEach {
@@ -19,4 +23,8 @@ final class MergeRequestsViewModelMock: MergeRequestsViewModel {
     func isStateSelected(_ state: MergeRequestState) -> Bool {
         selectedState == state
     }
+    func loadNextPage() {}
+    func hasCurrentStateNextPage() -> Bool { false }
+    func refresh() async {}
+    func retry() {}
 }

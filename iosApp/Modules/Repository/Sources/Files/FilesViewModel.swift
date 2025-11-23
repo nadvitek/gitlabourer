@@ -8,9 +8,11 @@ import SwiftUI
 public protocol FilesViewModel {
     var screenState: FilesScreenState { get }
     var selectedBranchName: String { get set }
+    var isRetryLoading: Bool { get }
     var branches: [String] { get }
 
     func onAppear()
+    func retry()
 }
 
 // MARK: - ScreenState
@@ -18,6 +20,7 @@ public protocol FilesViewModel {
 public enum FilesScreenState {
     case loading
     case loaded(FileData)
+    case error
 }
 
 // MARK: - FilesViewModelImpl
@@ -34,6 +37,7 @@ public class FilesViewModelImpl: FilesViewModel {
         }
     }
     public var branches: [String] = []
+    public var isRetryLoading: Bool = false
 
     private let projectId: KotlinInt
     private let filePath: String
@@ -64,14 +68,21 @@ public class FilesViewModelImpl: FilesViewModel {
         loadData()
     }
 
+    public func retry() {
+        loadData()
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
         branchTask?.cancel()
+
+        isRetryLoading = true
         branchTask = Task { @MainActor [weak self] in
             guard let self else { return }
 
             screenState = .loading
+            defer { isRetryLoading = false }
 
             do {
                 var fileData = try await dependencies.getFileData.invoke(

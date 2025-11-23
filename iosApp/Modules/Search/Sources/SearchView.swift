@@ -62,20 +62,10 @@ public struct SearchView<ViewModel: SearchViewModel>: View {
                 }
 
             case .error:
-                VStack(spacing: 20) {
-                    Image(systemName: "network.slash")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50)
-                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                        .symbolEffect(.bounce)
-
-                    PrimaryButton(
-                        "Retry",
-                        isLoading: viewModel.isLoading,
-                        action: viewModel.retry
-                    )
-                }
+                ErrorStateView(
+                    isLoading: viewModel.isLoading,
+                    retry: viewModel.retry
+                )
             }
         }
     }

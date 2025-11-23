@@ -24,6 +24,7 @@ final class RepositoryViewModelMock: RepositoryViewModel {
         "fix/verca"
     ]
     var selectedBranchName: String = "development"
+    var isRetryLoading: Bool = false
 
     init(screenState: RepositoryScreenState = .loading) {
         self.screenState = screenState
@@ -35,4 +36,5 @@ final class RepositoryViewModelMock: RepositoryViewModel {
     func onAppear() {}
     func onRowClick(_ item: TreeItem) {}
     func assignItemSize(_ size: CGSize) {}
+    func retry() {}
 }

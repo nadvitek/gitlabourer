@@ -35,6 +35,7 @@ public struct PrimaryButton: View {
                 .frame(minWidth: 150)
                 .background(GitlabColors.gitlabOrangeTwo.swiftUIColor)
                 .clipShape(.rect(cornerRadius: 20))
+                .disabled(isLoading)
                 .overlay {
                     if isLoading {
                         ProgressView()

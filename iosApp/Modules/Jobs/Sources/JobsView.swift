@@ -45,11 +45,27 @@ public struct JobsView<ViewModel: JobsViewModel>: View {
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
             case let .list(list):
-                JobsListView(list: list, handleAction: viewModel.handleAction)
+                JobsListView(
+                    list: list,
+                    hasNextPage: viewModel.hasNextPage,
+                    isLoadingNextPage: viewModel.isLoadingNextPage,
+                    handleAction: viewModel.handleAction,
+                    refresh: viewModel.refresh
+                )
 
             case let .pipeline(stream):
-                JobsPipelineView(stream: stream, handleAction: viewModel.handleAction)
+                JobsPipelineView(
+                    stream: stream,
+                    handleAction: viewModel.handleAction
+                )
+
+            case .error:
+                ErrorStateView(
+                    isLoading: viewModel.isRetryLoading,
+                    retry: viewModel.retry
+                )
             }
         }
     }

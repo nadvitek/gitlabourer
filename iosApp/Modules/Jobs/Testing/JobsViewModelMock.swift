@@ -3,8 +3,9 @@ import shared
 import Core
 
 final class JobsViewModelMock: JobsViewModel {
-
-    
+    var isLoadingNextPage: Bool = false
+    var hasNextPage: Bool = false
+    var isRetryLoading: Bool = false
     var screenState: JobsScreenState
 
     init(screenState: JobsScreenState = .loading) {
@@ -14,6 +15,8 @@ final class JobsViewModelMock: JobsViewModel {
     func onAppear() {}
     func openLink(_ webUrl: String) {}
     func handleAction(_ action: JobsAction) {}
+    func retry() {}
+    func refresh() async {}
 }
 
 #if DEBUG

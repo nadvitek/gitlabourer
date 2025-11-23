@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp.core.network
 
+import com.jetbrains.kmpapp.core.model.api.ApiPagedResponse
 import com.jetbrains.kmpapp.core.network.data.ApiLocalDataSource
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import io.ktor.client.HttpClient
@@ -21,14 +22,9 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.URLBuilder
 import io.ktor.http.append
-import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.encodedPath
-import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
@@ -107,17 +103,24 @@ internal class GitlabApiClient(
 
     fun close() = httpClient.close()
 
-    private fun normalizeBaseUrl(raw: String?): String {
-        val trimmed = raw?.trim().orEmpty()
-        if (trimmed.isBlank()) return "https://gitlab.com"
+    suspend inline fun <reified T> getPaged(
+        endpoint: String
+    ): ApiPagedResponse<T> {
+        val response = httpClient.get(endpoint)
 
-        val withScheme =
-            if (trimmed.startsWith("http://", ignoreCase = true) ||
-                trimmed.startsWith("https://", ignoreCase = true)
-            ) trimmed
-            else "https://$trimmed"
+        val body: T = response.body()
 
-        return withScheme.trimEnd('/')
+        fun headerInt(name: String): Int? =
+            response.headers[name]?.toIntOrNull()
+
+        return ApiPagedResponse(
+            response = body,
+            currentPage = headerInt("X-Page"),
+            nextPage = headerInt("X-Next-Page")?.takeIf { it != 0 },
+            totalPages = headerInt("X-Total-Pages"),
+            totalItems = headerInt("X-Total"),
+            perPage = headerInt("X-Per-Page")
+        )
     }
 }
 
@@ -143,64 +146,6 @@ internal object PrivateTokenPlugin {
                     request.headers.append(header, token)
             }
             proceed(request)
-        }
-    }
-}
-
-internal object DynamicBaseUrlPlugin {
-    class Config {
-        lateinit var baseUrlProvider: suspend () -> String?
-        var apiPath: List<String> = listOf("api", "v4")
-        var onlyForRelativeRequests: Boolean = true
-    }
-
-    val Plugin = createClientPlugin("DynamicBaseUrlPlugin", ::Config) {
-        val provider = pluginConfig.baseUrlProvider
-        val apiPath = pluginConfig.apiPath
-        val onlyRelative = pluginConfig.onlyForRelativeRequests
-
-        on(Send) { request ->
-            val isRelative = request.url.host.isEmpty()
-
-            if (onlyRelative && !isRelative) {
-                return@on proceed(request)
-            }
-
-            val base = provider()?.trimEnd('/')
-                ?: throw IllegalStateException("Missing base URL")
-
-            val parsed = URLBuilder().apply { takeFrom(base) }.build()
-            require(parsed.host.isNotBlank()) { "Base URL must include a host (got '$base')" }
-
-            val apiBase = URLBuilder().apply {
-                takeFrom(base)
-                appendPathSegments(apiPath)
-            }.build()
-
-            val originalPath = request.url.encodedPath
-            val originalQuery = request.url.build().encodedQuery
-
-            request.url.takeFrom(apiBase)
-
-            val joinedPath = listOf(
-                request.url.encodedPath.trimEnd('/'),
-                originalPath.trimStart('/')
-            ).filter { it.isNotEmpty() }.joinToString("/")
-
-            request.url.encodedPath = if (joinedPath.isEmpty()) "/" else "/$joinedPath"
-
-            if (originalQuery.isNotBlank()) {
-                request.url.parameters.clear()
-
-                val parsed = URLBuilder("https://dummy.invalid/?$originalQuery").build().parameters
-                parsed.names().forEach { name ->
-                    parsed.getAll(name)?.forEach { value ->
-                        request.url.parameters.append(name, value)
-                    }
-                }
-            }
-
-            return@on proceed(request)
         }
     }
 }

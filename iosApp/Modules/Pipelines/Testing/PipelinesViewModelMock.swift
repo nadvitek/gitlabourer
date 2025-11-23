@@ -2,6 +2,9 @@ import Foundation
 import shared
 
 final class PipelinesViewModelMock: PipelinesViewModel {
+    var hasNextPage: Bool = false
+    var isRetryLoading: Bool = false
+    var isLoadingNextPage: Bool = false
     var screenState: PipelinesScreenState
 
     init(screenState: PipelinesScreenState = .loading) {
@@ -11,6 +14,9 @@ final class PipelinesViewModelMock: PipelinesViewModel {
     func onAppear() {}
     func openLink(_ webUrl: String) {}
     func onPipelineClick(_ pipeline: DetailedPipeline) {}
+    func refresh() async {}
+    func retry() {}
+    func loadNextPage() {}
 }
 
 #if DEBUG

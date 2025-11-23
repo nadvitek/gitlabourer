@@ -1,5 +1,7 @@
 package com.jetbrains.kmpapp.feature.jobs.data.api
 
+import com.jetbrains.kmpapp.core.mapper.ApiPagedResponseMapper
+import com.jetbrains.kmpapp.core.model.domain.PageInfo
 import com.jetbrains.kmpapp.core.network.GitlabApiClient
 import com.jetbrains.kmpapp.feature.jobs.data.JobsRemoteDataSource
 import com.jetbrains.kmpapp.feature.jobs.data.api.mapper.ApiBridgeMapper
@@ -10,6 +12,8 @@ import com.jetbrains.kmpapp.feature.jobs.data.api.model.ApiJobSummary
 import com.jetbrains.kmpapp.feature.jobs.domain.model.Bridge
 import com.jetbrains.kmpapp.feature.jobs.domain.model.DetailedJob
 import com.jetbrains.kmpapp.feature.jobs.domain.model.JobLog
+import com.jetbrains.kmpapp.feature.jobs.domain.model.JobsPage
+import kotlinx.coroutines.coroutineScope
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class JobsKtorDataSource(
@@ -18,19 +22,36 @@ internal class JobsKtorDataSource(
 
     private val apiDetailedJobMapper = ApiDetailedJobMapper()
     private val apiBridgeMapper = ApiBridgeMapper()
+    private val apiPagedResponseMapper = ApiPagedResponseMapper()
 
-    override suspend fun getJobs(projectId: Int, pageNumber: Int): List<DetailedJob> {
-        val summaries = try {
-            apiClient.get<List<ApiJobSummary>>(
+    override suspend fun getJobs(projectId: Int, pageNumber: Int): JobsPage {
+        val paged = try {
+            apiClient.getPaged<List<ApiJobSummary>>(
                 endpoint = JobsRemoteDataSource.projectJobs(projectId, pageNumber)
             )
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             e.printStackTrace()
-            emptyList()
+            return JobsPage(
+                items = emptyList(),
+                PageInfo(
+                    currentPage = pageNumber,
+                    nextPage = null,
+                    totalPages = null,
+                    totalItems = null,
+                    perPage = null
+                )
+            )
         }
 
-        return summaries.map(apiDetailedJobMapper::map)
+        val mappedItems = paged.response.map(apiDetailedJobMapper::map)
+
+        val pageInfo = apiPagedResponseMapper.map(paged)
+
+        return JobsPage(
+            items = mappedItems,
+            pageInfo = pageInfo
+        )
     }
 
     override suspend fun getJobsForPipeline(

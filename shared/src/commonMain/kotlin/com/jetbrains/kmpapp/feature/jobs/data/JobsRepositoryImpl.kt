@@ -5,11 +5,12 @@ import com.jetbrains.kmpapp.feature.jobs.domain.JobsRepository
 import com.jetbrains.kmpapp.feature.jobs.domain.model.Bridge
 import com.jetbrains.kmpapp.feature.jobs.domain.model.DetailedJob
 import com.jetbrains.kmpapp.feature.jobs.domain.model.JobLog
+import com.jetbrains.kmpapp.feature.jobs.domain.model.JobsPage
 
 internal class JobsRepositoryImpl(
     private val remoteDataSource: JobsRemoteDataSource
 ) : JobsRepository {
-    override suspend fun getJobs(projectId: Int, pageNumber: Int): List<DetailedJob> {
+    override suspend fun getJobs(projectId: Int, pageNumber: Int): JobsPage {
         return remoteDataSource.getJobs(projectId, pageNumber)
     }
 

@@ -1,5 +1,7 @@
 package com.jetbrains.kmpapp.feature.mergeRequests.data.api
 
+import com.jetbrains.kmpapp.core.mapper.ApiPagedResponseMapper
+import com.jetbrains.kmpapp.core.model.domain.PageInfo
 import com.jetbrains.kmpapp.core.network.GitlabApiClient
 import com.jetbrains.kmpapp.feature.mergeRequests.data.MergeRequestsRemoteDataSource
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.mapper.ApiPipelineMapper
@@ -8,8 +10,10 @@ import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiMergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiPipeline
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestState
+import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestsPage
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.Pipeline
 import com.jetbrains.kmpapp.feature.mergerequest.data.api.mapper.ApiMergeRequestMapper
+import com.jetbrains.kmpapp.feature.project.domain.model.ProjectsPage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -21,10 +25,11 @@ internal class MergeRequestsKtorDataSource(
 
     private val apiMergeRequestMapper = ApiMergeRequestMapper()
     private val apiPipelineMapper = ApiPipelineMapper()
+    private val apiPagedResponseMapper = ApiPagedResponseMapper()
 
-    override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?): List<MergeRequest> = coroutineScope {
-        val apiMRs = try {
-            apiClient.get<List<ApiMergeRequest>>(
+    override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage = coroutineScope {
+        val paged = try {
+            apiClient.getPaged<List<ApiMergeRequest>>(
                 endpoint = projectId?.let {
                     MergeRequestsRemoteDataSource.mergeRequestWithStateForProject(state, it)
                 } ?: MergeRequestsRemoteDataSource.mergeRequestWithState(state)
@@ -32,10 +37,19 @@ internal class MergeRequestsKtorDataSource(
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             e.printStackTrace()
-            emptyList()
+            return@coroutineScope MergeRequestsPage(
+                items = emptyList(),
+                PageInfo(
+                    currentPage = pageNumber,
+                    nextPage = null,
+                    totalPages = null,
+                    totalItems = null,
+                    perPage = null
+                )
+            )
         }
 
-        apiMRs.map { api ->
+        val mappedItems = paged.response.map { api ->
             async {
                 val pipeline = runCatching {
                     getPipeline(
@@ -54,6 +68,13 @@ internal class MergeRequestsKtorDataSource(
                 mapped.copy(pipeline = pipeline, isApproved = approval.getOrDefault(false))
             }
         }.awaitAll()
+
+        val pageInfo = apiPagedResponseMapper.map(paged)
+
+        MergeRequestsPage(
+            items = mappedItems,
+            pageInfo = pageInfo
+        )
     }
 
     suspend fun getPipeline(projectId: String, mrId: String): Pipeline? {

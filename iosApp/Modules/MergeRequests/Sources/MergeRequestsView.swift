@@ -40,10 +40,11 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
 
     // MARK: - Private helpers
 
+    @ViewBuilder
     private var content: some View {
-        ScrollViewThatFits {
-            switch viewModel.screenState[viewModel.selectedState] {
-            case let .loaded(mrs):
+        switch viewModel.screenState[viewModel.selectedState] {
+        case let .loaded(mrs):
+            ScrollViewThatFits {
                 VStack(spacing: 16) {
                     ForEach(mrs, id:\.self) { mr in
                         MergeRequestItemView(mr: mr)
@@ -51,11 +52,30 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 1)
-            case .loading, .none:
-                ProgressView()
+
+                if viewModel.hasCurrentStateNextPage() {
+                    PrimaryButton(
+                        "Load more",
+                        isLoading: viewModel.isLoadingNextPage[viewModel.selectedState] ?? false,
+                        action: viewModel.loadNextPage
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 16)
+                }
             }
+            .refreshable {
+                await viewModel.refresh()
+            }
+
+        case .loading, .none:
+            ProgressView()
+
+        case .error:
+            ErrorStateView(
+                isLoading: viewModel.isRetryLoading[viewModel.selectedState] ?? false,
+                retry: viewModel.retry
+            )
         }
-        .onAppear(perform: viewModel.onAppear)
     }
 
     private func stateButton(_ state: MergeRequestState) -> some View {

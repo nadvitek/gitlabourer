@@ -58,8 +58,15 @@ public struct JobsDetailView<ViewModel: JobsDetailViewModel>: View {
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
             case let .loaded(jobLog):
                 loaded(jobLog)
+
+            case .error:
+                ErrorStateView(
+                    isLoading: viewModel.isRetryLoading,
+                    retry: viewModel.retry
+                )
             }
         }
         .padding(.top, 20)

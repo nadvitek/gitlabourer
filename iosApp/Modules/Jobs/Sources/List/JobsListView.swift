@@ -7,7 +7,11 @@ struct JobsListView: View {
     // MARK: - Properties
 
     let list: [DetailedJob]
+    let hasNextPage: Bool
+    let isLoadingNextPage: Bool
+
     let handleAction: (JobsAction) -> Void
+    let refresh: () async -> Void
 
     // MARK: - UI
 
@@ -28,10 +32,24 @@ struct JobsListView: View {
                         jobView(for: job)
                     }
                 }
+
+                if hasNextPage {
+                    PrimaryButton(
+                        "Load more",
+                        isLoading: isLoadingNextPage
+                    ) {
+                        handleAction(.loadNextPage)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 16)
+                }
             }
             .padding(.horizontal, 8)
             .padding(.top, 8)
             .padding(.bottom, 8)
+        }
+        .refreshable {
+            await refresh()
         }
     }
 
@@ -49,7 +67,7 @@ struct JobsListView: View {
                         Spacer()
 
                         Button {
-//                            viewModel.openLink(job.webUrl)
+                            handleAction(.openLink(job.webUrl))
                         } label: {
                             Image(systemName: "link.circle.fill")
                                 .resizable()
@@ -146,7 +164,10 @@ struct JobsListView: View {
             .mock(id: 3, name: "Lint"),
             .mock(id: 4, name: "Unit Tests")
         ],
-        handleAction: { _ in }
+        hasNextPage: false,
+        isLoadingNextPage: false,
+        handleAction: { _ in },
+        refresh: {}
     )
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .gitlabourerBackground()

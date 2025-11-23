@@ -1,10 +1,10 @@
 package com.jetbrains.kmpapp.feature.pipelines.data
 
-import com.jetbrains.kmpapp.feature.pipelines.domain.model.DetailedPipeline
+import com.jetbrains.kmpapp.feature.pipelines.domain.model.PipelinesPage
 
 internal interface PipelinesRemoteDataSource {
 
-    suspend fun getPipelines(projectId: Int, pageNumber: Int): List<DetailedPipeline>
+    suspend fun getPipelines(projectId: Int, pageNumber: Int): PipelinesPage
 
     companion object Endpoints {
         const val PIPELINES = "pipelines"

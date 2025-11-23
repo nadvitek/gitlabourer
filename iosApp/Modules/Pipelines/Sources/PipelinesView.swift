@@ -46,8 +46,15 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
             case .loaded(let array):
                 loaded(array)
+
+            case .error:
+                ErrorStateView(
+                    isLoading: viewModel.isRetryLoading,
+                    retry: viewModel.retry
+                )
             }
         }
     }
@@ -62,8 +69,21 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
                         pipelineView(pipeline)
                     }
                 }
+
+                if viewModel.hasNextPage {
+                    PrimaryButton(
+                        "Load more",
+                        isLoading: viewModel.isLoadingNextPage,
+                        action: viewModel.loadNextPage
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 16)
+                }
             }
             .padding(.horizontal, 16)
+        }
+        .refreshable {
+            await viewModel.refresh()
         }
     }
 

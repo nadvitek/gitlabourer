@@ -64,8 +64,15 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
             case let .loaded(file):
                 loaded(file)
+
+            case .error:
+                ErrorStateView(
+                    isLoading: viewModel.isRetryLoading,
+                    retry: viewModel.retry
+                )
             }
         }
         .padding(.top, 20)

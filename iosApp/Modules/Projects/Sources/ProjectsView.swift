@@ -28,13 +28,6 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                         .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
                         .frame(width: 200, alignment: .leading)
                 }
-                
-//                ToolbarItem(placement: .topBarTrailing) {
-//                    Button(action: viewModel.logout) {
-//                        Image(systemName: "door.right.hand.open")
-//                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-//                    }
-//                }
             }
     }
 
@@ -50,6 +43,7 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                     maxWidth: .infinity,
                     maxHeight: .infinity
                 )
+
         case let .loaded(projects):
             ScrollViewThatFits {
                 VStack(alignment: .leading, spacing: 12) {
@@ -59,24 +53,28 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                             action: viewModel.onProjectClick
                         )
                     }
+
+                    if viewModel.hasNextPage {
+                        PrimaryButton(
+                            "Load more",
+                            isLoading: viewModel.isLoadingNextPage,
+                            action: viewModel.loadNextPage
+                        )
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 16)
+                    }
                 }
                 .padding(.horizontal, 16)
             }
-        case .error:
-            VStack(spacing: 20) {
-                Image(systemName: "network.slash")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50)
-                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                    .symbolEffect(.bounce)
-                
-                PrimaryButton(
-                    "Retry",
-                    isLoading: viewModel.isLoading,
-                    action: viewModel.retry
-                )
+            .refreshable {
+                await viewModel.refresh()
             }
+
+        case .error:
+            ErrorStateView(
+                isLoading: viewModel.isLoading,
+                retry: viewModel.retry
+            )
         }
     }
 }

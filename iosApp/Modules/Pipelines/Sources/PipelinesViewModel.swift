@@ -7,9 +7,15 @@ import SwiftUI
 
 public protocol PipelinesViewModel {
     var screenState: PipelinesScreenState { get }
+    var hasNextPage: Bool { get }
+    var isRetryLoading: Bool { get }
+    var isLoadingNextPage: Bool { get }
 
     func onAppear()
     func openLink(_ webUrl: String)
+    func refresh() async
+    func retry()
+    func loadNextPage()
     func onPipelineClick(_ pipeline: DetailedPipeline)
 }
 
@@ -18,6 +24,7 @@ public protocol PipelinesViewModel {
 public enum PipelinesScreenState {
     case loading
     case loaded([DetailedPipeline])
+    case error
 }
 
 // MARK: - PipelinesViewModelImpl
@@ -28,8 +35,12 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
     // MARK: - Internal properties
 
     public var screenState: PipelinesScreenState = .loading
+    public var hasNextPage: Bool = false
+    public var isRetryLoading: Bool = false
+    public var isLoadingNextPage: Bool = false
 
     private let projectId: KotlinInt
+    private var cachedPipelines: [DetailedPipeline] = []
     private let dependencies: PipelinesViewModelDependencies
     private weak var flowDelegate: PipelinesFlowDelegate?
     private var pageNumber: Int = 0
@@ -67,6 +78,55 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
         flowDelegate?.onPipelineClick(pipeline)
     }
 
+    public func loadNextPage() {
+        pageNumber += 1
+        isLoadingNextPage = true
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            screenState = .loading
+            defer { isLoadingNextPage = false }
+
+            do {
+                let pipelines = try await dependencies.getPipelinesForProjectUseCase.invoke(
+                    projectId: Int32(truncating: projectId),
+                    pageNumber: Int32(pageNumber)
+                )
+
+                cachedPipelines.append(contentsOf: pipelines.items)
+                hasNextPage = pipelines.pageInfo.hasNextPage
+                screenState = .loaded(pipelines.items)
+            } catch {
+                screenState = .error
+            }
+        }
+    }
+
+    public func refresh() async {
+        pageNumber = 0
+        cachedPipelines = []
+
+        do {
+            let pipelines = try await dependencies.getPipelinesForProjectUseCase.invoke(
+                projectId: Int32(truncating: projectId),
+                pageNumber: Int32(pageNumber)
+            )
+
+            cachedPipelines = pipelines.items
+            hasNextPage = pipelines.pageInfo.hasNextPage
+            screenState = .loaded(pipelines.items)
+        } catch {
+            screenState = .error
+        }
+    }
+
+    public func retry() {
+        isRetryLoading = true
+
+        loadData()
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
@@ -74,16 +134,19 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
             guard let self else { return }
 
             screenState = .loading
+            defer { isRetryLoading = false }
 
             do {
-                let fileData = try await dependencies.getPipelinesForProjectUseCase.invoke(
+                let pipelines = try await dependencies.getPipelinesForProjectUseCase.invoke(
                     projectId: Int32(truncating: projectId),
                     pageNumber: Int32(pageNumber)
                 )
 
-                screenState = .loaded(fileData)
+                cachedPipelines = pipelines.items
+                hasNextPage = pipelines.pageInfo.hasNextPage
+                screenState = .loaded(pipelines.items)
             } catch {
-
+                screenState = .error
             }
         }
     }

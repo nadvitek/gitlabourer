@@ -54,8 +54,15 @@ public struct RepositoryView<ViewModel: RepositoryViewModel>: View {
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
             case .loaded(let array):
                 loaded(array)
+
+            case .error:
+                ErrorStateView(
+                    isLoading: viewModel.isRetryLoading,
+                    retry: viewModel.retry
+                )
             }
         }
     }
