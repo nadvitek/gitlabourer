@@ -50,10 +50,12 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
 
                 Spacer()
 
-                RepositoryBranchPickerView(
-                    selectedBranch: $viewModel.selectedBranchName,
-                    branches: viewModel.branches
-                )
+                if viewModel.selectedBranchName.isNotEmpty {
+                    RepositoryBranchPickerView(
+                        selectedBranch: $viewModel.selectedBranchName,
+                        branches: viewModel.branches
+                    )
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 

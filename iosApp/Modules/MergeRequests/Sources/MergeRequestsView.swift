@@ -25,7 +25,7 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
 
             content
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .gitlabourerBackground()
         .onAppear(perform: viewModel.onAppear)
         .toolbar {

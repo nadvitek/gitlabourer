@@ -11,7 +11,7 @@ actor EncryptionService {
     func encrypt(_ plaintext: String) throws -> String {
         let data = Data(plaintext.utf8)
         let sealed = try AES.GCM.seal(data, using: key)
-        let combined = sealed.combined! // nonce + ciphertext + tag
+        let combined = sealed.combined!
         return combined.base64EncodedString()
     }
 
