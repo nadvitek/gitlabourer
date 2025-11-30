@@ -2,6 +2,7 @@ import Foundation
 import shared
 import Observation
 import SwiftUI
+import GitLabourerUI
 
 // MARK: - JobsViewModel
 
@@ -34,14 +35,14 @@ public class JobsDetailViewModelImpl: JobsDetailViewModel {
     public let job: DetailedJob
     public var isRetryLoading: Bool = false
 
-    private let projectId: KotlinInt
+    private let projectId: Int64
     private let dependencies: JobsDetailViewModelDependencies
 
     // MARK: - Initializers
 
     public init(
         dependencies: JobsDetailViewModelDependencies,
-        projectId: KotlinInt,
+        projectId: Int64,
         job: DetailedJob
     ) {
         self.dependencies = dependencies
@@ -80,11 +81,13 @@ public class JobsDetailViewModelImpl: JobsDetailViewModel {
         Task { @MainActor [weak self] in
             guard let self else { return }
 
+            try? await Task.sleep(nanoseconds: 300_000_000)
+
             defer { isRetryLoading = false }
 
             do {
                 let jobLog = try await dependencies.getJobLogUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
+                    projectId: Int32(projectId),
                     jobId: job.id
                 )
 

@@ -12,7 +12,7 @@ public struct AttributedText: UIViewRepresentable {
     public func makeUIView(context: Context) -> UITextView {
         let tv = UITextView()
         tv.isEditable = false
-        tv.isScrollEnabled = false
+        tv.isScrollEnabled = true
         tv.isSelectable = true
         tv.dataDetectorTypes = .link
         tv.backgroundColor = .clear
@@ -31,9 +31,9 @@ public struct AttributedText: UIViewRepresentable {
         uiView.attributedText = attributedString
     }
 
-    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize {
-        let targetWidth = proposal.width ?? UIScreen.main.bounds.width
-        let size = uiView.sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))
-        return CGSize(width: targetWidth, height: size.height)
-    }
+//    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize {
+//        let targetWidth = proposal.width ?? UIScreen.main.bounds.width
+//        let size = uiView.sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))
+//        return CGSize(width: targetWidth, height: size.height)
+//    }
 }

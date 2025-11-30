@@ -73,55 +73,57 @@ public struct JobsDetailView<ViewModel: JobsDetailViewModel>: View {
     }
 
     private func loaded(_ jobLog: JobLog) -> some View {
-        ScrollViewThatFits {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 0) {
-                    if let name = viewModel.job.name {
-                        Text(name)
-                            .fontWeight(.bold)
-                    }
-                }
-                .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 6)
-                .padding(.horizontal, 8)
-                .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
-                .clipShape(
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: 12,
-                        bottomLeadingRadius: 0,
-                        bottomTrailingRadius: 0,
-                        topTrailingRadius: 12,
-                        style: .circular
-                    )
-                )
-
-                if jobLog.content.isEmpty {
-                    Text("This job does not have a trace.")
-                        .font(.headline)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                if let name = viewModel.job.name {
+                    Text(name)
                         .fontWeight(.bold)
-                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                } else {
-                    let nsAttr = NSAttributedString(string: jobLog.content)
-                    let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
-                    AttributedText(attributedString: recolored)
-                        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 12)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
-                        .clipShape(
-                            UnevenRoundedRectangle(
-                                topLeadingRadius: 0,
-                                bottomLeadingRadius: 12,
-                                bottomTrailingRadius: 12,
-                                topTrailingRadius: 0,
-                                style: .circular
-                            )
-                        )
                 }
             }
+            .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
+            .clipShape(
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 12,
+                    bottomLeadingRadius: 0,
+                    bottomTrailingRadius: 0,
+                    topTrailingRadius: 12,
+                    style: .circular
+                )
+            )
+
+            if jobLog.content.isEmpty {
+                Text("This job does not have a trace.")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+            } else {
+                let nsAttr = NSAttributedString(string: jobLog.content)
+                let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
+                AttributedText(attributedString: recolored)
+                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 12)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
+                    .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
+                    .clipShape(
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: 0,
+                            bottomLeadingRadius: 12,
+                            bottomTrailingRadius: 12,
+                            topTrailingRadius: 0,
+                            style: .circular
+                        )
+                    )
+            }
         }
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 
     private func overridingColor(_ attributed: NSAttributedString, color: UIColor) -> NSAttributedString {

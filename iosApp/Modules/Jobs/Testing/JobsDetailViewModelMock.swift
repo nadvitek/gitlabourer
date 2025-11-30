@@ -5,6 +5,7 @@ final class JobsDetailViewModelMock: JobsDetailViewModel {
     var screenState: JobsDetailScreenState
     var job: DetailedJob
     var isRetryLoading: Bool = false
+    var attributedLog: NSAttributedString? = nil
 
     init(
         screenState: JobsDetailScreenState = .loading,

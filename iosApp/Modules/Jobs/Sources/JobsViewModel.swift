@@ -52,11 +52,11 @@ public class JobsViewModelImpl: JobsViewModel {
     public var isLoadingNextPage: Bool = false
     public var isRetryLoading: Bool = false
 
-    private let projectId: KotlinInt
+    private let projectId: Int64
     private let dependencies: JobsViewModelDependencies
     private weak var flowDelegate: JobsFlowDelegate?
     private let pipelineId: KotlinInt?
-    private var pageNumber: Int = 0
+    private var pageNumber: Int = 1
     private let jobsScreenType: JobsScreenType
     private var cachedJobs: [DetailedJob] = []
 
@@ -65,7 +65,7 @@ public class JobsViewModelImpl: JobsViewModel {
     public init(
         dependencies: JobsViewModelDependencies,
         flowDelegate: JobsFlowDelegate?,
-        projectId: KotlinInt,
+        projectId: Int64,
         pipelineId: KotlinInt?,
         screenType: JobsScreenType
     ) {
@@ -136,11 +136,11 @@ public class JobsViewModelImpl: JobsViewModel {
 
     public func refresh() async {
         cachedJobs = []
-        pageNumber = 0
+        pageNumber = 1
 
         do {
             let jobs = try await dependencies.getJobsForProjectUseCase.invoke(
-                projectId: Int32(truncating: projectId),
+                projectId: Int32(projectId),
                 pageNumber: Int32(pageNumber)
             )
 
@@ -163,7 +163,7 @@ public class JobsViewModelImpl: JobsViewModel {
 
             do {
                 let stream = try await dependencies.getJobsForPipelineUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
+                    projectId: Int32(projectId),
                     pipelineId: Int64(truncating: pipelineId)
                 )
 
@@ -188,7 +188,7 @@ public class JobsViewModelImpl: JobsViewModel {
 
             do {
                 let jobs = try await dependencies.getJobsForProjectUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
+                    projectId: Int32(projectId),
                     pageNumber: Int32(pageNumber)
                 )
 
@@ -209,7 +209,7 @@ public class JobsViewModelImpl: JobsViewModel {
 
             do {
                 let jobs = try await dependencies.getJobsForProjectUseCase.invoke(
-                    projectId: Int32(truncating: projectId),
+                    projectId: Int32(projectId),
                     pageNumber: Int32(pageNumber)
                 )
 
@@ -227,7 +227,7 @@ public class JobsViewModelImpl: JobsViewModel {
             guard let self else { return }
 
             let _ = try? await dependencies.retryJobUseCase.invoke(
-                projectId: Int32(truncating: projectId),
+                projectId: Int32(projectId),
                 jobId: job.id
             )
         }
@@ -238,7 +238,7 @@ public class JobsViewModelImpl: JobsViewModel {
             guard let self else { return }
 
             let _ = try? await dependencies.cancelJobUseCase.invoke(
-                projectId: Int32(truncating: projectId),
+                projectId: Int32(projectId),
                 jobId: job.id
             )
         }

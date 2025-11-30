@@ -81,81 +81,76 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
     }
 
     private func loaded(_ file: FileData) -> some View {
-        ScrollViewThatFits {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 0) {
-                    Text(file.fileName)
-                        .fontWeight(.bold)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                Text(file.fileName)
+                    .fontWeight(.bold)
 
-                    Spacer()
+                Spacer()
 
-                    HStack(spacing: 8) {
-                        if coppied {
-                            Image(systemName: "checkmark")
-                                .transition(.opacity.combined(with: .scale))
+                HStack(spacing: 8) {
+                    if coppied {
+                        Image(systemName: "checkmark")
+                            .transition(.opacity.combined(with: .scale))
+                    }
+
+                    Button {
+                        UIPasteboard.general.string = file.content
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            coppied = true
                         }
 
-                        Button {
-                            UIPasteboard.general.string = file.content
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                coppied = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coppied = false
                             }
-
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    coppied = false
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "document.on.document.fill")
                         }
+                    } label: {
+                        Image(systemName: "document.on.document.fill")
                     }
                 }
-                .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .padding(.horizontal, 8)
-                .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
-                .clipShape(
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: 12,
-                        bottomLeadingRadius: 0,
-                        bottomTrailingRadius: 0,
-                        topTrailingRadius: 12,
-                        style: .circular
-                    )
-                )
-
-                // Render Markdown with a selectable UITextView wrapper; otherwise use selectable SwiftUI Text
-                Group {
-                    if file.type == .md,
-                       let attributed = try? attributedMarkdown(from: file.content) {
-                        // Convert to NSAttributedString and override colors
-                        let nsAttr = NSAttributedString(attributed)
-                        let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
-                        AttributedText(attributedString: recolored)
-                    } else {
-                        // Plain text: enable SwiftUI text selection
-                        Text(file.content)
-                            .textSelection(.enabled)
-                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
-                    }
-                }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 12)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
-                .clipShape(
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: 0,
-                        bottomLeadingRadius: 12,
-                        bottomTrailingRadius: 12,
-                        topTrailingRadius: 0,
-                        style: .circular
-                    )
-                )
             }
+            .foregroundStyle(GitlabColors.gitlabDark.swiftUIColor)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.6))
+            .clipShape(
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 12,
+                    bottomLeadingRadius: 0,
+                    bottomTrailingRadius: 0,
+                    topTrailingRadius: 12,
+                    style: .circular
+                )
+            )
+
+            Group {
+                let nsAttr = if file.type == .md,
+                   let attributed = try? attributedMarkdown(from: file.content) {
+                    NSAttributedString(attributed)
+                } else {
+                    NSAttributedString(string: file.content)
+                }
+
+                let recolored = overridingColor(nsAttr, color: GitlabColors.gitlabGray.color)
+                AttributedText(attributedString: recolored)
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(GitlabColors.gitlabDark.swiftUIColor.opacity(0.8))
+            .clipShape(
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 0,
+                    bottomLeadingRadius: 12,
+                    bottomTrailingRadius: 12,
+                    topTrailingRadius: 0,
+                    style: .circular
+                )
+            )
         }
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 
     // MARK: - Helpers
@@ -164,14 +159,6 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
         var options = AttributedString.MarkdownParsingOptions()
         options.interpretedSyntax = .inlineOnlyPreservingWhitespace
         return try AttributedString(markdown: content, options: options)
-    }
-
-    private func overridingColor(_ attributed: NSAttributedString, color: UIColor) -> NSAttributedString {
-        let mutable = NSMutableAttributedString(attributedString: attributed)
-        let fullRange = NSRange(location: 0, length: mutable.length)
-        mutable.removeAttribute(.foregroundColor, range: fullRange)
-        mutable.addAttribute(.foregroundColor, value: color, range: fullRange)
-        return mutable
     }
 }
 

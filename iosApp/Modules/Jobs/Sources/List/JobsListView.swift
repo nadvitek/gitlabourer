@@ -16,7 +16,7 @@ struct JobsListView: View {
     // MARK: - UI
 
     var body: some View {
-        ScrollViewThatFits {
+        ScrollView {
             LazyVGrid(
                 columns: [
                     GridItem(.flexible(), spacing: 12),
