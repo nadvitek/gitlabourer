@@ -27,4 +27,5 @@ final class MergeRequestsViewModelMock: MergeRequestsViewModel {
     func hasCurrentStateNextPage() -> Bool { false }
     func refresh() async {}
     func retry() {}
+    func openMergeRequest(_ mergeRequest: MergeRequest) {}
 }

@@ -5,6 +5,8 @@ import com.jetbrains.kmpapp.feature.login.domain.LoginRepository
 import com.jetbrains.kmpapp.feature.login.domain.model.User
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import com.jetbrains.kmpapp.feature.token.domain.model.AuthTokens
+import com.jetbrains.kmpapp.feature.user.data.UserLocalDataSource
+import com.jetbrains.kmpapp.feature.user.domain.model.UserId
 import io.github.mykhailoliutov.koinexport.core.KoinKmmExport
 
 @KoinKmmExport
@@ -17,6 +19,7 @@ public interface LoginUseCase {
 internal class LoginUseCaseImpl(
     private val tokenLocalDataSource: TokenLocalDataSource,
     private val apiLocalDataSource: ApiLocalDataSource,
+    private val userLocalDataSource: UserLocalDataSource,
     private val loginRepository: LoginRepository
 ) : LoginUseCase {
 
@@ -24,6 +27,11 @@ internal class LoginUseCaseImpl(
         val authTokens = AuthTokens(privateToken = token)
         tokenLocalDataSource.saveTokens(authTokens)
         apiLocalDataSource.saveUrl(url)
-        return loginRepository.login()
+
+        val user = loginRepository.login()
+        val userId = user?.let { UserId(it.id.toString()) }
+        userId?.let { userLocalDataSource.saveUserId(userId) }
+
+        return user
     }
 }

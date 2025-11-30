@@ -60,7 +60,7 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
     }
 
     private func loaded(_ pipelines: [DetailedPipeline]) -> some View {
-        ScrollViewThatFits {
+        ScrollView {
             VStack(spacing: 12) {
                 ForEach(pipelines, id: \.id) { pipeline in
                     Button {

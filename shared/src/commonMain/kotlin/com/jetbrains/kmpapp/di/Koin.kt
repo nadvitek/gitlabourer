@@ -10,6 +10,10 @@ import com.jetbrains.kmpapp.feature.login.domain.usecase.GetUserUseCase
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LoginUseCase
 import com.jetbrains.kmpapp.feature.login.domain.usecase.LogoutUseCase
 import com.jetbrains.kmpapp.feature.login.loginModule
+import com.jetbrains.kmpapp.feature.mergeRequestDetail.domain.usecase.ChangeMergeRequestApprovalUseCase
+import com.jetbrains.kmpapp.feature.mergeRequestDetail.domain.usecase.GetMergeRequestDetailUseCase
+import com.jetbrains.kmpapp.feature.mergeRequestDetail.domain.usecase.MergeMergeRequestUseCase
+import com.jetbrains.kmpapp.feature.mergeRequestDetail.mergeRequestDetailModule
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetMergeRequestsUseCase
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.usecase.GetRepositoryFileTreeUseCase
 import com.jetbrains.kmpapp.feature.mergeRequests.mergeRequestsModule
@@ -24,6 +28,7 @@ import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetFileDataUseCase
 import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetRepositoryBranchesUseCase
 import com.jetbrains.kmpapp.feature.repository.repositoryDetailModule
 import com.jetbrains.kmpapp.feature.token.tokenModule
+import com.jetbrains.kmpapp.feature.user.userModule
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.startKoin
@@ -41,6 +46,8 @@ public fun initKoin(extraModules: List<Module>) {
             pipelinesModule,
             jobsModule,
             notificationModule,
+            userModule,
+            mergeRequestDetailModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -94,5 +101,14 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val observePipelineUpdatesUseCase: ObservePipelineUpdatesUseCase
+        get() = get()
+
+    public val getMergeRequestDetailUseCase: GetMergeRequestDetailUseCase
+        get() = get()
+
+    public val mergeMergeRequestUseCase: MergeMergeRequestUseCase
+        get() = get()
+
+    public val changeMergeRequestApprovalUseCase: ChangeMergeRequestApprovalUseCase
         get() = get()
 }

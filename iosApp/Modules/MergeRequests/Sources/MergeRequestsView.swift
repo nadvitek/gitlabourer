@@ -15,6 +15,8 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
         self.viewModel = viewModel
     }
 
+    // MARK: - UI
+
     public var body: some View {
         VStack(spacing: 16) {
             HStack(spacing: 16) {
@@ -44,10 +46,14 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
     private var content: some View {
         switch viewModel.screenState[viewModel.selectedState] {
         case let .loaded(mrs):
-            ScrollViewThatFits {
+            ScrollView {
                 VStack(spacing: 16) {
                     ForEach(mrs, id:\.self) { mr in
-                        MergeRequestItemView(mr: mr)
+                        Button {
+                            viewModel.openMergeRequest(mr)
+                        } label: {
+                            MergeRequestItemView(mr: mr)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)

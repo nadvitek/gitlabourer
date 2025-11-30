@@ -16,6 +16,7 @@ struct MergeRequestItemView: View {
                 Text(mr.title)
                     .font(.subheadline)
                     .fontWeight(.bold)
+                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(1)
 
@@ -117,6 +118,7 @@ struct MergeRequestItemView: View {
                 }
             }
         }
+        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
     }
 
     private var nonLabelsLanes: some View {
@@ -154,6 +156,7 @@ struct MergeRequestItemView: View {
             }
         }
         .frame(height: 22)
+        .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
     }
 }
 

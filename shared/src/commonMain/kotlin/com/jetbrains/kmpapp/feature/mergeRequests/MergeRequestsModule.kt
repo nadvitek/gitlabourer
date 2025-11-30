@@ -27,7 +27,8 @@ public val mergeRequestsModule: Module = module {
 
     factory<GetMergeRequestsUseCase> {
         GetMergeRequestsUseCaseImpl(
-            mergeRequestsRepository = get()
+            mergeRequestsRepository = get(),
+            userLocalDataSource = get()
         )
     }
 }

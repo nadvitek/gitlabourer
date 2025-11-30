@@ -33,7 +33,8 @@ internal val loginModule: Module = module {
         LoginUseCaseImpl(
             tokenLocalDataSource = get(),
             apiLocalDataSource = get(),
-            loginRepository = get()
+            userLocalDataSource = get(),
+            loginRepository = get(),
         )
     }
 

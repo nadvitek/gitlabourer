@@ -17,6 +17,7 @@ import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -84,6 +85,9 @@ internal class GitlabApiClient(
 
     suspend inline fun <reified T> post(endpoint: String): T =
         httpClient.post(endpoint).body()
+
+    suspend inline fun <reified T> put(endpoint: String): T =
+        httpClient.put(endpoint).body()
 
     suspend fun getRaw(
         endpoint: String,

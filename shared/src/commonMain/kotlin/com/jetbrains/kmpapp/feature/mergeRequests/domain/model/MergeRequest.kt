@@ -40,9 +40,9 @@ public data class TaskStatus(
 )
 
 public data class MergeRequest(
-    val id: String,
-    val iid: String,
-    val projectId: String,
+    val id: Long,
+    val iid: Long,
+    val projectId: Long,
 
     val title: String,
     val description: String?,

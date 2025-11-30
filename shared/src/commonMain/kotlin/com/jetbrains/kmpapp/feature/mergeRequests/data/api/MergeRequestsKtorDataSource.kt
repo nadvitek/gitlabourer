@@ -6,6 +6,7 @@ import com.jetbrains.kmpapp.core.network.GitlabApiClient
 import com.jetbrains.kmpapp.feature.mergeRequests.data.MergeRequestsRemoteDataSource
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.mapper.ApiPipelineMapper
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiApprovals
+import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiLabel
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiMergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.data.api.model.ApiPipeline
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
@@ -27,19 +28,138 @@ internal class MergeRequestsKtorDataSource(
     private val apiPipelineMapper = ApiPipelineMapper()
     private val apiPagedResponseMapper = ApiPagedResponseMapper()
 
-    override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage = coroutineScope {
-        val paged = try {
-            apiClient.getPaged<List<ApiMergeRequest>>(
-                endpoint = projectId?.let {
-                    MergeRequestsRemoteDataSource.mergeRequestWithStateForProject(state, it)
-                } ?: MergeRequestsRemoteDataSource.mergeRequestWithState(state)
-            )
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            e.printStackTrace()
+    override suspend fun getMergeRequests(
+        state: MergeRequestState,
+        projectId: Int?,
+        pageNumber: Int,
+        userId: String?
+    ): MergeRequestsPage = coroutineScope {
+        if (projectId != null) {
+            val paged = try {
+                apiClient.getPaged<List<ApiMergeRequest>>(
+                    endpoint = MergeRequestsRemoteDataSource.mergeRequestWithStateForProject(state, projectId)
+                )
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                e.printStackTrace()
+                return@coroutineScope MergeRequestsPage(
+                    items = emptyList(),
+                    pageInfo = PageInfo(
+                        currentPage = pageNumber,
+                        nextPage = null,
+                        totalPages = null,
+                        totalItems = null,
+                        perPage = null
+                    )
+                )
+            }
+
+            val mappedItems = paged.response.map { api ->
+                async {
+                    val pipeline = runCatching {
+                        getPipeline(
+                            projectId = api.projectId.toString(),
+                            mrId = api.iid.toString()
+                        )
+                    }.getOrNull()
+
+                    val approval: Result<Boolean> = runCatching {
+                        getApproval(
+                            projectId = api.projectId.toString(),
+                            mrId = api.iid.toString()
+                        )
+                    }
+
+                    val mapped = apiMergeRequestMapper.map(api)
+                    mapped.copy(pipeline = pipeline, isApproved = approval.getOrDefault(false))
+                }
+            }.awaitAll()
+
+            val pageInfo = apiPagedResponseMapper.map(paged)
+
             return@coroutineScope MergeRequestsPage(
+                items = mappedItems,
+                pageInfo = pageInfo
+            )
+        } else if (userId != null) {
+            val result = try {
+                val assigneeDeferred = async {
+                    apiClient.getPaged<List<ApiMergeRequest>>(
+                        endpoint = MergeRequestsRemoteDataSource.mergeRequestWithStateForAssignee(
+                            state = state,
+                            assigneeId = userId
+                        )
+                    )
+                }
+
+                val reviewerDeferred = async {
+                    apiClient.getPaged<List<ApiMergeRequest>>(
+                        endpoint = MergeRequestsRemoteDataSource.mergeRequestWithStateForReviewer(
+                            state = state,
+                            reviewerId = userId
+                        )
+                    )
+                }
+
+                val assigneePaged = assigneeDeferred.await()
+                val reviewerPaged = reviewerDeferred.await()
+
+                assigneePaged to reviewerPaged
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                e.printStackTrace()
+                return@coroutineScope MergeRequestsPage(
+                    items = emptyList(),
+                    pageInfo = PageInfo(
+                        currentPage = pageNumber,
+                        nextPage = null,
+                        totalPages = null,
+                        totalItems = null,
+                        perPage = null
+                    )
+                )
+            }
+
+            val (assigneePaged, reviewerPaged) = result
+
+            val combinedApiMergeRequests = (assigneePaged.response + reviewerPaged.response)
+                .distinctBy { it.projectId to it.iid }
+                .sortedByDescending { it.createdAt }
+
+            val mappedItems = combinedApiMergeRequests.map { api ->
+                async {
+                    val pipeline = runCatching {
+                        getPipeline(
+                            projectId = api.projectId.toString(),
+                            mrId = api.iid.toString()
+                        )
+                    }.getOrNull()
+
+                    val approval: Result<Boolean> = runCatching {
+                        getApproval(
+                            projectId = api.projectId.toString(),
+                            mrId = api.iid.toString()
+                        )
+                    }
+
+                    val mapped = apiMergeRequestMapper.map(api)
+                    mapped.copy(pipeline = pipeline, isApproved = approval.getOrDefault(false))
+                }
+            }.awaitAll()
+
+            val pageInfo = when {
+                assigneePaged.response.isNotEmpty() -> apiPagedResponseMapper.map(assigneePaged)
+                else -> apiPagedResponseMapper.map(reviewerPaged)
+            }
+
+            MergeRequestsPage(
+                items = mappedItems,
+                pageInfo = pageInfo
+            )
+        } else {
+            MergeRequestsPage(
                 items = emptyList(),
-                PageInfo(
+                pageInfo = PageInfo(
                     currentPage = pageNumber,
                     nextPage = null,
                     totalPages = null,
@@ -48,34 +168,8 @@ internal class MergeRequestsKtorDataSource(
                 )
             )
         }
-
-        val mappedItems = paged.response.map { api ->
-            async {
-                val pipeline = runCatching {
-                    getPipeline(
-                        projectId = api.projectId.toString(),
-                        mrId = api.iid.toString()
-                    )
-                }.getOrNull()
-                val approval: Result<Boolean> = runCatching {
-                    getApproval(
-                        projectId = api.projectId.toString(),
-                        mrId = api.iid.toString()
-                    )
-                }
-
-                val mapped = apiMergeRequestMapper.map(api)
-                mapped.copy(pipeline = pipeline, isApproved = approval.getOrDefault(false))
-            }
-        }.awaitAll()
-
-        val pageInfo = apiPagedResponseMapper.map(paged)
-
-        MergeRequestsPage(
-            items = mappedItems,
-            pageInfo = pageInfo
-        )
     }
+
 
     suspend fun getPipeline(projectId: String, mrId: String): Pipeline? {
         val response: List<ApiPipeline> = apiClient.get(

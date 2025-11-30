@@ -5,7 +5,7 @@ import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestState
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestsPage
 
 internal interface MergeRequestsRemoteDataSource {
-    suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage
+    suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int, userId: String?): MergeRequestsPage
 
     companion object Endpoints {
         const val MRS = "merge_requests"
@@ -19,6 +19,20 @@ internal interface MergeRequestsRemoteDataSource {
 
         fun mergeRequestWithStateForProject(state: MergeRequestState, projectId: Int): String {
             return "$PROJECTS/$projectId/$MRS?with_labels_details=true&state=${state.value}"
+        }
+
+        fun mergeRequestWithStateForAssignee(
+            state: MergeRequestState,
+            assigneeId: String
+        ): String {
+            return "$MRS?with_labels_details=true&scope=all&assignee_id=${assigneeId}&state=${state.value}"
+        }
+
+        fun mergeRequestWithStateForReviewer(
+            state: MergeRequestState,
+            reviewerId: String
+        ): String {
+            return "$MRS?with_labels_details=true&scope=all&reviewer_id=${reviewerId}&state=${state.value}"
         }
 
         fun pipelineForMergeRequest(projectId: String, mrId: String): String {

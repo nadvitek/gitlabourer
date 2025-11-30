@@ -8,8 +8,9 @@ import Repository
 import Pipelines
 import ACKategories
 import Jobs
+import MergeRequestDetail
 
-class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate, PipelinesFlowDelegate, JobsFlowDelegate {
+class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, ProjectsFlowDelegate, ProjectDetailFlowDelegate, MergeRequestsFlowDelegate, RepositoryFlowDelegate, PipelinesFlowDelegate, JobsFlowDelegate, MergeRequestDetailFlowDelegate {
 
     private var projectId: KotlinInt?
 
@@ -71,7 +72,7 @@ class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, Project
                 viewModel: JobsViewModelImpl(
                     dependencies: appDependency.jobsViewModelDependencies,
                     flowDelegate: self,
-                    projectId: KotlinInt(value: project.id),
+                    projectId: Int64(project.id),
                     pipelineId: nil,
                     screenType: .list
                 )
@@ -116,7 +117,7 @@ class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, Project
             viewModel: JobsViewModelImpl(
                 dependencies: appDependency.jobsViewModelDependencies,
                 flowDelegate: self,
-                projectId: projectId,
+                projectId: Int64(truncating: projectId),
                 pipelineId: KotlinInt(value: Int32(pipeline.id)),
                 screenType: .pipeline
             )
@@ -134,7 +135,7 @@ class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, Project
         let vc = JobsDetailView(
             viewModel: JobsDetailViewModelImpl(
                 dependencies: appDependency.jobsDetailViewModelDependencies,
-                projectId: projectId,
+                projectId: Int64(truncating: projectId),
                 job: job
             )
         )
@@ -144,5 +145,39 @@ class ProjectsNavigationFlowCoordinator: Base.FlowCoordinatorNoDeepLink, Project
         vc.modalPresentationStyle = .fullScreen
 
         navigationController?.present(vc, animated: true)
+    }
+
+    func onPipelineClick(_ pipeline: Pipeline) {
+        guard let pipelineId = Int32(pipeline.id), let projectId else { return }
+
+        let vc = JobsView(
+            viewModel: JobsViewModelImpl(
+                dependencies: appDependency.jobsViewModelDependencies,
+                flowDelegate: self,
+                projectId: Int64(truncating: projectId),
+                pipelineId: KotlinInt(value: pipelineId),
+                screenType: .pipeline
+            )
+        )
+        .hosting()
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func openMergeRequestDetail(
+        projectId: Int64,
+        mergeRequestId: Int64
+    ) {
+        let vc = MergeRequestDetailView(
+            viewModel: MergeRequestDetailViewModelImpl(
+                dependencies: appDependency.mergeRequestDetailViewModelDependencies,
+                flowDelegate: self,
+                projectId: projectId,
+                mergeRequestId: mergeRequestId
+            )
+        )
+        .hosting()
+
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

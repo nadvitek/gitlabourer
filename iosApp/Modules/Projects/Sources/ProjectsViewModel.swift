@@ -38,7 +38,7 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
     public var isLoadingNextPage: Bool = false
     public var hasNextPage: Bool = false
 
-    private var pageNumber: Int = 0
+    private var pageNumber: Int = 1
     private let dependencies: ProjectsViewModelDependencies
     private weak var flowDelegate: ProjectsFlowDelegate?
     private var cachedProjects: [Project] = []
@@ -76,7 +76,7 @@ public class ProjectsViewModelImpl: ProjectsViewModel {
     }
 
     public func refresh() async {
-        pageNumber = 0
+        pageNumber = 1
         cachedProjects = []
 
         do {

@@ -18,6 +18,7 @@ public protocol MergeRequestsViewModel {
     func retry()
     func loadNextPage()
     func selectState(state: MergeRequestState)
+    func openMergeRequest(_ mergeRequest: MergeRequest)
 }
 
 // MARK: - ScreenState
@@ -44,7 +45,7 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
     private let projectId: KotlinInt?
     private let dependencies: MergeRequestsViewModelDependencies
     private var cachedMergeRequests: [MergeRequestState: [MergeRequest]] = [:]
-    private var pageNumber = 0
+    private var pageNumber = 1
     private weak var flowDelegate: MergeRequestsFlowDelegate?
 
     // MARK: - Initializers
@@ -52,7 +53,7 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
     public init(
         dependencies: MergeRequestsViewModelDependencies,
         flowDelegate: MergeRequestsFlowDelegate?,
-        projectId: KotlinInt?
+        projectId: KotlinInt?,
     ) {
         self.dependencies = dependencies
         self.flowDelegate = flowDelegate
@@ -81,7 +82,7 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
     }
 
     public func refresh() async {
-        pageNumber = 0
+        pageNumber = 1
         cachedMergeRequests[selectedState] = []
         let currentState = selectedState
 
@@ -89,7 +90,7 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
             let mergeRequests = try await dependencies.getMergeRequestsUseCase.invoke(
                 state: selectedState,
                 projectId: projectId,
-                pageNumber: 0
+                pageNumber: 1
             )
 
             cachedMergeRequests[currentState] = mergeRequests.items
@@ -138,6 +139,13 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
         hasNextPage[selectedState] ?? false
     }
 
+    public func openMergeRequest(_ mergeRequest: MergeRequest) {
+        flowDelegate?.openMergeRequestDetail(
+            projectId: mergeRequest.projectId,
+            mergeRequestId: mergeRequest.iid
+        )
+    }
+
     // MARK: - Private helpers
 
     private func loadData() {
@@ -147,11 +155,13 @@ public class MergeRequestsViewModelImpl: MergeRequestsViewModel {
             let currentState = selectedState
             defer { isRetryLoading[currentState] = false }
 
+            print("ProjectId Print \(projectId)")
+
             do {
                 let mergeRequests = try await dependencies.getMergeRequestsUseCase.invoke(
                     state: selectedState,
                     projectId: projectId,
-                    pageNumber: 0
+                    pageNumber: Int32(pageNumber)
                 )
 
                 cachedMergeRequests[currentState] = mergeRequests.items

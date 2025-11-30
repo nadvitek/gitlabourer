@@ -8,6 +8,7 @@ import MergeRequests
 import Pipelines
 import Jobs
 import Settings
+import MergeRequestDetail
 
 let appDependency = AppDependency()
 
@@ -68,6 +69,14 @@ extension AppDependency {
         SettingsViewModelDependencies(
             getUserUseCase: getUserUseCase,
             logoutUseCase: logoutUseCase
+        )
+    }
+
+    var mergeRequestDetailViewModelDependencies: MergeRequestDetailViewModelDependencies {
+        MergeRequestDetailViewModelDependencies(
+            getMergeRequestDetailUseCase: getMergeRequestDetailUseCase,
+            changeMergeRequestApprovalUseCase: changeMergeRequestApprovalUseCase,
+            mergeMergeRequestUseCase: mergeMergeRequestUseCase
         )
     }
 }

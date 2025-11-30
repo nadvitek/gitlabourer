@@ -43,7 +43,7 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
     private var cachedPipelines: [DetailedPipeline] = []
     private let dependencies: PipelinesViewModelDependencies
     private weak var flowDelegate: PipelinesFlowDelegate?
-    private var pageNumber: Int = 0
+    private var pageNumber: Int = 1
 
     // MARK: - Initializers
 
@@ -104,7 +104,7 @@ public class PipelinesViewModelImpl: PipelinesViewModel {
     }
 
     public func refresh() async {
-        pageNumber = 0
+        pageNumber = 1
         cachedPipelines = []
 
         do {

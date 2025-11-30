@@ -45,7 +45,7 @@ public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
                 )
 
         case let .loaded(projects):
-            ScrollViewThatFits {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(projects, id: \.id) { project in
                         ProjectItemView(

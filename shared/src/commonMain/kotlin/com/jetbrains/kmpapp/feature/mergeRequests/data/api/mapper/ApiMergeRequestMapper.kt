@@ -24,14 +24,14 @@ internal class ApiMergeRequestMapper {
     val apiUserMapper = ApiUserMapper()
 
     fun map(api: ApiMergeRequest): MergeRequest = MergeRequest(
-        id = api.id.toString(),
-        iid = api.iid.toString(),
-        projectId = api.projectId.toString(),
+        id = api.id,
+        iid = api.iid,
+        projectId = api.projectId,
         title = api.title,
         description = api.description,
         sourceBranch = api.sourceBranch,
         targetBranch = api.targetBranch,
-        state = api.state.toMRState(),
+        state = mapState(api.state),
         createdAt = api.createdAt,
         updatedAt = api.updatedAt,
         mergedAt = api.mergedAt,
@@ -66,7 +66,15 @@ internal class ApiMergeRequestMapper {
         userNotesCount = api.userNotesCount
     )
 
-    private fun map(api: ApiLabel): Label = Label(
+    fun mapState(apiState: String?): MRState = when (apiState?.lowercase()) {
+        "opened" -> MRState.OPENED
+        "merged" -> MRState.MERGED
+        "closed" -> MRState.CLOSED
+        "locked" -> MRState.LOCKED
+        else -> MRState.UNKNOWN
+    }
+
+    fun map(api: ApiLabel): Label = Label(
         name = api.name,
         color = api.color,
         textColor = api.textColor
@@ -104,15 +112,6 @@ internal class ApiMergeRequestMapper {
                     .date
             }.getOrNull()
         }
-
-
-    private fun String?.toMRState(): MRState = when (this?.lowercase()) {
-        "opened" -> MRState.OPENED
-        "merged" -> MRState.MERGED
-        "closed" -> MRState.CLOSED
-        "locked" -> MRState.LOCKED
-        else -> MRState.UNKNOWN
-    }
 
     private fun String?.toMergeStatus(): MergeStatus = when (this?.lowercase()) {
         "can_be_merged" -> MergeStatus.CAN_BE_MERGED

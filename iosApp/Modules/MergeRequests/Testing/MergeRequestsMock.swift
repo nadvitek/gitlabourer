@@ -54,9 +54,9 @@ public enum MergeRequestMockFactory {
     }
 
     public static func makeMergeRequest(
-        id: String = "12345",
-        iid: String = "1",
-        projectId: String = "proj-987",
+        id: Int64 = 12345,
+        iid: Int64 = 1,
+        projectId: Int64 = 987,
         title: String = "Fix login crash on iOS",
         description: String? = "This MR fixes a crash when tapping the login button on iOS 18.",
         sourceBranch: String = "feature/fix-login-crash",
@@ -151,8 +151,8 @@ public enum MergeRequestMockFactory {
             let state: MRState = (i % 3 == 0) ? .opened : (i % 3 == 1) ? .merged : .closed
             list.append(
                 makeMergeRequest(
-                    id: "mr-\(i)",
-                    iid: "\(i + 1)",
+                    id: Int64(i),
+                    iid: Int64(i + 1),
                     title: ["🐛Fix login crash", "✨Add dark mode", "🚑Hotfix background fetch"][i % 3],
                     state: state,
                     createdAt: Int64(Date().timeIntervalSince1970 * 1000),

@@ -37,7 +37,7 @@ public struct RepositoryView<ViewModel: RepositoryViewModel>: View {
     @ViewBuilder
     private var content: some View {
         VStack(spacing: 0) {
-            if viewModel.selectedBranchName.isNotEmpty {
+            if !viewModel.selectedBranchName.isEmpty {
                 RepositoryBranchPickerView(
                     selectedBranch: $viewModel.selectedBranchName,
                     branches: viewModel.branches

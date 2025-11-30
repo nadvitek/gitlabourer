@@ -4,6 +4,7 @@ import com.jetbrains.kmpapp.feature.mergeRequests.domain.MergeRequestsRepository
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequest
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestState
 import com.jetbrains.kmpapp.feature.mergeRequests.domain.model.MergeRequestsPage
+import com.jetbrains.kmpapp.feature.user.data.UserLocalDataSource
 
 import io.github.mykhailoliutov.koinexport.core.KoinKmmExport
 
@@ -16,9 +17,11 @@ public interface GetMergeRequestsUseCase {
 
 internal class GetMergeRequestsUseCaseImpl(
     private val mergeRequestsRepository: MergeRequestsRepository,
+    private val userLocalDataSource: UserLocalDataSource,
 ) : GetMergeRequestsUseCase {
 
     override suspend fun invoke(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage {
-        return mergeRequestsRepository.getMergeRequests(state, projectId, pageNumber)
+        val userId = userLocalDataSource.getUserId()?.id
+        return mergeRequestsRepository.getMergeRequests(state, projectId, pageNumber, userId)
     }
 }

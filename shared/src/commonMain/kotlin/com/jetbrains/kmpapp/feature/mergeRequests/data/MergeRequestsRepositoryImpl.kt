@@ -9,7 +9,7 @@ internal class MergeRequestsRepositoryImpl(
     private val mergeRequestsRemoteDataSource: MergeRequestsRemoteDataSource
 ): MergeRequestsRepository {
 
-    override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int): MergeRequestsPage {
-        return mergeRequestsRemoteDataSource.getMergeRequests(state, projectId, pageNumber)
+    override suspend fun getMergeRequests(state: MergeRequestState, projectId: Int?, pageNumber: Int, userId: String?): MergeRequestsPage {
+        return mergeRequestsRemoteDataSource.getMergeRequests(state, projectId, pageNumber, userId)
     }
 }

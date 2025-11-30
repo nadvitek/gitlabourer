@@ -39,6 +39,7 @@ public class SearchViewModelImpl: SearchViewModel {
     }
     public var isPresented: Bool = true
 
+    private var lastSearchedText: String = ""
     private var searchTask: Task<Void, Never>?
     private let dependencies: SearchViewModelDependencies
     private weak var flowDelegate: SearchFlowDelegate?
@@ -69,6 +70,7 @@ public class SearchViewModelImpl: SearchViewModel {
 
     private func searchData() {
         guard !text.isEmpty else { screenState = .loaded([]); return }
+        guard lastSearchedText != text else { return }
 
         screenState = .loading
 
@@ -88,6 +90,7 @@ public class SearchViewModelImpl: SearchViewModel {
                     text: text
                 )
 
+                lastSearchedText = text
                 screenState = .loaded(projects)
             } catch {
                 screenState = .error
