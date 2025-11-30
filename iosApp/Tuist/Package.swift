@@ -3,13 +3,12 @@
 @preconcurrency import PackageDescription
 
 #if TUIST
-@preconcurrency import ProjectDescription
+import ProjectDescription
+import ProjectDescriptionHelpers
 
 let packageSettings = PackageSettings(
     baseSettings: .settings(
-        configurations: [.debug(
-            name: .debug
-        )]
+        configurations: [.current]
     )
 )
 #endif
@@ -19,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/AckeeCZ/ackee-ios-snapshots",
-            revision: "28f9aba"
+            revision: "28a367e"
         ),
         .package(
             url: "https://github.com/AckeeCZ/ACKategories",

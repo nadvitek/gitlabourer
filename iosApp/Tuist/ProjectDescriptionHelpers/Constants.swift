@@ -1,5 +1,8 @@
 import ProjectDescription
 
+public let projectName = "GitLabourer"
+public let version: Version = "1.0.0"
+
 public let projectTargets = [
     app, appTesting,
     projects, projectsTesting,
@@ -12,5 +15,6 @@ public let projectTargets = [
     mergeRequests, mergeRequestsTesting,
     settings, settingsTesting,
     projectDetail, projectDetailTesting,
-    jobs, jobsTesting
+    jobs, jobsTesting,
+    mergeRequestDetail, mergeRequestDetailTesting
 ]

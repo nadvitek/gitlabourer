@@ -1,14 +1,29 @@
 import Foundation
 import ProjectDescription
+import AckeeTemplate
+
+private let targetName = "GitLabourer"
+private let bundleID = AppSetup.current.bundleID
+private let appName: String = {
+    if Environment.current == .production, Configuration.current == .release {
+        return "GitLabourer"
+    }
+
+    return [targetName, AppSetup.current.appNameValue].joined(separator: " ")
+}()
+
+private let codeSigning = CodeSigning.current(
+    bundleID: bundleID,
+    teamID: AppSetup.current.teamID
+)
 
 let app = Target.target(
-    name: "GitLabourer",
-    destinations: .iOS,
+    name: targetName,
+    destinations: Destinations(arrayLiteral: .iPhone, .iPad, .macCatalyst),
     product: .app,
-    bundleId: "cz.nadvitek.GitLabourer",
+    bundleId: "cz.nadvitek.gitlabourer",
     infoPlist: .extendingDefault(with: [
-        "UILaunchScreen": [
-        ],
+        "UILaunchScreen": [],
         "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
@@ -33,12 +48,12 @@ let app = Target.target(
         .projects,
         .login,
         .repository,
-        .ackategories,
         .settings,
         .pipelines,
         .mergeRequests,
         .projectDetail,
-        .jobs
+        .jobs,
+        .mergeRequestDetail
     ]
 )
 

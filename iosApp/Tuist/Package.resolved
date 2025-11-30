@@ -1,5 +1,5 @@
 {
-  "originHash" : "c05ce9dcaff161bc6ae71cb0514587b6c1c2d0a3fe300e00636413c0b2d84905",
+  "originHash" : "1ad987fa59bb022f0d311a3eafd035e993c2aab86acbfcdef56b3a4379cfea58",
   "pins" : [
     {
       "identity" : "ackategories",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AckeeCZ/ackee-ios-snapshots",
       "state" : {
-        "branch" : "28f9aba",
-        "revision" : "28f9abac6e48f80c950277a10fbb5f8e7139393e"
+        "branch" : "28a367e",
+        "revision" : "28a367edf1dbcb27dc7b948c1833bb0f9901f128"
       }
     },
     {
