@@ -57,7 +57,7 @@ let app = Target.target(
     ]
 )
 
-let appTesting = Target.target(
+let appTests = Target.target(
     name: "GitLabourerTests",
     destinations: .iOS,
     product: .unitTests,
@@ -67,6 +67,7 @@ let appTesting = Target.target(
     resources: [],
     dependencies: [
         .xctest,
-        .target(app)
+        .target(app),
+        .appTesting
     ]
 )

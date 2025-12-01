@@ -30,7 +30,8 @@ let repositoryTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(repository)
+        .target(repository),
+        .appTesting
     ]
 )
 

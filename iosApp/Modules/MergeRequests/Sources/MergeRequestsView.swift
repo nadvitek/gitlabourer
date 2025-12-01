@@ -127,15 +127,17 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
 
 // MARK: - Previews
 
-#Preview {
-    MergeRequestsView(
-        viewModel: MergeRequestsViewModelMock(
-            screenState: .loaded(
-                MergeRequestMockFactory.makeList()
+struct MergeRequestsView_Previews: PreviewProvider {
+    static var previews: some View {
+        MergeRequestsView(
+            viewModel: MergeRequestsViewModelMock(
+                screenState: .loaded(
+                    MergeRequestMockFactory.makeList()
+                )
             )
         )
-    )
-    .preferredColorScheme(.dark)
+        .preferredColorScheme(.dark)
+    }
 }
 
 #endif

@@ -43,13 +43,15 @@ struct RepositoryFileTreeView: View {
     }
 }
 
-#Preview {
-    RepositoryFileTreeView(
-        onRowClick: { _ in },
-        assignItemSize: { _ in },
-        contentHeight: 0,
-        firstLevelItems: [],
-        expanded: [],
-        itemSize: .zero
-    )
+struct RepositoryFileTreeView_Previews: PreviewProvider {
+    static var previews: some View {
+        RepositoryFileTreeView(
+            onRowClick: { _ in },
+            assignItemSize: { _ in },
+            contentHeight: 0,
+            firstLevelItems: [],
+            expanded: [],
+            itemSize: .zero
+        )
+    }
 }

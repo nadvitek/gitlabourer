@@ -45,10 +45,12 @@ public struct PrimaryButton: View {
     }
 }
 
-#Preview {
-    VStack {
-        PrimaryButton("Primary Button") {}
+struct PrimaryButton_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            PrimaryButton("Primary Button") {}
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(GitlabColors.gitlabDark.swiftUIColor)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(GitlabColors.gitlabDark.swiftUIColor)
 }

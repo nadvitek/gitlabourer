@@ -102,64 +102,66 @@ extension TreeItem {
     }
 }
 
-#Preview {
-    RepositoryView(
-        viewModel: RepositoryViewModelMock(
-            screenState: .loaded(
-                [
-                    .init(
-                        sha: "1",
-                        name: "File",
-                        path: "1",
-                        mode: "1",
-                        kind: .file,
-                        children: []
-                    ),
-                    .init(
-                        sha: "2",
-                        name: "Directory",
-                        path: "2",
-                        mode: "2",
-                        kind: .directory,
-                        children: [
-                            .init(
-                                sha: "4",
-                                name: "File",
-                                path: "1",
-                                mode: "1",
-                                kind: .file,
-                                children: []
-                            ),
-                            .init(
-                                sha: "5",
-                                name: "Subdir",
-                                path: "2/5",
-                                mode: "2",
-                                kind: .directory,
-                                children: [
-                                    .init(
-                                        sha: "6",
-                                        name: "Nested file",
-                                        path: "2/5/6",
-                                        mode: "1",
-                                        kind: .file,
-                                        children: []
-                                    )
-                                ]
-                            )
-                        ]
-                    ),
-                    .init(
-                        sha: "3",
-                        name: "Submodule",
-                        path: "2",
-                        mode: "2",
-                        kind: .submodule,
-                        children: []
-                    )
-                ]
+struct RepositoryView_Previews: PreviewProvider {
+    static var previews: some View {
+        RepositoryView(
+            viewModel: RepositoryViewModelMock(
+                screenState: .loaded(
+                    [
+                        .init(
+                            sha: "1",
+                            name: "File",
+                            path: "1",
+                            mode: "1",
+                            kind: .file,
+                            children: []
+                        ),
+                        .init(
+                            sha: "2",
+                            name: "Directory",
+                            path: "2",
+                            mode: "2",
+                            kind: .directory,
+                            children: [
+                                .init(
+                                    sha: "4",
+                                    name: "File",
+                                    path: "1",
+                                    mode: "1",
+                                    kind: .file,
+                                    children: []
+                                ),
+                                .init(
+                                    sha: "5",
+                                    name: "Subdir",
+                                    path: "2/5",
+                                    mode: "2",
+                                    kind: .directory,
+                                    children: [
+                                        .init(
+                                            sha: "6",
+                                            name: "Nested file",
+                                            path: "2/5/6",
+                                            mode: "1",
+                                            kind: .file,
+                                            children: []
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                        .init(
+                            sha: "3",
+                            name: "Submodule",
+                            path: "2",
+                            mode: "2",
+                            kind: .submodule,
+                            children: []
+                        )
+                    ]
+                )
             )
         )
-    )
-    .preferredColorScheme(.dark)
+        .preferredColorScheme(.dark)
+    }
 }

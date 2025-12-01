@@ -156,20 +156,22 @@ struct JobsListView: View {
     }
 }
 
-#Preview {
-    JobsListView(
-        list: [
-            .mock(),
-            .mock(id: 2, name: "Assemble"),
-            .mock(id: 3, name: "Lint"),
-            .mock(id: 4, name: "Unit Tests")
-        ],
-        hasNextPage: false,
-        isLoadingNextPage: false,
-        handleAction: { _ in },
-        refresh: {}
-    )
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
+struct JobsListView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsListView(
+            list: [
+                .mock(),
+                .mock(id: 2, name: "Assemble"),
+                .mock(id: 3, name: "Lint"),
+                .mock(id: 4, name: "Unit Tests")
+            ],
+            hasNextPage: false,
+            isLoadingNextPage: false,
+            handleAction: { _ in },
+            refresh: {}
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
+    }
 }

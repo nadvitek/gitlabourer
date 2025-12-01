@@ -139,10 +139,12 @@ public struct JobsDetailView<ViewModel: JobsDetailViewModel>: View {
 
 // MARK: - Previews
 
-#Preview {
-    JobsDetailView(
-        viewModel: JobsDetailViewModelMock()
-    )
+struct JobsDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsDetailView(
+            viewModel: JobsDetailViewModelMock()
+        )
+    }
 }
 
 #endif

@@ -98,9 +98,11 @@ public func createLoginViewController(
 
 #if DEBUG
 
-#Preview {
-    LoginView(viewModel: LoginViewModelMock(errorMessage: "Personal Access Token is invalid."))
-        .preferredColorScheme(.dark)
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoginView(viewModel: LoginViewModelMock(errorMessage: "Personal Access Token is invalid."))
+            .preferredColorScheme(.dark)
+    }
 }
 
 #endif

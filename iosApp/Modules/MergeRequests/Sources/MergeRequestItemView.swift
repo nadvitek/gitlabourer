@@ -160,27 +160,29 @@ struct MergeRequestItemView: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 12) {
-        MergeRequestItemView(
-            mr: MergeRequestMockFactory.makeMergeRequest(
-                pipelineStatus: .canceled
+struct MergeRequestItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 12) {
+            MergeRequestItemView(
+                mr: MergeRequestMockFactory.makeMergeRequest(
+                    pipelineStatus: .canceled
+                )
             )
-        )
 
-        MergeRequestItemView(
-            mr: MergeRequestMockFactory.makeMergeRequest(
-                pipelineStatus: .failed,
-                labels: [.init(
-                    name: "Auto-merge",
-                    color: "#9400d3",
-                    textColor: "#FFFFFF"
-                )]
+            MergeRequestItemView(
+                mr: MergeRequestMockFactory.makeMergeRequest(
+                    pipelineStatus: .failed,
+                    labels: [.init(
+                        name: "Auto-merge",
+                        color: "#9400d3",
+                        textColor: "#FFFFFF"
+                    )]
+                )
             )
-        )
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
     }
-    .padding(.horizontal, 16)
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
 }

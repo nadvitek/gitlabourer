@@ -200,13 +200,15 @@ public struct PipelinesView<ViewModel: PipelinesViewModel>: View {
 
 // MARK: - Previews
 
-#Preview {
-    PipelinesView(
-        viewModel: PipelinesViewModelMock(
-            screenState: .loaded([.mock()])
+struct PipelinesView_Previews: PreviewProvider {
+    static var previews: some View {
+        PipelinesView(
+            viewModel: PipelinesViewModelMock(
+                screenState: .loaded([.mock()])
+            )
         )
-    )
-    .preferredColorScheme(.dark)
+        .preferredColorScheme(.dark)
+    }
 }
 
 #endif

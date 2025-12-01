@@ -114,15 +114,17 @@ public struct ProjectItemView: View {
 
 #if DEBUG
 
-#Preview {
-    VStack(spacing: 20) {
-        ProjectItemView(
-            project: .mock
-        ) { _ in }
+struct ProjectItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 20) {
+            ProjectItemView(
+                project: .mock
+            ) { _ in }
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
     }
-    .padding(.horizontal)
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
 }
 
 public extension Project {

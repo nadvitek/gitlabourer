@@ -31,7 +31,8 @@ let searchTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(search)
+        .target(search),
+        .appTesting
     ]
 )
 

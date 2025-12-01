@@ -105,11 +105,13 @@ struct JobsSectionView: View {
 
 // MARK: - Previews
 
-#Preview {
-    JobsSectionView(section: .mock(), handleAction: { _ in })
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .gitlabourerBackground()
-        .preferredColorScheme(.dark)
+struct JobsSectionView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsSectionView(section: .mock(), handleAction: { _ in })
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .gitlabourerBackground()
+            .preferredColorScheme(.dark)
+    }
 }
 
 extension JobsSection {

@@ -41,11 +41,13 @@ public struct ErrorStateView: View {
 
 // MARK: - Previews
 
-#Preview {
-    ErrorStateView(
-        isLoading: false,
-        retry: {}
-    )
+struct ErrorStateView_Previews: PreviewProvider {
+    static var previews: some View {
+        ErrorStateView(
+            isLoading: false,
+            retry: {}
+        )
+    }
 }
 
 #endif

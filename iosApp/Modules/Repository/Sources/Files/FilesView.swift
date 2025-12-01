@@ -166,14 +166,15 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
 
 // MARK: - Previews
 
-#Preview(traits: .landscapeRight) {
-    FilesView(
-        viewModel: FilesViewModelMock(
-            screenState: .loaded(
-                .init(
-                    fileName: "SomeFile.md",
-                    ref: "",
-                    content: """
+struct FilesView_Previews: PreviewProvider {
+    static var previews: some View {
+        FilesView(
+            viewModel: FilesViewModelMock(
+                screenState: .loaded(
+                    .init(
+                        fileName: "SomeFile.md",
+                        ref: "",
+                        content: """
                     O Ackee 📖
                     ======
 
@@ -207,10 +208,12 @@ public struct FilesView<ViewModel: FilesViewModel>: View {
 
                     [Project assignment](https://gitlab.ack.ee/Ackee/ackee-hub/-/blob/master/codelamvackee.md)
                     """
+                    )
                 )
             )
         )
-    )
+        .previewInterfaceOrientation(.landscapeRight)
+    }
 }
 
 #endif

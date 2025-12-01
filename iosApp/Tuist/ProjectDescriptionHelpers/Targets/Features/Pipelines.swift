@@ -31,7 +31,8 @@ let pipelinesTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(pipelines)
+        .target(pipelines),
+        .appTesting
     ]
 )
 

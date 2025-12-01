@@ -96,7 +96,7 @@ public func createProjectsViewController(
 
 // MARK: - Previews
 
-struct ProjectsView_Preview: PreviewProvider {
+struct ProjectsView_Previews: PreviewProvider {
     static var previews: some View {
         ProjectsView(
             viewModel: ProjectsViewModelMock(

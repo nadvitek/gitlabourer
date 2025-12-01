@@ -67,27 +67,29 @@ public struct GitLabourerTextField<Trailing: View>: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 20) {
-        GitLabourerTextField(
-            text: .constant(""),
-            placeholder: "Private access token",
-            errorMessage: .constant("")
-        )
+struct GitLabourerTextField_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 20) {
+            GitLabourerTextField(
+                text: .constant(""),
+                placeholder: "Private access token",
+                errorMessage: .constant("")
+            )
 
-        GitLabourerTextField(
-            text: .constant("Something"),
-            placeholder: "Private access token",
-            errorMessage: .constant("")
-        )
+            GitLabourerTextField(
+                text: .constant("Something"),
+                placeholder: "Private access token",
+                errorMessage: .constant("")
+            )
 
-        GitLabourerTextField(
-            text: .constant("Something"),
-            placeholder: "Private access token",
-            errorMessage: .constant("Error")
-        )
+            GitLabourerTextField(
+                text: .constant("Something"),
+                placeholder: "Private access token",
+                errorMessage: .constant("Error")
+            )
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
     }
-    .padding(.horizontal, 16)
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
 }

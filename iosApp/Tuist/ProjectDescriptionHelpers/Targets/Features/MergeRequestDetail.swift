@@ -31,7 +31,8 @@ let mergeRequestDetailTesting = Target.target(
     sources: ["\(basePath)/Tests/**"],
     dependencies: [
         .xctest,
-        .target(mergeRequests)
+        .target(mergeRequests),
+        .appTesting
     ]
 )
 
