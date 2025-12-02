@@ -92,6 +92,7 @@ public struct MergeRequestsView<ViewModel: MergeRequestsViewModel>: View {
                 .fontWeight(.semibold)
                 .font(.headline)
                 .foregroundStyle(viewModel.isStateSelected(state) ? GitlabColors.gitlabDark.swiftUIColor : GitlabColors.gitlabDark.swiftUIColor)
+                .lineLimit(1)
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
                 .background(viewModel.isStateSelected(state) ? GitlabColors.gitlabOrangeTwo.swiftUIColor : GitlabColors.gitlabGray.swiftUIColor.opacity(0.8))

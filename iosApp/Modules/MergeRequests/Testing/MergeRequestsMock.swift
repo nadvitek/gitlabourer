@@ -148,17 +148,30 @@ public enum MergeRequestMockFactory {
         guard count > 0 else { return [] }
         var list: [MergeRequest] = []
         for i in 0..<count {
-            let state: MRState = (i % 3 == 0) ? .opened : (i % 3 == 1) ? .merged : .closed
+            let status: PipelineStatus = (i % 3 == 0) ? .running : (i % 3 == 1) ? .canceled : .success
             list.append(
                 makeMergeRequest(
                     id: Int64(i),
                     iid: Int64(i + 1),
                     title: ["🐛Fix login crash", "✨Add dark mode", "🚑Hotfix background fetch"][i % 3],
-                    state: state,
+                    state: .opened,
                     createdAt: Int64(Date().timeIntervalSince1970 * 1000),
                     updatedAt: Int64(Date().timeIntervalSince1970 * 1000),
-                    mergedAt: state == .merged ? Kotlinx_datetimeInstant.Companion().fromEpochMilliseconds(epochMilliseconds: Int64(Date().timeIntervalSince1970 * 1000)) : nil,
-                    pipelineStatus: .success,
+                    mergedAt: nil,
+                    pipelineStatus: status,
+                    reviewers: i == 0 ? [] : [.mock(id: 4, username: "ckent", name: "Clark Kent")],
+                    labels: i == 2 ? [.init(
+                        name: "Review Required",
+                        color: "#6699cc",
+                        textColor: "#FFFFFF"
+                    )] : i == 1 ?
+                    [
+                        .init(
+                            name: "Action Requested",
+                            color: "#dc143c",
+                            textColor: "#FFFFFF"
+                        )
+                    ] : [],
                     milestone: (i % 2 == 0) ? makeMilestone() : nil,
                     upvotes: Int32(5 + i),
                     downvotes: Int32(i % 2)
