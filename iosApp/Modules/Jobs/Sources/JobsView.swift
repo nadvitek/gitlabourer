@@ -75,9 +75,11 @@ public struct JobsView<ViewModel: JobsViewModel>: View {
 
 // MARK: - Previews
 
-#Preview {
-    JobsView(viewModel: JobsViewModelMock())
-        .preferredColorScheme(.dark)
+struct JobsView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsView(viewModel: JobsViewModelMock())
+            .preferredColorScheme(.dark)
+    }
 }
 
 #endif

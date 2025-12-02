@@ -49,6 +49,8 @@ struct PrimaryButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             PrimaryButton("Primary Button") {}
+
+            PrimaryButton("Very very very long text on Button") {}
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(GitlabColors.gitlabDark.swiftUIColor)

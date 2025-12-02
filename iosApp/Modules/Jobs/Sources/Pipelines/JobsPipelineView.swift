@@ -43,36 +43,38 @@ struct JobsPipelineView: View {
 
 // MARK: - Previews
 
-#Preview {
-    JobsPipelineView(
-        stream: .init(
-            pipelineId: 1,
-            projectId: 1,
-            sections: [.mock(), .mock(stage: "build")],
-            downstreams: [
-                .init(
-                    pipelineId: 2,
-                    projectId: 2,
-                    sections: [.mock(), .mock(stage: "build")],
-                    downstreams: [
-
-                    ]
-                ),
-                .init(
-                    pipelineId: 3,
-                    projectId: 3,
-                    sections: [.mock(), .mock(stage: "build")],
-                    downstreams: [
-
-                    ]
-                )
-            ]
-        ),
-        handleAction: { _ in }
-    )
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
+struct JobPipelineView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsPipelineView(
+            stream: .init(
+                pipelineId: 1,
+                projectId: 1,
+                sections: [.mock(), .mock(stage: "build")],
+                downstreams: [
+                    .init(
+                        pipelineId: 2,
+                        projectId: 2,
+                        sections: [.mock(), .mock(stage: "build")],
+                        downstreams: [
+                            
+                        ]
+                    ),
+                    .init(
+                        pipelineId: 3,
+                        projectId: 3,
+                        sections: [.mock(), .mock(stage: "build")],
+                        downstreams: [
+                            
+                        ]
+                    )
+                ]
+            ),
+            handleAction: { _ in }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
+    }
 }
 
 #endif

@@ -76,9 +76,11 @@ public struct SettingsView<ViewModel: SettingsViewModel>: View {
 
 // MARK: - Previews
 
-#Preview {
-    SettingsView(viewModel: SettingsViewModelMock())
-        .preferredColorScheme(.dark)
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView(viewModel: SettingsViewModelMock())
+            .preferredColorScheme(.dark)
+    }
 }
 
 #endif

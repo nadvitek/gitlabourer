@@ -1,6 +1,6 @@
 package com.jetbrains.kmpapp.feature.token
 
-import TokenSettingsDataSource
+import com.jetbrains.kmpapp.feature.token.data.TokenSettingsDataSource
 import com.jetbrains.kmpapp.feature.token.data.TokenLocalDataSource
 import com.jetbrains.kmpapp.feature.token.domain.GetTokenUseCase
 import com.jetbrains.kmpapp.feature.token.domain.GetTokenUseCaseImpl

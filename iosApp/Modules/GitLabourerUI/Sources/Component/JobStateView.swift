@@ -13,7 +13,7 @@ extension PipelineStatus {
         case .canceled, .created, .skipped, .manual:
             GitlabColors.cancel.swiftUIColor
         case .pending:
-            GitlabColors.gitlabOrange.swiftUIColor.opacity(0.6)
+            GitlabColors.gitlabOrange.swiftUIColor.opacity(0.8)
         default:
             .brown
         }
@@ -38,7 +38,7 @@ extension PipelineStatus {
         case .manual:
             Image(systemName: "gear.circle")
         default:
-            Image(systemName: "plus")
+            Image(systemName: "circle")
         }
     }
 
@@ -71,13 +71,21 @@ public struct JobStateView: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 20) {
-        ForEach(PipelineStatus.allCases, id: \.self) { status in
-            JobStateView(state: status)
+#if DEBUG
+
+// MARK: - Previews
+
+struct JobStateView_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 20) {
+            ForEach(PipelineStatus.allCases, id: \.self) { status in
+                JobStateView(state: status)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
 }
+
+#endif

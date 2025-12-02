@@ -44,11 +44,15 @@ public struct SecondaryButton: View {
     }
 }
 
-#Preview {
-    VStack {
-        SecondaryButton("Secondary Button") {}
+struct SecondaryButton_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            SecondaryButton("Secondary Button") {}
+
+            SecondaryButton("Very very very long text on Button") {}
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
 }

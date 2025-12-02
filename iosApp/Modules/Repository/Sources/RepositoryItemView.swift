@@ -76,20 +76,22 @@ struct RepositoryItemView: View {
     }
 }
 
-#Preview {
-    RepositoryItemView(
-        onRowClick: { _ in },
-        depth: 0,
-        item: .init(
-            sha: "1",
-            name: "1",
-            path: "1",
-            mode: "223",
-            kind: .directory,
-            children: []
-        ),
-        expanded: [],
-        isFirst: true,
-        isLast: true
-    )
+struct RepositoryItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        RepositoryItemView(
+            onRowClick: { _ in },
+            depth: 0,
+            item: .init(
+                sha: "1",
+                name: "1",
+                path: "1",
+                mode: "223",
+                kind: .directory,
+                children: []
+            ),
+            expanded: [],
+            isFirst: true,
+            isLast: true
+        )
+    }
 }

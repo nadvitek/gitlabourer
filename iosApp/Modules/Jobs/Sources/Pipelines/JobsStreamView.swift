@@ -55,19 +55,21 @@ struct JobsStreamView: View {
 
 // MARK: - Previews
 
-#Preview {
-    JobsStreamView(
-        stream: .init(
-            pipelineId: 1,
-            projectId: 1,
-            sections: [.mock(), .mock(stage: "build")],
-            downstreams: []
-        ),
-        handleAction: { _ in } 
-    )
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
+struct JobsStreamView_Previews: PreviewProvider {
+    static var previews: some View {
+        JobsStreamView(
+            stream: .init(
+                pipelineId: 1,
+                projectId: 1,
+                sections: [.mock(), .mock(stage: "build")],
+                downstreams: []
+            ),
+            handleAction: { _ in }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
+    }
 }
 
 #endif

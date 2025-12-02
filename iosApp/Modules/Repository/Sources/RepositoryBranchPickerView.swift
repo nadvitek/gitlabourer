@@ -50,21 +50,23 @@ struct RepositoryBranchPickerView: View {
     }
 }
 
-#Preview {
-    RepositoryBranchPickerView(
-        selectedBranch: .constant("development"),
-        branches: [
-            "development",
-            "feature/rosta",
-            "fix/verca",
-            "fix/luky",
-            "fix/vítek",
-            "fix/simi",
-            "fix/tom",
-            "fix/hynek"
-        ]
-    )
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .gitlabourerBackground()
-    .preferredColorScheme(.dark)
+struct RepositoryBranchPickerView_Previews: PreviewProvider {
+    static var previews: some View {
+        RepositoryBranchPickerView(
+            selectedBranch: .constant("development"),
+            branches: [
+                "development",
+                "feature/rosta",
+                "fix/verca",
+                "fix/luky",
+                "fix/vítek",
+                "fix/simi",
+                "fix/tom",
+                "fix/hynek"
+            ]
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .gitlabourerBackground()
+        .preferredColorScheme(.dark)
+    }
 }
