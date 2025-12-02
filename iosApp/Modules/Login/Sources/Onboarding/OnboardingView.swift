@@ -80,7 +80,6 @@ struct OnboardingView<ViewModel: OnboardingViewModel>: View {
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView(viewModel: OnboardingViewModelImpl())
-            .preferredColorScheme(.dark)
     }
 }
 
