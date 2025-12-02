@@ -144,6 +144,7 @@ struct JobsDetailView_Previews: PreviewProvider {
         JobsDetailView(
             viewModel: JobsDetailViewModelMock()
         )
+        .previewInterfaceOrientation(.landscapeRight)
     }
 }
 

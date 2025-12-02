@@ -7,6 +7,8 @@ private let iPhoneDevices: [SnapshotDevice] = [
     defaultSnapshotDevice
 ]
 
+public let landscapeDevice: SnapshotDevice = .iPhone13ProMax(.landscape)
+
 public let AssertSnapshot: SnapshotTest = .init(
     devices: iPhoneDevices,
     record: false,
