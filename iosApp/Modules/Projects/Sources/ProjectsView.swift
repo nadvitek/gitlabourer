@@ -98,13 +98,15 @@ public func createProjectsViewController(
 
 struct ProjectsView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectsView(
-            viewModel: ProjectsViewModelMock(
-                screenState: .loaded(
-                    [.mock]
+        NavigationStack {
+            ProjectsView(
+                viewModel: ProjectsViewModelMock(
+                    screenState: .loaded(
+                        [.mock]
+                    )
                 )
             )
-        )
+        }
     }
 }
 

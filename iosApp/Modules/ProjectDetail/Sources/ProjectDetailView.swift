@@ -105,3 +105,18 @@ public struct ProjectDetailView<ViewModel: ProjectDetailViewModel>: View {
         }
     }
 }
+
+#if DEBUG
+
+// MARK: - Previews
+
+struct ProjectDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProjectDetailView(
+            viewModel: ProjectDetailViewModelMock()
+        )
+        .preferredColorScheme(.dark)
+    }
+}
+
+#endif

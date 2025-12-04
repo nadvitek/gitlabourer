@@ -1,8 +1,12 @@
-//
-//  Repository_Tests.swift
-//  GitLabourer
-//
-//  Created by Vít Nademlejnský on 18.10.2025.
-//
+import Testing
+import GitLabourer_Testing
+@testable import Pipelines
 
-import Foundation
+struct Pipelines_Tests {
+
+    @Test
+    @MainActor
+    func pipelinesView() async throws {
+        AssertSnapshot.devices(PipelinesView_Previews.testPreviews)
+    }
+}
