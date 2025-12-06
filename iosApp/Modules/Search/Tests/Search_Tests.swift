@@ -1,4 +1,18 @@
-import XCTest
+import Testing
+import GitLabourer_Testing
+@testable import Search
 
-final class Projects_Tests: XCTestCase {
+struct Search_Tests {
+
+    @Test
+    @MainActor
+    func searchViewEmpty() async throws {
+        AssertSnapshot.devices(SearchViewEmpty_Previews.testPreviews)
+    }
+
+    @Test
+    @MainActor
+    func searchView() async throws {
+        AssertSnapshot.devices(SearchView_Previews.testPreviews)
+    }
 }
