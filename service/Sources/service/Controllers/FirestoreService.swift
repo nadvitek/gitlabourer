@@ -56,7 +56,8 @@ final class FirestoreService: @unchecked Sendable {
         let fields = SubscriptionFields(
             userId: .init(stringValue: sub.userId),
             baseUrl: .init(stringValue: sub.baseUrl),
-            token: .init(stringValue: encryptedToken)
+            token: .init(stringValue: encryptedToken),
+            apnsDeviceToken: sub.apnsDeviceToken.map { FSString(stringValue: $0) }
         )
 
         let doc = FirestoreDocument<SubscriptionFields>(
@@ -66,13 +67,22 @@ final class FirestoreService: @unchecked Sendable {
             updateTime: nil
         )
 
-        let documentId = "\(sub.baseUrl)_\(sub.userId)"
+        let rawId = "\(sub.baseUrl)_\(sub.userId)"
+        let documentId = Data(rawId.utf8).base64EncodedString()
 
         let url = documentURL(collection: "subscriptions", documentId: documentId)
         let headers = try await authHeaders()
 
-        _ = try await app.client.patch(URI(string: url), headers: headers) { req in
+        app.logger.info("Saving subscription for userId=\(sub.userId) at URL=\(url)")
+
+        let res = try await app.client.patch(URI(string: url), headers: headers) { req in
             try req.content.encode(doc)
+        }
+
+        if res.status != .ok && res.status != .created {
+            let bodyString = res.body.flatMap { String(buffer: $0) } ?? "<no body>"
+            app.logger.error("Firestore saveSubscription failed: \(res.status) \(bodyString)")
+            throw Abort(.internalServerError, reason: "Firestore saveSubscription error: \(res.status)")
         }
 
         app.logger.info("Saved subscription for userId \(sub.userId)")
@@ -103,7 +113,8 @@ final class FirestoreService: @unchecked Sendable {
             let sub = Subscription(
                 userId: f.userId.stringValue,
                 baseUrl: f.baseUrl.stringValue,
-                token: decryptedToken
+                token: decryptedToken,
+                apnsDeviceToken: f.apnsDeviceToken?.stringValue
             )
             subscriptions.append(sub)
         }
@@ -134,7 +145,8 @@ final class FirestoreService: @unchecked Sendable {
             updateTime: nil
         )
 
-        let docId = "\(sub.baseUrl)_\(sub.userId)_\(mr.project_id)_\(mr.iid)_\(pipeline.id)"
+        let rawId = "\(sub.baseUrl)_\(sub.userId)_\(mr.project_id)_\(mr.iid)_\(pipeline.id)"
+        let docId = Data(rawId.utf8).base64EncodedString()
         let url = documentURL(collection: "pipelineStatuses", documentId: docId)
         let headers = try await authHeaders()
 

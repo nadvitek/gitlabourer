@@ -2,7 +2,7 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req async in
-        "It works!"
+        "It works and it is new version!"
     }
 
     app.get("health") { req in
@@ -16,6 +16,7 @@ func routes(_ app: Application) throws {
             userId: body.userId,
             baseUrl: body.baseUrl,
             token: body.token,
+            apnsDeviceToken: body.apnsDeviceToken
         )
 
         try await req.firestore.saveSubscription(sub)
@@ -26,6 +27,7 @@ func routes(_ app: Application) throws {
         let firestore = req.firestore
         req.logger.info("Firestore gathered")
         let cache = req.application.pipelineCache
+        let push = req.application.push
 
         req.logger.info("Cache gathered")
 
@@ -49,7 +51,8 @@ func routes(_ app: Application) throws {
                 sub: sub,
                 logger: req.logger,
                 cache: cache,
-                firestore: req.firestore
+                firestore: req.firestore,
+                push: push
             )
         }
 
@@ -62,7 +65,8 @@ private func processResults(
     sub: Subscription,
     logger: Logger,
     cache: PipelineCache,
-    firestore: FirestoreService
+    firestore: FirestoreService,
+    push: PushService
 ) async {
     for result in results {
         let mr = result.mergeRequest
@@ -73,49 +77,33 @@ private func processResults(
         let newStatus = pipeline.status
         let lastStatus = await cache.lastStatus(for: key)
 
+        guard let deviceToken = sub.apnsDeviceToken else {
+            continue
+        }
+
         if let lastStatus {
             if lastStatus != newStatus {
-                // 3a) Status changed
                 logger.info(
                     "🔔 Pipeline changed [user=\(sub.userId), project=\(mr.project_id), MR=\(mr.iid), pipeline=\(pipeline.id)]: \(lastStatus) → \(newStatus)"
                 )
 
                 await cache.updateStatus(newStatus, for: key)
-                // TODO: here you can:
-                // - write newStatus to Firestore for the client to read
-                // - send FCM / APNs notification
-
-                do {
-                    try await firestore.savePipelineStatus(for: sub, result: result)
-                } catch {
-                    logger.report(error: error)
-                }
+                await push.sendPipelineUpdate(to: deviceToken, result: result, userId: sub.userId)
             } else if newStatus.isFinished {
                 logger.info(
                     "🔔 First status for pipeline [user=\(sub.userId), project=\(mr.project_id), MR=\(mr.iid), pipeline=\(pipeline.id)]: Status is \(newStatus)"
                 )
 
                 await cache.removeValue(for: key)
-
-                do {
-                    try await firestore.savePipelineStatus(for: sub, result: result)
-                } catch {
-                    logger.report(error: error)
-                }
+                await push.sendPipelineUpdate(to: deviceToken, result: result, userId: sub.userId)
             }
         } else if newStatus.isRunning {
-            // 3b) First time we see this pipeline
             logger.info(
                 "🆕 First status for pipeline [user=\(sub.userId), project=\(mr.project_id), MR=\(mr.iid), pipeline=\(pipeline.id)]: Status is \(newStatus)"
             )
 
             await cache.updateStatus(newStatus, for: key)
-
-            do {
-                try await firestore.savePipelineStatus(for: sub, result: result)
-            } catch {
-                logger.report(error: error)
-            }
+            await push.sendPipelineUpdate(to: deviceToken, result: result, userId: sub.userId)
         }
     }
 }

@@ -13,6 +13,7 @@ struct SubscriptionFields: Content {
     let userId: FSString
     let baseUrl: FSString
     let token: FSString
+    let apnsDeviceToken: FSString?
 }
 
 struct FirestoreDocument<F: Content>: Content {

@@ -14,6 +14,7 @@ let package = Package(
         // 🔐 JWTKit provides JWT + Vapor integration (Application.jwt.signers).
         .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.13.0"),
         .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
+        .package(url: "https://github.com/swift-server-community/APNSwift.git", from: "4.0.0"),
     ],
     targets: [
         .executableTarget(
@@ -24,6 +25,7 @@ let package = Package(
                 .product(name: "Crypto", package: "swift-crypto"),
                 .product(name: "NIOCore", package: "swift-nio"),
                 .product(name: "NIOPosix", package: "swift-nio"),
+                .product(name: "APNSwift", package: "APNSwift")
             ],
             swiftSettings: swiftSettings
         ),

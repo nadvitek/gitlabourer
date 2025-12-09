@@ -22,6 +22,27 @@ public func configure(_ app: Application) async throws {
         fatalError("ENCRYPTION_KEY env var must be set to 32 random bytes in base64")
     }
 
+    guard
+        let apnsKeyId = Environment.get("APNS_KEY_ID"),
+        let apnsTeamId = Environment.get("APNS_TEAM_ID"),
+        let apnsBundleId = Environment.get("APNS_BUNDLE_ID"),
+        let apnsPrivateKey = Environment.get("APNS_PRIVATE_KEY")
+    else {
+        app.logger.warning("APNS_* env vars not fully set, PushService disabled")
+        // you can early-return or just skip configuring push
+        return try routes(app)
+    }
+
+    let apnsConfig = APNSConfig(
+        keyId: apnsKeyId,
+        teamId: apnsTeamId,
+        bundleId: apnsBundleId,
+        environment: .sandbox, // TODO: - Change to production
+        privateKey: apnsPrivateKey
+    )
+
+    app.push = try PushService(app: app, config: apnsConfig)
+
     // Replace literal "\n" with real newlines (common when storing key in env)
     let privateKeyPEM = rawPrivateKey.replacingOccurrences(of: "\\n", with: "\n")
 
