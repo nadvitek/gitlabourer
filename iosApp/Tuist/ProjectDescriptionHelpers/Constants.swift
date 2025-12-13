@@ -4,7 +4,7 @@ public let projectName = "GitLabourer"
 public let version: Version = "1.0.0"
 
 public let projectTargets = [
-    app, appTests, appTesting, appWidgets,
+    app, appTests, appTesting,
     projects, projectsTesting,
     search, searchTesting,
     login, loginTesting,

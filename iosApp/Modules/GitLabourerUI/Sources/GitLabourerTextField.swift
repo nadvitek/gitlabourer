@@ -67,6 +67,10 @@ public struct GitLabourerTextField<Trailing: View>: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct GitLabourerTextField_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
@@ -93,3 +97,5 @@ struct GitLabourerTextField_Previews: PreviewProvider {
         .gitlabourerBackground()
     }
 }
+
+#endif

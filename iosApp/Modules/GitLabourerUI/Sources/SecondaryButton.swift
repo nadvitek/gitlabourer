@@ -44,6 +44,10 @@ public struct SecondaryButton: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct SecondaryButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -56,3 +60,5 @@ struct SecondaryButton_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+
+#endif

@@ -45,6 +45,10 @@ public struct PrimaryButton: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct PrimaryButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -56,3 +60,5 @@ struct PrimaryButton_Previews: PreviewProvider {
         .background(GitlabColors.gitlabDark.swiftUIColor)
     }
 }
+
+#endif

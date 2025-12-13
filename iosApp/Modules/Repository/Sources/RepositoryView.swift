@@ -102,6 +102,10 @@ extension TreeItem {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct RepositoryView_Previews: PreviewProvider {
     static var previews: some View {
         RepositoryView(
@@ -165,3 +169,5 @@ struct RepositoryView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+
+#endif

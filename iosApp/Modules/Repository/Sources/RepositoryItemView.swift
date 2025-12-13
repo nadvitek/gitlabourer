@@ -76,6 +76,10 @@ struct RepositoryItemView: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct RepositoryItemView_Previews: PreviewProvider {
     static var previews: some View {
         RepositoryItemView(
@@ -95,3 +99,5 @@ struct RepositoryItemView_Previews: PreviewProvider {
         )
     }
 }
+
+#endif

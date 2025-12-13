@@ -160,6 +160,10 @@ struct MergeRequestItemView: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct MergeRequestItemView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 12) {
@@ -186,3 +190,5 @@ struct MergeRequestItemView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+
+#endif

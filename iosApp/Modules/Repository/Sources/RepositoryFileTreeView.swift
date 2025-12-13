@@ -43,6 +43,10 @@ struct RepositoryFileTreeView: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct RepositoryFileTreeView_Previews: PreviewProvider {
     static var previews: some View {
         RepositoryFileTreeView(
@@ -55,3 +59,5 @@ struct RepositoryFileTreeView_Previews: PreviewProvider {
         )
     }
 }
+
+#endif

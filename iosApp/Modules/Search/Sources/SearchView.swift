@@ -104,6 +104,10 @@ public func createSearchViewController(
     .hosting(isTabBarHidden: false)
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct SearchViewEmpty_Previews: PreviewProvider {
     static var previews: some View {
         SearchView(viewModel: SearchViewModelMock(screenState: .loaded([])))
@@ -121,3 +125,5 @@ struct SearchView_Previews: PreviewProvider {
         )
     }
 }
+
+#endif

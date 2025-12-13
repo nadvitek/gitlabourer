@@ -50,6 +50,10 @@ struct RepositoryBranchPickerView: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct RepositoryBranchPickerView_Previews: PreviewProvider {
     static var previews: some View {
         RepositoryBranchPickerView(
@@ -70,3 +74,5 @@ struct RepositoryBranchPickerView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+
+#endif

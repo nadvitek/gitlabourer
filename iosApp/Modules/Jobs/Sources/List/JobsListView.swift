@@ -156,6 +156,10 @@ struct JobsListView: View {
     }
 }
 
+#if DEBUG
+
+// MARK: - Previews
+
 struct JobsListView_Previews: PreviewProvider {
     static var previews: some View {
         JobsListView(
@@ -175,3 +179,5 @@ struct JobsListView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+
+#endif

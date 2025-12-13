@@ -1,0 +1,21 @@
+Privacy Policy
+
+This app collects only the data necessary to function properly.
+
+Data Collected
+
+- User identifiers
+
+- Push notification tokens
+
+Usage
+Data is used solely to deliver app functionality and notifications.
+
+Storage
+Data is stored securely using Google Firestore.
+
+Third Parties
+No data is sold or shared with third parties except for infrastructure services required to operate the app.
+
+Contact
+If you have questions, contact: nadvitek@gmail.com

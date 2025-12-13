@@ -19,11 +19,10 @@ private let codeSigning = CodeSigning.current(
 
 let app = Target.target(
     name: targetName,
-    destinations: Destinations(arrayLiteral: .iPhone, .iPad, .macCatalyst),
+    destinations: [.iPhone, .iPad, .macWithiPadDesign],
     product: .app,
     bundleId: "cz.ackee.gitlabourer",
     infoPlist: .extendingDefault(with: [
-        "UILaunchScreen": [],
         "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
@@ -37,12 +36,15 @@ let app = Target.target(
                 ]
             ]
         ],
+        "UILaunchStoryboardName": "LaunchScreen.storyboard",
+        "UILaunchScreen": [
+            "UIImageName": "LaunchScreen"
+        ],
         "UIBackgroundModes": ["fetch", "remote-notification"],
         "NSAppTransportSecurity": [
             "NSAllowsArbitraryLoads": true
         ],
         "NSSupportsLiveActivities": true,
-//        "UIApplicationSupportsMultipleScenes": true
     ]),
     sources: ["GitLabourer/Sources/**"],
     resources: ["GitLabourer/Resources/**"],
@@ -61,7 +63,7 @@ let app = Target.target(
         .projectDetail,
         .jobs,
         .mergeRequestDetail,
-        .target(appWidgets),
+//        .target(appWidgets),
     ],
     settings: .settings(
         base: codeSigning.settings,
@@ -69,25 +71,25 @@ let app = Target.target(
     )
 )
 
-let appWidgets = Target.target(
-    name: "GitLabourerWidgets",
-    destinations: Destinations(arrayLiteral: .iPhone),
-    product: .appExtension,
-    bundleId: "cz.ackee.gitlabourer.widgets",
-    infoPlist: .extendingDefault(with: [
-        "NSExtension": [
-            "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
-        ]
-    ]),
-    sources: "GitLabourerWidgets/Sources/**",
-    dependencies: [
-        .target(core)
-    ],
-    settings: .settings(
-        base: codeSigning.settings,
-        configurations: [.current]
-    )
-)
+//let appWidgets = Target.target(
+//    name: "GitLabourerWidgets",
+//    destinations: Destinations(arrayLiteral: .iPhone),
+//    product: .appExtension,
+//    bundleId: "cz.ackee.gitlabourer.widgets",
+//    infoPlist: .extendingDefault(with: [
+//        "NSExtension": [
+//            "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
+//        ]
+//    ]),
+//    sources: "GitLabourerWidgets/Sources/**",
+//    dependencies: [
+//        .target(core)
+//    ],
+//    settings: .settings(
+//        base: codeSigning.settings,
+//        configurations: [.current]
+//    )
+//)
 
 //let notificationService = Target.target(
 //    name: "GitLabourerNotificationService",
