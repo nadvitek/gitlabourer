@@ -2,6 +2,8 @@ import Foundation
 import shared
 
 final class SettingsViewModelMock: SettingsViewModel {
+    var isNotificationOn: Bool = true
+    var isNotificationLoading: Bool = false
     var user: User?
 
     init(

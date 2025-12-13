@@ -88,6 +88,29 @@ final class FirestoreService: @unchecked Sendable {
         app.logger.info("Saved subscription for userId \(sub.userId)")
     }
 
+    func deleteSubscription(_ data: UnsubscribeRequest) async throws {
+        let rawId = "\(data.baseUrl)_\(data.userId)"
+        let documentId = Data(rawId.utf8).base64EncodedString()
+
+        let url = documentURL(collection: "subscriptions", documentId: documentId)
+        let headers = try await authHeaders()
+
+        app.logger.info("Deleting subscription for userId=\(data.userId) at URL=\(url)")
+
+        let res = try await app.client.delete(URI(string: url), headers: headers)
+
+        switch res.status {
+        case .ok, .noContent:
+            app.logger.info("Deleted subscription for userId \(data.userId)")
+        case .notFound:
+            app.logger.info("No subscription found to delete for userId \(data.userId)")
+        default:
+            let bodyString = res.body.flatMap { String(buffer: $0) } ?? "<no body>"
+            app.logger.error("Firestore deleteSubscription failed: \(res.status) \(bodyString)")
+            throw Abort(.internalServerError, reason: "Firestore deleteSubscription error: \(res.status)")
+        }
+    }
+
     /// Load all subscriptions (for polling job)
     func loadAllSubscriptions() async throws -> [Subscription] {
         let url = listDocumentsURL(collection: "subscriptions")

@@ -1,5 +1,6 @@
 import SwiftUI
 import GitLabourerUI
+import Core
 
 public struct ProjectsView<ViewModel: ProjectsViewModel>: View {
     

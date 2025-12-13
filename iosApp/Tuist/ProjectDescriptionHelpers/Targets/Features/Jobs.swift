@@ -3,7 +3,7 @@ import ProjectDescription
 
 private let targetName = "Jobs"
 private let basePath = "Modules/" + targetName
-private let bundleId = "cz.nadvitek.\(targetName)"
+private let bundleId = "cz.ackee.\(targetName)"
 
 let jobs = Target.target(
     name: targetName,

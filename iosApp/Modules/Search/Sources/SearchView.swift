@@ -1,6 +1,7 @@
 import SwiftUI
 import GitLabourerUI
 import shared
+import Core
 
 public struct SearchView<ViewModel: SearchViewModel>: View {
     @FocusState private var focused: Bool

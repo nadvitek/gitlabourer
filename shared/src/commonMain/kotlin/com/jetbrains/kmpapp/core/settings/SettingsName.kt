@@ -5,6 +5,8 @@ package com.jetbrains.kmpapp.core.settings
  */
 internal enum class SettingsName(val settingsFileName: String) {
 
+    DEVICE_TOKEN("device_token"),
+    NOTIFICATIONS("notifications"),
     TOKEN("token"),
     URL("url"),
     USER_ID("userId")

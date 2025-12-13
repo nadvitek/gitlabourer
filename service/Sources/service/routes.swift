@@ -23,6 +23,13 @@ func routes(_ app: Application) throws {
         return .ok
     }
 
+    app.post("unsubscribe") { req async throws -> HTTPStatus in
+        let body = try req.content.decode(UnsubscribeRequest.self)
+
+        try await req.firestore.deleteSubscription(body)
+        return .ok
+    }
+
     app.get("poll-merge-requests") { req async throws -> String in
         let firestore = req.firestore
         req.logger.info("Firestore gathered")

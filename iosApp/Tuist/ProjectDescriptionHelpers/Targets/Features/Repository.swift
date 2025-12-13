@@ -3,7 +3,7 @@ import ProjectDescription
 
 private let targetName = "Repository"
 private let basePath = "Modules/" + targetName
-private let bundleId = "cz.nadvitek.\(targetName)"
+private let bundleId = "cz.ackee.\(targetName)"
 
 let repository = Target.target(
     name: targetName,
@@ -17,7 +17,8 @@ let repository = Target.target(
     ].compactMap { $0 }),
     dependencies: [
         .gitlabourerUI,
-        .kmp
+        .kmp,
+        .core
     ]
 )
 

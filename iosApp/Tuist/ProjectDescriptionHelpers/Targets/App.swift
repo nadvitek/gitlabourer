@@ -21,7 +21,7 @@ let app = Target.target(
     name: targetName,
     destinations: Destinations(arrayLiteral: .iPhone, .iPad, .macCatalyst),
     product: .app,
-    bundleId: "cz.nadvitek.gitlabourer",
+    bundleId: "cz.ackee.gitlabourer",
     infoPlist: .extendingDefault(with: [
         "UILaunchScreen": [],
         "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
@@ -36,10 +36,17 @@ let app = Target.target(
                     ]
                 ]
             ]
-        ]
+        ],
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+        "NSAppTransportSecurity": [
+            "NSAllowsArbitraryLoads": true
+        ],
+        "NSSupportsLiveActivities": true,
+//        "UIApplicationSupportsMultipleScenes": true
     ]),
     sources: ["GitLabourer/Sources/**"],
     resources: ["GitLabourer/Resources/**"],
+    entitlements: "GitLabourer/App.entitlements",
     dependencies: [
         .kmp,
         .core,
@@ -53,15 +60,63 @@ let app = Target.target(
         .mergeRequests,
         .projectDetail,
         .jobs,
-        .mergeRequestDetail
-    ]
+        .mergeRequestDetail,
+        .target(appWidgets),
+    ],
+    settings: .settings(
+        base: codeSigning.settings,
+        configurations: [.current]
+    )
 )
+
+let appWidgets = Target.target(
+    name: "GitLabourerWidgets",
+    destinations: Destinations(arrayLiteral: .iPhone),
+    product: .appExtension,
+    bundleId: "cz.ackee.gitlabourer.widgets",
+    infoPlist: .extendingDefault(with: [
+        "NSExtension": [
+            "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
+        ]
+    ]),
+    sources: "GitLabourerWidgets/Sources/**",
+    dependencies: [
+        .target(core)
+    ],
+    settings: .settings(
+        base: codeSigning.settings,
+        configurations: [.current]
+    )
+)
+
+//let notificationService = Target.target(
+//    name: "GitLabourerNotificationService",
+//    destinations: Destinations(arrayLiteral: .iPhone),
+//    product: .appExtension,
+//    bundleId: "cz.ackee.gitlabourer.notification-service",
+//    infoPlist: .extendingDefault(with: [
+//        "NSExtension": [
+//            "NSExtensionPointIdentifier": "com.apple.usernotifications.service",
+//            "NSExtensionPrincipalClass": "$(PRODUCT_MODULE_NAME).NotificationService"
+//        ]
+//    ]),
+//    sources: ["GitLabourerNotificationService/Sources/**"],
+//    resources: [],
+//    entitlements: nil,
+//    dependencies: [
+//        .target(core)
+//    ],
+//    settings: .settings(
+//        base: codeSigning.settings,
+//        configurations: [.current]
+//    )
+//)
 
 let appTests = Target.target(
     name: "GitLabourerTests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "cz.nadvitek.GitLabourer",
+    bundleId: "cz.ackee.gitLabourer",
     infoPlist: .default,
     sources: ["GitLabourer/Tests/**"],
     resources: [],

@@ -1,10 +1,7 @@
 package com.jetbrains.kmpapp.feature.notification
 
-import com.jetbrains.kmpapp.feature.notification.domain.NotificationRepository
-import com.jetbrains.kmpapp.feature.notification.domain.usecase.ObservePipelineUpdatesUseCase
-import com.jetbrains.kmpapp.feature.notification.domain.usecase.ObservePipelineUpdatesUseCaseImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import com.jetbrains.kmpapp.feature.notification.data.BackendRepositoryImpl
+import com.jetbrains.kmpapp.feature.notification.domain.BackendRepository
 import org.koin.dsl.module
 
 internal val notificationModule = module {
@@ -17,4 +14,7 @@ internal val notificationModule = module {
 //            ioDispatcher = Dispatchers.IO
 //        )
 //    }
+    single<BackendRepository> {
+        BackendRepositoryImpl()
+    }
 }

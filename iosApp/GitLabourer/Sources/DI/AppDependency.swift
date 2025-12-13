@@ -68,7 +68,10 @@ extension AppDependency {
     var settingsViewModelDependencies: SettingsViewModelDependencies {
         SettingsViewModelDependencies(
             getUserUseCase: getUserUseCase,
-            logoutUseCase: logoutUseCase
+            logoutUseCase: logoutUseCase,
+            subscribeForNotificationUseCase: subscribeForNotificationUseCase,
+            unsubscribeForNotificationUseCase: unsubscribeForNotificationUseCase,
+            getNotificationsSettingsUseCase: getNotificationsSettingsUseCase
         )
     }
 

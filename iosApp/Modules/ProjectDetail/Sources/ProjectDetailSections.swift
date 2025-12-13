@@ -2,14 +2,15 @@ import Foundation
 import SwiftUI
 
 public enum ProjectDetailSection: CaseIterable, Equatable {
-    case manage
+    // TODO: - Implement later
+//    case manage
     case code
     case build
 
     var title: String {
         switch self {
-        case .manage:
-            "Manage"
+//        case .manage:
+//            "Manage"
         case .code:
             "Code"
         case .build:
@@ -19,15 +20,15 @@ public enum ProjectDetailSection: CaseIterable, Equatable {
 
     var paths: [ProjectDetailPath] {
         switch self {
-        case .manage:
-            [
-                .members
-            ]
+//        case .manage:
+//            [
+//                .members
+//            ]
         case .code:
             [
                 .repository,
                 .mrs,
-                .tags
+//                .tags
             ]
         case .build:
             [

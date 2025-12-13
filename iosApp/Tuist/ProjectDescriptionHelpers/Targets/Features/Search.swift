@@ -3,7 +3,7 @@ import ProjectDescription
 
 private let targetName = "Search"
 private let basePath = "Modules/" + targetName
-private let bundleId = "cz.nadvitek.\(targetName)"
+private let bundleId = "cz.ackee.\(targetName)"
 
 let search = Target.target(
     name: targetName,
@@ -18,7 +18,8 @@ let search = Target.target(
     dependencies: [
         .projects,
         .gitlabourerUI,
-        .kmp
+        .kmp,
+        .core
     ]
 )
 

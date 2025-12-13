@@ -6,7 +6,7 @@ let appTesting = Target.target(
     name: name,
     destinations: .iOS,
     product: .framework,
-    bundleId: "cz.nadvitek.GitLabourer",
+    bundleId: "cz.ackee.gitLabourer",
     sources: "Modules/\(name)/**",
     dependencies: [
         .xctest,

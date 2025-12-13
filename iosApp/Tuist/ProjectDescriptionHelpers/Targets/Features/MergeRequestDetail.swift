@@ -3,7 +3,7 @@ import ProjectDescription
 
 private let targetName = "MergeRequestDetail"
 private let basePath = "Modules/" + targetName
-private let bundleId = "cz.nadvitek.\(targetName)"
+private let bundleId = "cz.ackee.\(targetName)"
 
 let mergeRequestDetail = Target.target(
     name: targetName,

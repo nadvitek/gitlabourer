@@ -1,5 +1,9 @@
 package com.jetbrains.kmpapp.di
 
+import com.jetbrains.kmpapp.feature.apns.apnsModule
+import com.jetbrains.kmpapp.feature.apns.domain.GetNotificationsSettingsUseCase
+import com.jetbrains.kmpapp.feature.apns.domain.SubscribeForNotificationUseCase
+import com.jetbrains.kmpapp.feature.apns.domain.UnsubscribeForNotificationUseCase
 import com.jetbrains.kmpapp.feature.jobs.domain.usecase.CancelJobUseCase
 import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobLogUseCase
 import com.jetbrains.kmpapp.feature.jobs.domain.usecase.GetJobsForPipelineUseCase
@@ -27,6 +31,7 @@ import com.jetbrains.kmpapp.feature.project.projectModule
 import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetFileDataUseCase
 import com.jetbrains.kmpapp.feature.repository.domain.usecase.GetRepositoryBranchesUseCase
 import com.jetbrains.kmpapp.feature.repository.repositoryDetailModule
+import com.jetbrains.kmpapp.feature.token.domain.SaveDeviceTokenUseCase
 import com.jetbrains.kmpapp.feature.token.tokenModule
 import com.jetbrains.kmpapp.feature.user.userModule
 import org.koin.core.component.KoinComponent
@@ -48,6 +53,7 @@ public fun initKoin(extraModules: List<Module>) {
             notificationModule,
             userModule,
             mergeRequestDetailModule,
+            apnsModule,
             *extraModules.toTypedArray(),
         )
     }
@@ -110,5 +116,17 @@ public class AppDependency : KoinComponent {
         get() = get()
 
     public val changeMergeRequestApprovalUseCase: ChangeMergeRequestApprovalUseCase
+        get() = get()
+
+    public val saveDeviceTokenUseCase: SaveDeviceTokenUseCase
+        get() = get()
+
+    public val subscribeForNotificationUseCase: SubscribeForNotificationUseCase
+        get() = get()
+
+    public val unsubscribeForNotificationUseCase: UnsubscribeForNotificationUseCase
+        get() = get()
+
+    public val getNotificationsSettingsUseCase: GetNotificationsSettingsUseCase
         get() = get()
 }

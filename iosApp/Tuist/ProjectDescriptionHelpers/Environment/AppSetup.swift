@@ -11,14 +11,7 @@ public struct AppSetup {
     public let configuration: Configuration
 
     public var bundleID: String {
-        switch (configuration, environment) {
-        case (.debug, _):
-            return "cz.nadvitek.gitlabourer.debug"
-        case (.beta, _):
-            return "cz.nadvitek.gitlabourer.beta"
-        case (.release, _):
-            return "cz.nadvitek.gitlabourer"
-        }
+        "cz.ackee.gitlabourer"
     }
 
     public var appNameValue: String {

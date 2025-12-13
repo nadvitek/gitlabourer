@@ -36,6 +36,29 @@ public struct SettingsView<ViewModel: SettingsViewModel>: View {
                         }
                         .font(.subheadline)
                     }
+                    .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+
+                    HStack(spacing: 0) {
+                        Text("Merge Requests pipeline notificatons")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
+
+                        Spacer()
+
+                        Toggle(
+                            isOn: $viewModel.isNotificationOn
+                        ) {
+                            EmptyView()
+                        }
+                        .labelsHidden()
+                        .tint(GitlabColors.gitlabOrange.swiftUIColor)
+                        .disabled(viewModel.isNotificationLoading)
+                    }
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 12)
+                    .background(GitlabColors.gitlabGray.swiftUIColor.opacity(0.05))
+                    .clipShape(.rect(cornerRadius: 8))
                 }
                 .foregroundStyle(GitlabColors.gitlabGray.swiftUIColor)
             }
@@ -49,6 +72,7 @@ public struct SettingsView<ViewModel: SettingsViewModel>: View {
         }
         .padding(.top, 20)
         .padding(.bottom, 16)
+        .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar {
             ToolbarItemTransparent(placement: .principal) {
